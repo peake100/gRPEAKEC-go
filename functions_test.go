@@ -1,4 +1,4 @@
-package islelib
+package grpcerr
 
 import (
 	"github.com/stretchr/testify/assert"

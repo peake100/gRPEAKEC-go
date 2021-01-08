@@ -1,6 +1,6 @@
 // +build tools
 
-package tools
+package grpcerr
 
 import (
 	_ "github.com/ains/go-test-html"

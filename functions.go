@@ -1,4 +1,4 @@
-package islelib
+package grpcerr
 
 // CastSpell returns the name of a spell.
 func CastSpell() string {
