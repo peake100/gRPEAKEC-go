@@ -3,7 +3,7 @@
 
 package pktesting
 
-import "github.com/peake100/gRPEAKEC-go/protogen"
+import "github.com/peake100/gRPEAKEC-go/pktesting/protogen"
 
 // MockUnaryServiceServer is an alias of protogen.MockUnaryServiceServer
 type MockUnaryServiceServer = protogen.MockUnaryServiceServer

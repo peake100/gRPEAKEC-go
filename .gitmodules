@@ -4,3 +4,6 @@
 [submodule "cereal_proto"]
 	path = cereal_proto
 	url = git@github.com:illuscio-dev/cereal_proto.git
+[submodule "grpeakec_proto"]
+	path = grpeakec_proto
+	url = git@github.com:peake100/grpeakec_proto.git

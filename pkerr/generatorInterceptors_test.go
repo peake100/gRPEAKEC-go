@@ -8,7 +8,6 @@ import (
 	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
 	"github.com/peake100/gRPEAKEC-go/pktesting"
-	"github.com/peake100/gRPEAKEC-go/protogen"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"
@@ -152,7 +151,7 @@ func (mock *MockService) Dummy(ctx context.Context, empty *empty.Empty) (*empty.
 	panic("implement me")
 }
 
-func (mock *MockService) DummyStream(server protogen.MockStreamService_DummyStreamServer) error {
+func (mock *MockService) DummyStream(server pktesting.MockStreamService_DummyStreamServer) error {
 	panic("implement me")
 }
 

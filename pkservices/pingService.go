@@ -3,7 +3,7 @@ package pkservices
 import (
 	"context"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/peake100/gRPEAKEC-go/protogen"
+	"github.com/peake100/gRPEAKEC-go/pkservices/protogen"
 	"google.golang.org/grpc"
 	"sync"
 )
