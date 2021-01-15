@@ -1,9 +1,6 @@
 [submodule "zdevelop/make_scripts"]
 	path = zdevelop/make_scripts
 	url = https://github.com/illuscio-dev/make_scripts.git
-[submodule "grpcerr_proto"]
-	path = grpcerr_proto
-	url = git@github.com:peake100/grpcerr_proto.git
 [submodule "cereal_proto"]
 	path = cereal_proto
 	url = git@github.com:illuscio-dev/cereal_proto.git
