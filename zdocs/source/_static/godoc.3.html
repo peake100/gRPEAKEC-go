@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>scratch - Go Documentation Server</title>
+  <title>protogen - Go Documentation Server</title>
 
 <link type="text/css" rel="stylesheet" href="style.css">
 
@@ -43,7 +43,7 @@
 
 
   <h1>
-    Command scratch
+    Package protogen
     <span class="text-muted"></span>
   </h1>
 
@@ -75,6 +75,547 @@
 
 	
 		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/peake100/gRPEAKEC-go/pkerr/protogen"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="godoc.3.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="godoc.3.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+				
+			</div>
+		</div>
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="godoc.3.html#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="godoc.3.html#Error">type Error</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.Descriptor">func (*Error) Descriptor() ([]byte, []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.Error">func (x *Error) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetCode">func (x *Error) GetCode() uint32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetDetails">func (x *Error) GetDetails() []*any.Any</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetGrpcCode">func (x *Error) GetGrpcCode() int32</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetId">func (x *Error) GetId() *cerealMessages.UUID</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetIssuer">func (x *Error) GetIssuer() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetMessage">func (x *Error) GetMessage() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetName">func (x *Error) GetName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetTime">func (x *Error) GetTime() *timestamp.Timestamp</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.GetTrace">func (x *Error) GetTrace() []*TraceInfo</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.ProtoMessage">func (*Error) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.ProtoReflect">func (x *Error) ProtoReflect() protoreflect.Message</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.Reset">func (x *Error) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#Error.String">func (x *Error) String() string</a></dd>
+				
+			
+				
+				<dd><a href="godoc.3.html#TraceInfo">type TraceInfo</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.Descriptor">func (*TraceInfo) Descriptor() ([]byte, []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.GetAdditionalContext">func (x *TraceInfo) GetAdditionalContext() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.GetAppHost">func (x *TraceInfo) GetAppHost() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.GetAppName">func (x *TraceInfo) GetAppName() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.GetStackTrace">func (x *TraceInfo) GetStackTrace() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.ProtoMessage">func (*TraceInfo) ProtoMessage()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.ProtoReflect">func (x *TraceInfo) ProtoReflect() protoreflect.Message</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.Reset">func (x *TraceInfo) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#TraceInfo.String">func (x *TraceInfo) String() string</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h3>Package files</h3>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go">error.pb.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/errorMethods.go">errorMethods.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				
+				<pre>var <span id="File_grpeakec_proto_pkerr_error_proto">File_grpeakec_proto_pkerr_error_proto</span> <a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/">protoreflect</a>.<a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/#FileDescriptor">FileDescriptor</a></pre>
+			
+		
+		
+		
+			
+			
+			<h2 id="Error">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=3339:5054#L101">Error</a>
+				<a class="permalink" href="godoc.3.html#Error">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+Error holds information about an error.
+</p>
+
+			<pre>type Error struct {
+
+    <span class="comment">// id is a uuid that uniquely identifies this error.</span>
+<span id="Error.Id"></span>    Id *<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/">cerealMessages</a>.<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/#UUID">UUID</a> `protobuf:&#34;bytes,1,opt,name=id,proto3&#34; json:&#34;id,omitempty&#34;`
+    <span class="comment">// issuer is the issuer of a code. If multiple services use this library, they</span>
+    <span class="comment">// can differentiate their error codes by having unique issuers. If a number of</span>
+    <span class="comment">// services working together in the same backend coordinate to ensure their error</span>
+    <span class="comment">// definitions do not overlap, they can share an Issuer value.</span>
+<span id="Error.Issuer"></span>    Issuer <a href="http://localhost:6161/pkg/builtin/#string">string</a> `protobuf:&#34;bytes,2,opt,name=issuer,proto3&#34; json:&#34;issuer,omitempty&#34;`
+    <span class="comment">// code is the API Error code.</span>
+<span id="Error.Code"></span>    Code <a href="http://localhost:6161/pkg/builtin/#uint32">uint32</a> `protobuf:&#34;varint,3,opt,name=code,proto3&#34; json:&#34;code,omitempty&#34;`
+    <span class="comment">// grpc_code is the grpc status code associated with this error.</span>
+<span id="Error.GrpcCode"></span>    GrpcCode <a href="http://localhost:6161/pkg/builtin/#int32">int32</a> `protobuf:&#34;varint,4,opt,name=grpc_code,json=grpcCode,proto3&#34; json:&#34;grpc_code,omitempty&#34;`
+    <span class="comment">// name is the human-readable API Error name tied to code.</span>
+<span id="Error.Name"></span>    Name <a href="http://localhost:6161/pkg/builtin/#string">string</a> `protobuf:&#34;bytes,5,opt,name=name,proto3&#34; json:&#34;name,omitempty&#34;`
+    <span class="comment">// message is the error message.</span>
+<span id="Error.Message"></span>    Message <a href="http://localhost:6161/pkg/builtin/#string">string</a> `protobuf:&#34;bytes,6,opt,name=message,proto3&#34; json:&#34;message,omitempty&#34;`
+    <span class="comment">// time is the time that the error occurred</span>
+<span id="Error.Time"></span>    Time *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/timestamp/">timestamp</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/timestamp/#Timestamp">Timestamp</a> `protobuf:&#34;bytes,7,opt,name=time,proto3&#34; json:&#34;time,omitempty&#34;`
+    <span class="comment">// details are arbitrary information about the error.</span>
+<span id="Error.Details"></span>    Details []*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a> `protobuf:&#34;bytes,8,rep,name=details,proto3&#34; json:&#34;details,omitempty&#34;`
+<span id="Error.Trace"></span>    <span class="comment">// Trace holds a stack of TraceInfo objects. Each time an app encounters an error,</span>
+    <span class="comment">// it can add it&#39;s TraceInfo object to the end of the trace.</span>
+    Trace []*<a href="godoc.3.html#TraceInfo">TraceInfo</a> `protobuf:&#34;bytes,9,rep,name=trace,proto3&#34; json:&#34;trace,omitempty&#34;`
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Error.Descriptor">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=5760:5802#L158">Descriptor</a>
+					<a class="permalink" href="godoc.3.html#Error.Descriptor">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (*<a href="godoc.3.html#Error">Error</a>) Descriptor() ([]<a href="http://localhost:6161/pkg/builtin/#byte">byte</a>, []<a href="http://localhost:6161/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Deprecated: Use Error.ProtoReflect.Descriptor instead.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Error.Error">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/errorMethods.go?s=72:102#L1">Error</a>
+					<a class="permalink" href="godoc.3.html#Error.Error">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				<p>
+Error implements builtins.error
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Error.GetCode">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=6059:6091#L176">GetCode</a>
+					<a class="permalink" href="godoc.3.html#Error.GetCode">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetCode() <a href="http://localhost:6161/pkg/builtin/#uint32">uint32</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetDetails">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=6500:6539#L211">GetDetails</a>
+					<a class="permalink" href="godoc.3.html#Error.GetDetails">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetDetails() []*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetGrpcCode">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=6141:6176#L183">GetGrpcCode</a>
+					<a class="permalink" href="godoc.3.html#Error.GetGrpcCode">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetGrpcCode() <a href="http://localhost:6161/pkg/builtin/#int32">int32</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetId">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=5878:5922#L162">GetId</a>
+					<a class="permalink" href="godoc.3.html#Error.GetId">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetId() *<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/">cerealMessages</a>.<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/#UUID">UUID</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetIssuer">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=5972:6006#L169">GetIssuer</a>
+					<a class="permalink" href="godoc.3.html#Error.GetIssuer">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetIssuer() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetMessage">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=6313:6348#L197">GetMessage</a>
+					<a class="permalink" href="godoc.3.html#Error.GetMessage">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetMessage() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetName">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=6230:6262#L190">GetName</a>
+					<a class="permalink" href="godoc.3.html#Error.GetName">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetName() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetTime">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=6402:6448#L204">GetTime</a>
+					<a class="permalink" href="godoc.3.html#Error.GetTime">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetTime() *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/timestamp/">timestamp</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/timestamp/#Timestamp">Timestamp</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.GetTrace">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=6594:6633#L218">GetTrace</a>
+					<a class="permalink" href="godoc.3.html#Error.GetTrace">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) GetTrace() []*<a href="godoc.3.html#TraceInfo">TraceInfo</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.ProtoMessage">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=5350:5378#L143">ProtoMessage</a>
+					<a class="permalink" href="godoc.3.html#Error.ProtoMessage">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (*<a href="godoc.3.html#Error">Error</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.ProtoReflect">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=5383:5434#L145">ProtoReflect</a>
+					<a class="permalink" href="godoc.3.html#Error.ProtoReflect">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) ProtoReflect() <a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/">protoreflect</a>.<a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/#Message">Message</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.Reset">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=5056:5079#L130">Reset</a>
+					<a class="permalink" href="godoc.3.html#Error.Reset">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Error.String">func (*Error) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=5274:5305#L139">String</a>
+					<a class="permalink" href="godoc.3.html#Error.String">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#Error">Error</a>) String() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="TraceInfo">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=1034:2046#L22">TraceInfo</a>
+				<a class="permalink" href="godoc.3.html#TraceInfo">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+Trace info holds information about where an error occurred.
+</p>
+
+			<pre>type TraceInfo struct {
+
+    <span class="comment">// app name is the name of the service or process that generated the error.</span>
+<span id="TraceInfo.AppName"></span>    AppName <a href="http://localhost:6161/pkg/builtin/#string">string</a> `protobuf:&#34;bytes,1,opt,name=app_name,json=appName,proto3&#34; json:&#34;app_name,omitempty&#34;`
+    <span class="comment">// Identifier for the host the app is running on.</span>
+<span id="TraceInfo.AppHost"></span>    AppHost <a href="http://localhost:6161/pkg/builtin/#string">string</a> `protobuf:&#34;bytes,2,opt,name=app_host,json=appHost,proto3&#34; json:&#34;app_host,omitempty&#34;`
+    <span class="comment">// stack_trace of the error (can be &#34;&#34;). No enforced format. This is meant for human</span>
+    <span class="comment">// reference).</span>
+<span id="TraceInfo.StackTrace"></span>    StackTrace <a href="http://localhost:6161/pkg/builtin/#string">string</a> `protobuf:&#34;bytes,3,opt,name=stack_trace,json=stackTrace,proto3&#34; json:&#34;stack_trace,omitempty&#34;`
+    <span class="comment">// Some languages let an error continue to gather context, with wrapping errors in go.</span>
+    <span class="comment">// This field can be used to store additional context added to the error after it</span>
+    <span class="comment">// was created.</span>
+<span id="TraceInfo.AdditionalContext"></span>    AdditionalContext <a href="http://localhost:6161/pkg/builtin/#string">string</a> `protobuf:&#34;bytes,4,opt,name=additional_context,json=additionalContext,proto3&#34; json:&#34;additional_context,omitempty&#34;`
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="TraceInfo.Descriptor">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=2776:2822#L68">Descriptor</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.Descriptor">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (*<a href="godoc.3.html#TraceInfo">TraceInfo</a>) Descriptor() ([]<a href="http://localhost:6161/pkg/builtin/#byte">byte</a>, []<a href="http://localhost:6161/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Deprecated: Use TraceInfo.ProtoReflect.Descriptor instead.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.GetAdditionalContext">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=3183:3232#L93">GetAdditionalContext</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.GetAdditionalContext">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#TraceInfo">TraceInfo</a>) GetAdditionalContext() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.GetAppHost">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=2991:3030#L79">GetAppHost</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.GetAppHost">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#TraceInfo">TraceInfo</a>) GetAppHost() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.GetAppName">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=2898:2937#L72">GetAppName</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.GetAppName">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#TraceInfo">TraceInfo</a>) GetAppName() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.GetStackTrace">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=3084:3126#L86">GetStackTrace</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.GetStackTrace">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#TraceInfo">TraceInfo</a>) GetStackTrace() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.ProtoMessage">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=2354:2386#L53">ProtoMessage</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.ProtoMessage">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (*<a href="godoc.3.html#TraceInfo">TraceInfo</a>) ProtoMessage()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.ProtoReflect">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=2391:2446#L55">ProtoReflect</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.ProtoReflect">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#TraceInfo">TraceInfo</a>) ProtoReflect() <a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/">protoreflect</a>.<a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/#Message">Message</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.Reset">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=2048:2075#L40">Reset</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.Reset">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#TraceInfo">TraceInfo</a>) Reset()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfo.String">func (*TraceInfo) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogen/error.pb.go?s=2274:2309#L49">String</a>
+					<a class="permalink" href="godoc.3.html#TraceInfo.String">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (x *<a href="godoc.3.html#TraceInfo">TraceInfo</a>) String() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
 		
 	
 

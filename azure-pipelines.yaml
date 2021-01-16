@@ -35,3 +35,4 @@ jobs:
       publishDocs: true
       language: GO
       buildType: LIBRARY
+      docProtoc: true

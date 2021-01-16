@@ -204,29 +204,6 @@ func (gen *ErrorGenerator) errToStatus(source error) error {
 	return thisStatus.Err()
 }
 
-// panicToStatus converts a recovered panic to an error. Do not pass in nil values.
-func (gen *ErrorGenerator) panicToStatus(recovered interface{}) error {
-	// Check if the recovered object is an error.
-	err, ok := recovered.(error)
-	if !ok {
-		// If the recovered data is not an error, just format the value as a string.
-		err = fmt.Errorf("%+v", recovered)
-	}
-
-	// Convert the error to a status.
-	return gen.errToStatus(err)
-}
-
-func (gen *ErrorGenerator) handleServerError(recovered interface{}, err error) error {
-	if recovered != nil {
-		return gen.panicToStatus(recovered)
-	} else if err != nil {
-		return gen.errToStatus(err)
-	}
-
-	return nil
-}
-
 // NewUnaryServerInterceptor returns a grpc.UnaryServerInterceptor that can handle
 // wrapping all errors and panics in an APIError and transforming them into a
 // status.Status.
@@ -237,13 +214,20 @@ func (gen *ErrorGenerator) NewUnaryServerInterceptor() grpc.UnaryServerIntercept
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (resp interface{}, err error) {
-		// Handle panics and errors.
 		defer func() {
-			err = gen.handleServerError(recover(), err)
+			if err != nil {
+				err = gen.errToStatus(err)
+			}
 		}()
 
-		// Invoke the handler.
-		resp, err = handler(ctx, req)
+		//  Catch the panic if it occurs.
+		err = CatchPanic(func() error {
+			// Invoke the handler.
+			var handlerErr error
+			resp, handlerErr = handler(ctx, req)
+			return handlerErr
+		})
+
 		return resp, err
 	}
 }
@@ -258,12 +242,17 @@ func (gen *ErrorGenerator) NewStreamServerInterceptor() grpc.StreamServerInterce
 		info *grpc.StreamServerInfo,
 		handler grpc.StreamHandler,
 	) (err error) {
-		// Handle panics and errors.
 		defer func() {
-			err = gen.handleServerError(recover(), err)
+			if err != nil {
+				err = gen.errToStatus(err)
+			}
 		}()
 
-		err = handler(srv, ss)
+		// Catch the panic if it occurs.
+		err = CatchPanic(func() error {
+			return handler(srv, ss)
+		})
+
 		return err
 	}
 }

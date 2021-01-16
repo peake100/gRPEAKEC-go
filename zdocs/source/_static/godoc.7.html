@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>pktesting - Go Documentation Server</title>
+
+<link type="text/css" rel="stylesheet" href="style.css">
+
+<script>window.initFuncs = [];</script>
+<script src="jquery.js" defer></script>
+
+
+
+<script>var goVersion = "go1.13.5";</script>
+<script src="godocs.js" defer></script>
+</head>
+<body>
+
+<div id='lowframe' style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:6161/pkg/">Go Documentation Server</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:6161/pkg/">GoDoc</a></div>
+<a href="godoc.7.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<form method="GET" action="http://localhost:6161/search">
+<div id="menu">
+
+<span class="search-box"><input type="search" id="search" name="q" placeholder="Search" aria-label="Search" required><button type="submit"><span><!-- magnifying glass: --><svg width="24" height="24" viewBox="0 0 24 24"><title>submit search</title><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg></span></button></span>
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide">
+<div class="container">
+
+
+  <h1>
+    Package pktesting
+    <span class="text-muted"></span>
+  </h1>
+
+
+
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/peake100/gRPEAKEC-go/pktesting"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="godoc.7.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="godoc.7.html#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="godoc.7.html#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+revive:disable
+</p>
+<p>
+pktesting makes some testing helpers for other packages available for testing code.
+</p>
+
+				
+			</div>
+		</div>
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="godoc.7.html#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="godoc.7.html#New3SecondCtx">func New3SecondCtx() (context.Context, context.CancelFunc)</a></dd>
+			
+			
+				
+				<dd><a href="godoc.7.html#AssertErr">type AssertErr</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#NewAssertErr">func NewAssertErr(t *testing.T, err error) *AssertErr</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.Code">func (asserter *AssertErr) Code(expected uint32) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.ErrorDef">func (asserter *AssertErr) ErrorDef(expected *pkerr.SentinelError, fullMessage bool) (result bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.GrpcCode">func (asserter *AssertErr) GrpcCode(expected codes.Code) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.Is">func (asserter *AssertErr) Is(expected error) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.Issuer">func (asserter *AssertErr) Issuer(expected string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.Message">func (asserter *AssertErr) Message(expected string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.MessageContains">func (asserter *AssertErr) MessageContains(contains string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.Name">func (asserter *AssertErr) Name(expected string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.TraceIndex">func (asserter *AssertErr) TraceIndex(index int) TraceInfoAssert</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#AssertErr.TraceLength">func (asserter *AssertErr) TraceLength(expected int) bool</a></dd>
+				
+			
+				
+				<dd><a href="godoc.7.html#ManagerSuite">type ManagerSuite</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerSuite.SetupSuite">func (m *ManagerSuite) SetupSuite()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerSuite.TearDownSuite">func (m *ManagerSuite) TearDownSuite()</a></dd>
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamServiceClient">type MockStreamServiceClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamServiceServer">type MockStreamServiceServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamService_DummyStreamClient">type MockStreamService_DummyStreamClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamService_DummyStreamServer">type MockStreamService_DummyStreamServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamService_StreamClient">type MockStreamService_StreamClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamService_StreamServer">type MockStreamService_StreamServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamUnaryServiceClient">type MockStreamUnaryServiceClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamUnaryServiceServer">type MockStreamUnaryServiceServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamUnaryService_DummyStreamUnaryClient">type MockStreamUnaryService_DummyStreamUnaryClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamUnaryService_DummyStreamUnaryServer">type MockStreamUnaryService_DummyStreamUnaryServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamUnaryService_StreamUnaryClient">type MockStreamUnaryService_StreamUnaryClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockStreamUnaryService_StreamUnaryServer">type MockStreamUnaryService_StreamUnaryServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryServiceClient">type MockUnaryServiceClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryServiceServer">type MockUnaryServiceServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryStreamServiceClient">type MockUnaryStreamServiceClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryStreamServiceServer">type MockUnaryStreamServiceServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryStreamService_DummyUnaryStreamClient">type MockUnaryStreamService_DummyUnaryStreamClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryStreamService_DummyUnaryStreamServer">type MockUnaryStreamService_DummyUnaryStreamServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryStreamService_UnaryStreamClient">type MockUnaryStreamService_UnaryStreamClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#MockUnaryStreamService_UnaryStreamServer">type MockUnaryStreamService_UnaryStreamServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#TraceInfoAssert">type TraceInfoAssert</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#TraceInfoAssert.AdditionalContext">func (traceAssert *TraceInfoAssert) AdditionalContext(expected string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#TraceInfoAssert.AppHost">func (traceAssert *TraceInfoAssert) AppHost(expected string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#TraceInfoAssert.AppName">func (traceAssert *TraceInfoAssert) AppName(expected string) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#TraceInfoAssert.HasStackTrace">func (traceAssert *TraceInfoAssert) HasStackTrace(expected bool) bool</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h3>Package files</h3>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go">assertErr.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go">managerSuite.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go">mockServiceAliases.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/timeoutCtx.go">timeoutCtx.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<p>
+NewMockStreamServiceClient is an alias of protogen.NewMockStreamServiceClient.
+</p>
+
+				<pre>var <span id="NewMockStreamServiceClient">NewMockStreamServiceClient</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#NewMockStreamServiceClient">NewMockStreamServiceClient</a></pre>
+			
+				<p>
+NewMockStreamUnaryServiceClient is an alias of
+protogen.NewMockStreamUnaryServiceClient.
+</p>
+
+				<pre>var <span id="NewMockStreamUnaryServiceClient">NewMockStreamUnaryServiceClient</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#NewMockStreamUnaryServiceClient">NewMockStreamUnaryServiceClient</a></pre>
+			
+				<p>
+NewMockUnaryServiceClient is an alias of protogen.NewMockUnaryServiceClient.
+</p>
+
+				<pre>var <span id="NewMockUnaryServiceClient">NewMockUnaryServiceClient</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#NewMockUnaryServiceClient">NewMockUnaryServiceClient</a></pre>
+			
+				<p>
+NewMockUnaryStreamServiceClient is an alias of
+protogen.NewMockUnaryStreamServiceClient.
+</p>
+
+				<pre>var <span id="NewMockUnaryStreamServiceClient">NewMockUnaryStreamServiceClient</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#NewMockUnaryStreamServiceClient">NewMockUnaryStreamServiceClient</a></pre>
+			
+				<p>
+RegisterMockStreamServiceServer is an alias of
+protogen.RegisterMockStreamServiceServer.
+</p>
+
+				<pre>var <span id="RegisterMockStreamServiceServer">RegisterMockStreamServiceServer</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#RegisterMockStreamServiceServer">RegisterMockStreamServiceServer</a></pre>
+			
+				<p>
+RegisterMockStreamUnaryServiceServer is an alias of
+protogen.RegisterMockStreamUnaryServiceServer.
+</p>
+
+				<pre>var <span id="RegisterMockStreamUnaryServiceServer">RegisterMockStreamUnaryServiceServer</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#RegisterMockStreamUnaryServiceServer">RegisterMockStreamUnaryServiceServer</a></pre>
+			
+				<p>
+RegisterMockUnaryServiceServer is an alias of
+protogen.RegisterMockUnaryServiceServer.
+</p>
+
+				<pre>var <span id="RegisterMockUnaryServiceServer">RegisterMockUnaryServiceServer</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#RegisterMockUnaryServiceServer">RegisterMockUnaryServiceServer</a></pre>
+			
+				<p>
+RegisterMockUnaryStreamServiceServer is an alias of
+protogen.RegisterMockUnaryStreamServiceServer.
+</p>
+
+				<pre>var <span id="RegisterMockUnaryStreamServiceServer">RegisterMockUnaryStreamServiceServer</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#RegisterMockUnaryStreamServiceServer">RegisterMockUnaryStreamServiceServer</a></pre>
+			
+		
+		
+			
+			
+			<h2 id="New3SecondCtx">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/timeoutCtx.go?s=143:201#L1">New3SecondCtx</a>
+				<a class="permalink" href="godoc.7.html#New3SecondCtx">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func New3SecondCtx() (<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#CancelFunc">CancelFunc</a>)</pre>
+			<p>
+New3SecondCtx returns a context with a 3-second timeout. Useful for testing rpc
+calls.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="AssertErr">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=1444:1544#L50">AssertErr</a>
+				<a class="permalink" href="godoc.7.html#AssertErr">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+AssertErr is a test helper for making assertions about the expected value of an API
+error.
+</p>
+
+			<pre>type AssertErr struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewAssertErr">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=3685:3738#L146">NewAssertErr</a>
+					<a class="permalink" href="godoc.7.html#NewAssertErr">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewAssertErr(t *<a href="http://localhost:6161/pkg/testing/">testing</a>.<a href="http://localhost:6161/pkg/testing/#T">T</a>, err <a href="http://localhost:6161/pkg/builtin/#error">error</a>) *<a href="godoc.7.html#AssertErr">AssertErr</a></pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="AssertErr.Code">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=1834:1887#L69">Code</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.Code">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) Code(expected <a href="http://localhost:6161/pkg/builtin/#uint32">uint32</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.ErrorDef">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=2651:2753#L99">ErrorDef</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.ErrorDef">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) ErrorDef(
+    expected *<a href="godoc.9.html">pkerr</a>.<a href="godoc.9.html#SentinelError">SentinelError</a>, fullMessage <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+) (result <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.GrpcCode">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=2147:2208#L81">GrpcCode</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.GrpcCode">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) GrpcCode(expected <a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/">codes</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/#Code">Code</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.Is">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=1546:1596#L57">Is</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.Is">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) Is(expected <a href="http://localhost:6161/pkg/builtin/#error">error</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.Issuer">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=1985:2040#L75">Issuer</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.Issuer">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) Issuer(expected <a href="http://localhost:6161/pkg/builtin/#string">string</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.Message">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=2314:2370#L87">Message</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.Message">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) Message(expected <a href="http://localhost:6161/pkg/builtin/#string">string</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.MessageContains">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=2477:2541#L93">MessageContains</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.MessageContains">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) MessageContains(contains <a href="http://localhost:6161/pkg/builtin/#string">string</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.Name">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=1683:1736#L63">Name</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.Name">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) Name(expected <a href="http://localhost:6161/pkg/builtin/#string">string</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.TraceIndex">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=3354:3418#L132">TraceIndex</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.TraceIndex">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) TraceIndex(index <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="godoc.7.html#TraceInfoAssert">TraceInfoAssert</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="AssertErr.TraceLength">func (*AssertErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=3203:3260#L126">TraceLength</a>
+					<a class="permalink" href="godoc.7.html#AssertErr.TraceLength">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (asserter *<a href="godoc.7.html#AssertErr">AssertErr</a>) TraceLength(expected <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ManagerSuite">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go?s=142:212#L1">ManagerSuite</a>
+				<a class="permalink" href="godoc.7.html#ManagerSuite">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+ManagerSuite offers some
+</p>
+
+			<pre>type ManagerSuite struct {
+    <a href="http://localhost:6161/pkg/github.com/stretchr/testify/suite/">suite</a>.<a href="http://localhost:6161/pkg/github.com/stretchr/testify/suite/#Suite">Suite</a>
+<span id="ManagerSuite.Manager"></span>    Manager *<a href="godoc.4.html">pkservices</a>.<a href="godoc.4.html#Manager">Manager</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ManagerSuite.SetupSuite">func (*ManagerSuite) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go?s=312:347#L10">SetupSuite</a>
+					<a class="permalink" href="godoc.7.html#ManagerSuite.SetupSuite">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (m *<a href="godoc.7.html#ManagerSuite">ManagerSuite</a>) SetupSuite()</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="ManagerSuite.TearDownSuite">func (*ManagerSuite) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go?s=214:252#L4">TearDownSuite</a>
+					<a class="permalink" href="godoc.7.html#ManagerSuite.TearDownSuite">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (m *<a href="godoc.7.html#ManagerSuite">ManagerSuite</a>) TearDownSuite()</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MockStreamServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=714:777#L8">MockStreamServiceClient</a>
+				<a class="permalink" href="godoc.7.html#MockStreamServiceClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamServiceClient is an alias of protogen.MockStreamServiceClient
+</p>
+
+			<pre>type MockStreamServiceClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamServiceClient">MockStreamServiceClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=574:637#L5">MockStreamServiceServer</a>
+				<a class="permalink" href="godoc.7.html#MockStreamServiceServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamServiceServer is an alias of protogen.MockStreamServiceServer
+</p>
+
+			<pre>type MockStreamServiceServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamServiceServer">MockStreamServiceServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamService_DummyStreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=1406:1493#L22">MockStreamService_DummyStreamClient</a>
+				<a class="permalink" href="godoc.7.html#MockStreamService_DummyStreamClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamService_DummyStreamClient is an alias of
+protogen.MockStreamService_DummyStreamClient
+</p>
+
+			<pre>type MockStreamService_DummyStreamClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamService_DummyStreamClient">MockStreamService_DummyStreamClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamService_DummyStreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=1048:1135#L15">MockStreamService_DummyStreamServer</a>
+				<a class="permalink" href="godoc.7.html#MockStreamService_DummyStreamServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamService_DummyStreamServer is an alias of
+protogen.MockStreamService_DummyStreamServer
+</p>
+
+			<pre>type MockStreamService_DummyStreamServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamService_DummyStreamServer">MockStreamService_DummyStreamServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamService_StreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=1226:1303#L18">MockStreamService_StreamClient</a>
+				<a class="permalink" href="godoc.7.html#MockStreamService_StreamClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamService_StreamClient is an alias of protogen.MockStreamService_StreamClient
+</p>
+
+			<pre>type MockStreamService_StreamClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamService_StreamClient">MockStreamService_StreamClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamService_StreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=868:945#L11">MockStreamService_StreamServer</a>
+				<a class="permalink" href="godoc.7.html#MockStreamService_StreamServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamService_StreamServer is an alias of protogen.MockStreamService_StreamServer
+</p>
+
+			<pre>type MockStreamService_StreamServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamService_StreamServer">MockStreamService_StreamServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamUnaryServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=2944:3017#L50">MockStreamUnaryServiceClient</a>
+				<a class="permalink" href="godoc.7.html#MockStreamUnaryServiceClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamUnaryServiceClient is an alias of protogen.MockStreamUnaryServiceClient.
+</p>
+
+			<pre>type MockStreamUnaryServiceClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamUnaryServiceClient">MockStreamUnaryServiceClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamUnaryServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=2783:2856#L47">MockStreamUnaryServiceServer</a>
+				<a class="permalink" href="godoc.7.html#MockStreamUnaryServiceServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamUnaryServiceServer is an alias of protogen.MockStreamUnaryServiceServer.
+</p>
+
+			<pre>type MockStreamUnaryServiceServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamUnaryServiceServer">MockStreamUnaryServiceServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamUnaryService_DummyStreamUnaryClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=3794:3901#L66">MockStreamUnaryService_DummyStreamUnaryClient</a>
+				<a class="permalink" href="godoc.7.html#MockStreamUnaryService_DummyStreamUnaryClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamUnaryService_DummyStreamUnaryClient is an alias of
+protogen.MockStreamUnaryService_DummyStreamUnaryClient.
+</p>
+
+			<pre>type MockStreamUnaryService_DummyStreamUnaryClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamUnaryService_DummyStreamUnaryClient">MockStreamUnaryService_DummyStreamUnaryClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamUnaryService_DummyStreamUnaryServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=3563:3670#L62">MockStreamUnaryService_DummyStreamUnaryServer</a>
+				<a class="permalink" href="godoc.7.html#MockStreamUnaryService_DummyStreamUnaryServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamUnaryService_DummyStreamUnaryServer is an alias of
+protogen.MockStreamUnaryService_DummyStreamUnaryServer.
+</p>
+
+			<pre>type MockStreamUnaryService_DummyStreamUnaryServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamUnaryService_DummyStreamUnaryServer">MockStreamUnaryService_DummyStreamUnaryServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamUnaryService_StreamUnaryClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=3342:3439#L58">MockStreamUnaryService_StreamUnaryClient</a>
+				<a class="permalink" href="godoc.7.html#MockStreamUnaryService_StreamUnaryClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamUnaryService_StreamUnaryClient is an alias of
+protogen.MockStreamUnaryService_StreamUnaryClient.
+</p>
+
+			<pre>type MockStreamUnaryService_StreamUnaryClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamUnaryService_StreamUnaryClient">MockStreamUnaryService_StreamUnaryClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockStreamUnaryService_StreamUnaryServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=3131:3228#L54">MockStreamUnaryService_StreamUnaryServer</a>
+				<a class="permalink" href="godoc.7.html#MockStreamUnaryService_StreamUnaryServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockStreamUnaryService_StreamUnaryServer is an alias of
+protogen.MockStreamUnaryService_StreamUnaryServer.
+</p>
+
+			<pre>type MockStreamUnaryService_StreamUnaryServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockStreamUnaryService_StreamUnaryServer">MockStreamUnaryService_StreamUnaryServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=436:497#L2">MockUnaryServiceClient</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryServiceClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryServiceClient is an alias of protogen.MockUnaryServiceClient
+</p>
+
+			<pre>type MockUnaryServiceClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryServiceClient">MockUnaryServiceClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=300:361#L1">MockUnaryServiceServer</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryServiceServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryServiceServer is an alias of protogen.MockUnaryServiceServer
+</p>
+
+			<pre>type MockUnaryServiceServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryServiceServer">MockUnaryServiceServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryStreamServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=1740:1813#L28">MockUnaryStreamServiceClient</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryStreamServiceClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryStreamServiceClient is an alias of protogen.MockUnaryStreamServiceClient
+</p>
+
+			<pre>type MockUnaryStreamServiceClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryStreamServiceClient">MockUnaryStreamServiceClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryStreamServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=1580:1653#L25">MockUnaryStreamServiceServer</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryStreamServiceServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryStreamServiceServer is an alias of protogen.MockUnaryStreamServiceServer
+</p>
+
+			<pre>type MockUnaryStreamServiceServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryStreamServiceServer">MockUnaryStreamServiceServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryStreamService_DummyUnaryStreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=2588:2695#L44">MockUnaryStreamService_DummyUnaryStreamClient</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryStreamService_DummyUnaryStreamClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryStreamService_DummyUnaryStreamClient is an alias of
+protogen.MockUnaryStreamService_DummyUnaryStreamClient
+</p>
+
+			<pre>type MockUnaryStreamService_DummyUnaryStreamClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryStreamService_DummyUnaryStreamClient">MockUnaryStreamService_DummyUnaryStreamClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryStreamService_DummyUnaryStreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=2358:2465#L40">MockUnaryStreamService_DummyUnaryStreamServer</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryStreamService_DummyUnaryStreamServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryStreamService_DummyUnaryStreamServer is an alias of
+protogen.MockUnaryStreamService_DummyUnaryStreamServer
+</p>
+
+			<pre>type MockUnaryStreamService_DummyUnaryStreamServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryStreamService_DummyUnaryStreamServer">MockUnaryStreamService_DummyUnaryStreamServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryStreamService_UnaryStreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=2137:2234#L36">MockUnaryStreamService_UnaryStreamClient</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryStreamService_UnaryStreamClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryStreamService_UnaryStreamClient is an alias of
+protogen.MockUnaryStreamService_UnaryStreamClient
+</p>
+
+			<pre>type MockUnaryStreamService_UnaryStreamClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryStreamService_UnaryStreamClient">MockUnaryStreamService_UnaryStreamClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="MockUnaryStreamService_UnaryStreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/mockServiceAliases.go?s=1926:2023#L32">MockUnaryStreamService_UnaryStreamServer</a>
+				<a class="permalink" href="godoc.7.html#MockUnaryStreamService_UnaryStreamServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MockUnaryStreamService_UnaryStreamServer is an alias of
+protogen.MockUnaryStreamService_UnaryStreamServer
+</p>
+
+			<pre>type MockUnaryStreamService_UnaryStreamServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#MockUnaryStreamService_UnaryStreamServer">MockUnaryStreamService_UnaryStreamServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TraceInfoAssert">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=170:276#L1">TraceInfoAssert</a>
+				<a class="permalink" href="godoc.7.html#TraceInfoAssert">&#xb6;</a>
+				
+				
+			</h2>
+			
+			<pre>type TraceInfoAssert struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="TraceInfoAssert.AdditionalContext">func (*TraceInfoAssert) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=702:777#L24">AdditionalContext</a>
+					<a class="permalink" href="godoc.7.html#TraceInfoAssert.AdditionalContext">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (traceAssert *<a href="godoc.7.html#TraceInfoAssert">TraceInfoAssert</a>) AdditionalContext(expected <a href="http://localhost:6161/pkg/builtin/#string">string</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfoAssert.AppHost">func (*TraceInfoAssert) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=490:555#L16">AppHost</a>
+					<a class="permalink" href="godoc.7.html#TraceInfoAssert.AppHost">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (traceAssert *<a href="godoc.7.html#TraceInfoAssert">TraceInfoAssert</a>) AppHost(expected <a href="http://localhost:6161/pkg/builtin/#string">string</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfoAssert.AppName">func (*TraceInfoAssert) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=278:343#L8">AppName</a>
+					<a class="permalink" href="godoc.7.html#TraceInfoAssert.AppName">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (traceAssert *<a href="godoc.7.html#TraceInfoAssert">TraceInfoAssert</a>) AppName(expected <a href="http://localhost:6161/pkg/builtin/#string">string</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="TraceInfoAssert.HasStackTrace">func (*TraceInfoAssert) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/assertErr.go?s=944:1013#L32">HasStackTrace</a>
+					<a class="permalink" href="godoc.7.html#TraceInfoAssert.HasStackTrace">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (traceAssert *<a href="godoc.7.html#TraceInfoAssert">TraceInfoAssert</a>) HasStackTrace(expected <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>) <a href="http://localhost:6161/pkg/builtin/#bool">bool</a></pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="gRPEAKEC-go.html">..</a></td>
+			</tr>
+			
+
+			
+				<tr>
+				
+					<td class="pkg-name" style="padding-left: 0px;">
+						<a href="godoc.8.html">protogen</a>
+					</td>
+				
+					<td class="pkg-synopsis">
+						
+					</td>
+				</tr>
+			
+		</table>
+	</div>
+
+
+
+<div id="footer">
+Build version go1.13.5.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:6161/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:6161/doc/tos.html">Terms of Service</a> |
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+</body>
+</html>

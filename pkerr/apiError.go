@@ -47,6 +47,8 @@ func (err APIError) Unwrap() error {
 func (err APIError) Is(target error) bool {
 	// If the issuer and code are the same, it is the same error.
 	switch otherInfo := target.(type) {
+	// For APIError, *SentinelError, and *Error, we just need to make sure the error
+	// code and issuer are the same
 	case APIError:
 		return err.Err.Code == otherInfo.Err.Code &&
 			err.Err.Issuer == otherInfo.Err.Issuer
@@ -54,7 +56,9 @@ func (err APIError) Is(target error) bool {
 		return err.Err.Code == otherInfo.Code && err.Err.Issuer == otherInfo.Issuer
 	case *Error:
 		return err.Err.Code == otherInfo.Code && err.Err.Issuer == otherInfo.Issuer
+	// If we are comparing against a gRPC code, then we need to take another tact.
 	case GrpcCodeErr:
+		// Wrap the code in a GrpcCodeErr and compare it to the one coming in.
 		return GrpcCodeErr(err.Err.GrpcCode) == otherInfo
 	default:
 		return false
@@ -78,7 +82,7 @@ func newAPIErrBasic(
 		details = append(details, packed)
 	}
 
-	// Delta our instance message to our sentinel message.
+	// Add our instance message to our sentinel message.
 	fullMessage := sentinel.DefaultMessage
 	if message != "" {
 		fullMessage = fullMessage + ": " + message

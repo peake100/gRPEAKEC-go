@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/golang/protobuf/ptypes/any"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
@@ -56,6 +57,10 @@ type MockService struct {
 	errors *pkerr.ErrorGenerator
 }
 
+func (mock *MockService) Id() string {
+	return "MockService"
+}
+
 func (mock *MockService) Setup(
 	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
 ) error {
@@ -65,6 +70,8 @@ func (mock *MockService) Setup(
 func (mock *MockService) RegisterOnServer(server *grpc.Server) {
 	pktesting.RegisterMockUnaryServiceServer(server, mock)
 	pktesting.RegisterMockStreamServiceServer(server, mock)
+	pktesting.RegisterMockUnaryStreamServiceServer(server, mock)
+	pktesting.RegisterMockStreamUnaryServiceServer(server, mock)
 }
 
 // General method for creating an error.
@@ -144,7 +151,34 @@ func (mock *MockService) Stream(server pktesting.MockStreamService_StreamServer)
 		return err
 	}
 
-	return nil
+	return server.Send(msg)
+}
+
+func (mock *MockService) UnaryStream(
+	msg *any.Any, server pktesting.MockUnaryStreamService_UnaryStreamServer,
+) error {
+	err := mock.createError(msg)
+	if err != nil {
+		return err
+	}
+
+	return server.Send(msg)
+}
+
+func (mock *MockService) StreamUnary(
+	server pktesting.MockStreamUnaryService_StreamUnaryServer,
+) error {
+	msg, err := server.Recv()
+	if err != nil {
+		return err
+	}
+
+	err = mock.createError(msg)
+	if err != nil {
+		return err
+	}
+
+	return server.SendAndClose(msg)
 }
 
 func (mock *MockService) Dummy(ctx context.Context, empty *empty.Empty) (*empty.Empty, error) {
@@ -152,6 +186,16 @@ func (mock *MockService) Dummy(ctx context.Context, empty *empty.Empty) (*empty.
 }
 
 func (mock *MockService) DummyStream(server pktesting.MockStreamService_DummyStreamServer) error {
+	panic("implement me")
+}
+
+func (mock *MockService) DummyUnaryStream(
+	e *empty.Empty, server pktesting.MockUnaryStreamService_DummyUnaryStreamServer,
+) error {
+	panic("implement me")
+}
+
+func (mock *MockService) DummyStreamUnary(server pktesting.MockStreamUnaryService_DummyStreamUnaryServer) error {
 	panic("implement me")
 }
 
@@ -170,6 +214,8 @@ func NewMockService() *MockService {
 type MockClient struct {
 	pktesting.MockUnaryServiceClient
 	pktesting.MockStreamServiceClient
+	pktesting.MockUnaryStreamServiceClient
+	pktesting.MockStreamUnaryServiceClient
 }
 
 type InterceptorSuite struct {
@@ -209,9 +255,13 @@ func (suite *InterceptorSuite) SetupSuite() {
 	suite.client = MockClient{
 		MockUnaryServiceClient:  pktesting.NewMockUnaryServiceClient(suite.clientConn),
 		MockStreamServiceClient: pktesting.NewMockStreamServiceClient(suite.clientConn),
+		MockUnaryStreamServiceClient: pktesting.NewMockUnaryStreamServiceClient(
+			suite.clientConn,
+		),
+		MockStreamUnaryServiceClient: pktesting.NewMockStreamUnaryServiceClient(
+			suite.clientConn,
+		),
 	}
-
-	suite.Manager.Test(suite.T()).PingGrpcServer(nil)
 }
 
 func (suite *InterceptorSuite) TearDownSuite() {
@@ -227,211 +277,217 @@ func (suite *InterceptorSuite) TearDownSuite() {
 	suite.ManagerSuite.TearDownSuite()
 }
 
+type sendMethodCase int
+
+const (
+	caseUnaryUnary sendMethodCase = iota
+	caseStreamStream
+	caseUnaryStream
+	caseStreamUnary
+)
+
+func (method sendMethodCase) String() string {
+	switch method {
+	case caseUnaryUnary:
+		return "UnaryUnary"
+	case caseStreamStream:
+		return "StreamStream"
+	case caseUnaryStream:
+		return "UnaryStream"
+	case caseStreamUnary:
+		return "StreamUnary"
+	default:
+		panic("unknown send method case value")
+	}
+}
+
 func (suite *InterceptorSuite) TestErrorReturns() {
+	// Set up our test cases. Each case will be repeated against every gRPC send method.
 	testCases := []struct {
 		Name            string
 		CaseType        int32
 		ExpectedDef     *pkerr.SentinelError
 		ExpectedMessage string
 		ExpectedContext string
-		SendStream      bool
+		SendStream      sendMethodCase
 	}{
 		{
-			Name:            "GeneratorAPIErrorUnary",
+			Name:            "GeneratorAPIError",
 			CaseType:        caseNew,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred: returning error directly",
 		},
 		{
-			Name:            "GeneratorAPIErrorStream",
-			CaseType:        caseNew,
-			ExpectedDef:     ErrCustom,
-			SendStream:      true,
-			ExpectedMessage: "data loss occurred: returning error directly",
-		},
-		{
-			Name:            "GeneratorAPIErrorPanicUnary",
+			Name:            "GeneratorAPIErrorPanic",
 			CaseType:        caseNewPanic,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred: returning error directly",
+			ExpectedContext: "panic recovered: [error]",
 		},
 		{
-			Name:            "GeneratorAPIErrorPanicStream",
-			CaseType:        caseNewPanic,
-			ExpectedDef:     ErrCustom,
-			ExpectedMessage: "data loss occurred: returning error directly",
-			SendStream:      true,
-		},
-		{
-			Name:            "GeneratorAPIErrorWrappedUnary",
+			Name:            "GeneratorAPIErrorWrapped",
 			CaseType:        caseNewWrap,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred: returning error directly",
 			ExpectedContext: "additional context: [error]",
 		},
 		{
-			Name:            "GeneratorAPIErrorWrappedStream",
-			CaseType:        caseNewWrap,
-			ExpectedDef:     ErrCustom,
-			ExpectedMessage: "data loss occurred: returning error directly",
-			ExpectedContext: "additional context: [error]",
-			SendStream:      true,
-		},
-		{
-			Name:            "GeneratorAPIErrorWrappedPanicUnary",
+			Name:            "GeneratorAPIErrorWrappedPanic",
 			CaseType:        caseNewWrapPanic,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred: returning error directly",
-			ExpectedContext: "panic context: [error]",
+			ExpectedContext: "panic recovered: panic context: [error]",
 		},
 		{
-			Name:            "GeneratorAPIErrorWrappedPanicStream",
-			CaseType:        caseNewWrapPanic,
-			ExpectedDef:     ErrCustom,
-			ExpectedMessage: "data loss occurred: returning error directly",
-			ExpectedContext: "panic context: [error]",
-			SendStream:      true,
-		},
-		{
-			Name:            "ErrorDefUnary",
+			Name:            "ErrorDef",
 			CaseType:        caseDef,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred",
 			ExpectedContext: "",
 		},
 		{
-			Name:            "ErrorDefStream",
-			CaseType:        caseDef,
-			ExpectedDef:     ErrCustom,
-			ExpectedMessage: "data loss occurred",
-			ExpectedContext: "",
-			SendStream:      true,
-		},
-		{
-			Name:            "ErrorDefPanicUnary",
+			Name:            "ErrorDefPanic",
 			CaseType:        caseDefPanic,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred",
+			ExpectedContext: "panic recovered: [error]",
 		},
 		{
-			Name:            "ErrorDefPanicStream",
-			CaseType:        caseDefPanic,
-			ExpectedDef:     ErrCustom,
-			ExpectedMessage: "data loss occurred",
-			SendStream:      true,
-		},
-		{
-			Name:            "ErrorDefWrappedUnary",
+			Name:            "ErrorDefWrapped",
 			CaseType:        caseDefWrap,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred",
 			ExpectedContext: "[error]: additional context",
 		},
 		{
-			Name:            "ErrorDefWrappedStream",
-			CaseType:        caseDefWrap,
-			ExpectedDef:     ErrCustom,
-			ExpectedMessage: "data loss occurred",
-			ExpectedContext: "[error]: additional context",
-			SendStream:      true,
-		},
-		{
-			Name:            "ErrorDefWrappedPanicUnary",
+			Name:            "ErrorDefWrappedPanic",
 			CaseType:        caseDefWrapPanic,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred",
-			ExpectedContext: "[error]: panic context",
+			ExpectedContext: "panic recovered: [error]: panic context",
 		},
 		{
-			Name:            "ErrorDefWrappedPanicStream",
-			CaseType:        caseDefWrapPanic,
-			ExpectedDef:     ErrCustom,
-			ExpectedMessage: "data loss occurred",
-			ExpectedContext: "[error]: panic context",
-			SendStream:      true,
-		},
-		{
-			Name:            "GenericUnary",
+			Name:            "Generic",
 			CaseType:        caseGeneric,
 			ExpectedDef:     pkerr.ErrUnknown,
 			ExpectedMessage: "an unknown error occurred: generic error",
-		},
-		{
-			Name:            "GenericStream",
-			CaseType:        caseGeneric,
-			ExpectedDef:     pkerr.ErrUnknown,
-			ExpectedMessage: "an unknown error occurred: generic error",
-			SendStream:      true,
 		},
 		{
 
-			Name:            "GenericPanicUnary",
-			CaseType:        caseGenericPanic,
-			ExpectedDef:     pkerr.ErrUnknown,
-			ExpectedMessage: "an unknown error occurred: generic error",
+			Name:        "GenericPanic",
+			CaseType:    caseGenericPanic,
+			ExpectedDef: pkerr.ErrUnknown,
+			ExpectedMessage: "an unknown error occurred: panic recovered: " +
+				"generic error",
 		},
 		{
-			Name:            "GenericPanicStream",
-			CaseType:        caseGenericPanic,
-			ExpectedDef:     pkerr.ErrUnknown,
-			ExpectedMessage: "an unknown error occurred: generic error",
-			SendStream:      true,
-		},
-		{
-			Name:            "NonErrPanicUnary",
+			Name:            "NonErrPanic",
 			CaseType:        caseNonErrPanic,
 			ExpectedDef:     pkerr.ErrUnknown,
-			ExpectedMessage: "an unknown error occurred: 11",
-		},
-		{
-			Name:            "NonErrPanicStream",
-			CaseType:        caseNonErrPanic,
-			ExpectedDef:     pkerr.ErrUnknown,
-			ExpectedMessage: "an unknown error occurred: 11",
-			SendStream:      true,
+			ExpectedMessage: "an unknown error occurred: panic recovered: 11",
 		},
 	}
 
+	// Define transport methods for each type of transport test we are going to do.
+	sendUnaryUnary := func(t *testing.T, msg *anypb.Any) error {
+		ctx, cancel := pktesting.New3SecondCtx()
+		defer cancel()
+
+		_, err := suite.client.Unary(ctx, msg)
+		return err
+	}
+
+	sendStreamStream := func(t *testing.T, msg *anypb.Any) error {
+		ctx, cancel := pktesting.New3SecondCtx()
+		defer cancel()
+
+		stream, streamErr := suite.client.Stream(ctx)
+		if !assert.NoError(t, streamErr, "get stream") {
+			t.FailNow()
+		}
+		streamErr = stream.Send(msg)
+		if !assert.NoError(t, streamErr, "send stream msg") {
+			t.FailNow()
+		}
+		_, err := stream.Recv()
+		return err
+	}
+
+	sendUnaryStream := func(t *testing.T, msg *anypb.Any) error {
+		ctx, cancel := pktesting.New3SecondCtx()
+		defer cancel()
+
+		stream, err := suite.client.UnaryStream(ctx, msg)
+		if !assert.NoError(t, err, "send unary") {
+			t.FailNow()
+		}
+
+		_, err = stream.Recv()
+		return err
+	}
+
+	sendStreamUnary := func(t *testing.T, msg *anypb.Any) error {
+		ctx, cancel := pktesting.New3SecondCtx()
+		defer cancel()
+
+		stream, streamErr := suite.client.StreamUnary(ctx)
+		if !assert.NoError(t, streamErr, "get stream") {
+			t.FailNow()
+		}
+		streamErr = stream.Send(msg)
+		if !assert.NoError(t, streamErr, "send stream msg") {
+			t.FailNow()
+		}
+
+		_, err := stream.CloseAndRecv()
+		return err
+	}
+
+	// Make a map of our sendMethodCase values to our send functions.
+	sendFunctions := map[sendMethodCase]func(t *testing.T, msg *anypb.Any) error{
+		caseUnaryUnary:   sendUnaryUnary,
+		caseStreamStream: sendStreamStream,
+		caseUnaryStream:  sendUnaryStream,
+		caseStreamUnary:  sendStreamUnary,
+	}
+
+	// Iterate over each case
 	for _, thisCase := range testCases {
-		suite.T().Run(thisCase.Name, func(t *testing.T) {
-			msg, err := anypb.New(wrapperspb.Int32(thisCase.CaseType))
-			if !assert.NoError(t, err) {
-				t.FailNow()
-			}
 
-			if thisCase.SendStream {
-				stream, streamErr := suite.client.Stream(context.Background())
-				if !assert.NoError(t, streamErr, "get stream") {
+		// for each case, iterate over the send methods.
+		for sendCase, sendFunc := range sendFunctions {
+			// Combine the name with the send method string for a full name.
+			testName := fmt.Sprintf("%v_%v", thisCase.Name, sendCase)
+
+			// Run the test.
+			suite.T().Run(testName, func(t *testing.T) {
+				msg, err := anypb.New(wrapperspb.Int32(thisCase.CaseType))
+				if !assert.NoError(t, err) {
 					t.FailNow()
 				}
-				streamErr = stream.Send(msg)
-				if !assert.NoError(t, streamErr, "send stream msg") {
-					t.FailNow()
-				}
-				_, err = stream.Recv()
-			} else {
-				_, err = suite.client.Unary(context.Background(), msg)
-			}
 
-			t.Log("ERROR:", err)
-			assert := pktesting.NewAssertErr(t, err)
-			assert.ErrorDef(thisCase.ExpectedDef, false)
-			assert.Message(thisCase.ExpectedMessage)
+				err = sendFunc(t, msg)
 
-			assert.TraceLength(2)
+				t.Log("ERROR RECEIVED:", err)
+				assert := pktesting.NewAssertErr(t, err)
+				assert.ErrorDef(thisCase.ExpectedDef, false)
+				assert.Message(thisCase.ExpectedMessage)
 
-			assertTrace := assert.TraceIndex(0)
-			assertTrace.AppName("MockService")
-			assertTrace.AppHost("server hostname")
-			assertTrace.HasStackTrace(true)
-			assertTrace.AdditionalContext(thisCase.ExpectedContext)
+				assert.TraceLength(2)
 
-			assertTrace = assert.TraceIndex(1)
-			assertTrace.AppName("Client")
-			assertTrace.AppHost("client hostname")
-			assertTrace.HasStackTrace(true)
-			assertTrace.AdditionalContext("")
-		})
+				assertTrace := assert.TraceIndex(0)
+				assertTrace.AppName("MockService")
+				assertTrace.AppHost("server hostname")
+				assertTrace.HasStackTrace(true)
+				assertTrace.AdditionalContext(thisCase.ExpectedContext)
+
+				assertTrace = assert.TraceIndex(1)
+				assertTrace.AppName("Client")
+				assertTrace.AppHost("client hostname")
+				assertTrace.HasStackTrace(true)
+				assertTrace.AdditionalContext("")
+			})
+		}
 	}
 }
 

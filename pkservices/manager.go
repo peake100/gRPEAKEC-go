@@ -3,6 +3,7 @@ package pkservices
 import (
 	"context"
 	"fmt"
+	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"github.com/peake100/gRPEAKEC-go/pksync"
 	"google.golang.org/grpc"
 	"net"
@@ -10,19 +11,10 @@ import (
 	"os/signal"
 	"sync"
 	"testing"
+	"time"
 )
 
 const DefaultGrpcAddress = "0.0.0.0:50051"
-
-// Service errors returns errors from multiple services as a single error.
-type ServiceErrors struct {
-	Errs []error
-}
-
-// Error implements builtins.errors, and reports the number of errors.
-func (s ServiceErrors) Error() string {
-	return fmt.Sprintf("%v errors occured", len(s.Errs))
-}
 
 // managerSync holds all the sync objects for Manager.
 type managerSync struct {
@@ -40,11 +32,21 @@ type managerSync struct {
 	// spins down.
 	resourcesReleased *sync.WaitGroup
 
-	// servicesCtx is ghe context passed to Service.Run() to signal services to being
+	// servicesCtx is the context passed to Service.Run() to signal services to being
 	// shutdown.
 	servicesCtx context.Context
 	// servicesCancel cancels servicesCtx.
 	servicesCancel context.CancelFunc
+
+	// listenersCtx is the context used for event listener functions like monitoring
+	// for system signals or shutdown context timeout. This context is cancelled after
+	// all services and resources have been release, but before shutdownComplete is
+	// called
+	listenersCtx context.Context
+	// listenersCancel cancels listenersCtx.
+	listenersCancel context.CancelFunc
+	// listenersExited is a WaitGroup for internal listeners.
+	listenersExited *sync.WaitGroup
 
 	// shutdownCtx is cancelled when the manager should stop waiting for services /
 	// resources to exit.
@@ -53,6 +55,8 @@ type managerSync struct {
 	shutdownCancel context.CancelFunc
 
 	// shutdownComplete complete is closed when the manager finishes shutting down.
+	// This signal is also available to the end caller through
+	// Manager.WaitForShutdown().
 	shutdownComplete chan struct{}
 }
 
@@ -67,26 +71,51 @@ type Manager struct {
 	opts *ManagerOpts
 }
 
+func (*Manager) mapServicesMapSingle(
+	action func(service Service) error, service Service,
+) error {
+	// Run the action while catching panics.
+	actionErr := pkerr.CatchPanic(func() error {
+		return action(service)
+	})
+
+	// If there was an error, wrap it in a service error.
+	if actionErr != nil {
+		actionErr = ServiceError{
+			ServiceId: service.Id(),
+			Err:       actionErr,
+		}
+	}
+
+	return actionErr
+}
+
 // mapServices maps action across every service concurrently.
 func (manager *Manager) mapServices(action func(service Service) error) error {
 	// We're going to store the results of each start up in this array.
 	errs := make([]error, len(manager.services))
 
-	// Create a CtxWaitGroup to mark when setup is complete
-	setupComplete := pksync.NewCtxWaitGroup(manager.sync.shutdownCtx)
-	for i, service := range manager.services {
-		setupComplete.Add(1)
+	// Create a CtxWaitGroup to mark when the action is complete
+	actionComplete := pksync.NewCtxWaitGroup(manager.sync.shutdownCtx)
 
-		// Run the setup.
+	// Iterate over each service and run the action on it concurrently.
+	for i, service := range manager.services {
+		_ = actionComplete.Add(1)
+
+		// Run the action on each service in it's own routine.
 		go func(service Service, i int) {
-			defer setupComplete.Done()
+
+			// Release the WaitGroup on completion
+			defer actionComplete.Done()
+
 			// Store the result of this setup in the index passed to the routine.
-			errs[i] = action(service)
+			errs[i] = manager.mapServicesMapSingle(action, service)
+
 		}(service, i)
 	}
 
 	// Wait for all the setup routines to complete.
-	err := setupComplete.Wait()
+	err := actionComplete.Wait()
 	if err != nil {
 		return fmt.Errorf(
 			"shutdown timed out: %w", err,
@@ -115,25 +144,34 @@ func (manager *Manager) setupServices() error {
 
 // runGrpcServices runs all gRPC services.
 func (manager *Manager) runGrpcServices() error {
-	// Get all of the gRPC services from our services list.
-	var grpcServices []GrpcService
-
-	for _, service := range manager.services {
-		if grpcService, ok := service.(GrpcService); ok {
-			grpcServices = append(grpcServices, grpcService)
+	// Iterate over the services and see if there are any grpc ones
+	var hasGrpc bool
+	// We know this will not result in an error.
+	_ = manager.mapServices(func(service Service) error {
+		_, ok := service.(GrpcService)
+		if ok {
+			hasGrpc = true
 		}
-	}
+		return nil
+	})
 
-	// If there are none, exit.
-	if len(grpcServices) == 0 {
+	// If there are no gRPC services, return.
+	if !hasGrpc {
 		return nil
 	}
 
-	// Allow them all to register themselves on the server.
+	// Allow them all to register themselves on the server. We are going to run this
+	// in the mapServices function so that if a Registration method panics, we will
+	// get the error.
 	server := grpc.NewServer(manager.opts.grpcServerOpts...)
-	for _, service := range grpcServices {
-		service.RegisterOnServer(server)
-	}
+	err := manager.mapServices(func(service Service) error {
+		grpcService, ok := service.(GrpcService)
+		if !ok {
+			return nil
+		}
+		grpcService.RegisterOnServer(server)
+		return nil
+	})
 
 	// get a listener
 	listener, err := net.Listen("tcp", manager.opts.grpcServiceAddress)
@@ -162,32 +200,14 @@ func (manager *Manager) runGrpcServices() error {
 	return nil
 }
 
-// genericServiceSignalShutdown calls GenericService.StartGracefulShutdown on all
-// registered GenericService values.
-func (manager *Manager) genericServiceSignalShutdown() {
-	_ = manager.mapServices(func(service Service) error {
-		serviceGeneric, ok := service.(GenericService)
-		if !ok {
-			return nil
-		}
-		serviceGeneric.StartGracefulShutdown(manager.sync.shutdownCtx)
-		return nil
-	})
-}
-
 // genericServicesRun runs all generic services
 func (manager *Manager) genericServicesRun() error {
-	go func() {
-		defer manager.genericServiceSignalShutdown()
-		<-manager.sync.servicesCtx.Done()
-	}()
-
 	return manager.mapServices(func(service Service) error {
 		serviceGeneric, ok := service.(GenericService)
 		if !ok {
 			return nil
 		}
-		return serviceGeneric.Run(manager.sync.servicesCtx)
+		return serviceGeneric.Run(manager.sync.servicesCtx, manager.sync.shutdownCtx)
 	})
 }
 
@@ -246,7 +266,11 @@ func (manager *Manager) runAllServices() error {
 	runsComplete.Add(1)
 	go func() {
 		defer runsComplete.Done()
-		err := manager.runGrpcServices()
+
+		err := pkerr.CatchPanic(func() error {
+			return manager.runGrpcServices()
+		})
+
 		if err != nil {
 			runErrors[1] = fmt.Errorf("error running grpc: %w", err)
 		}
@@ -285,6 +309,12 @@ func (manager *Manager) waitForShutdownComplete() error {
 		)
 	}
 
+	// Cancel the listener routines.
+	manager.sync.listenersCancel()
+	// Wait for listeners to exit.
+	manager.sync.listenersExited.Wait()
+
+	// Return, we are done shutting down.
 	return nil
 }
 
@@ -303,7 +333,49 @@ func (manager *Manager) listenForSignal() {
 	select {
 	case <-events:
 	case <-manager.sync.masterCtx.Done():
+	case <-manager.sync.listenersCtx.Done():
 	}
+}
+
+// timeoutShutdown handles listening for the main shutdown request, and signaling a
+// force-shutdown if the configured maximum shutdown duration expires.
+func (manager *Manager) timeoutShutdown() {
+	// If the shutdown time is under 0, we are going to allow an unlimited time to
+	// shutdown, and should exit this routine immediately.
+	if manager.opts.maxShutdownDuration < 0 {
+		return
+	}
+
+	// Cancel the shutdown on the way out
+	defer manager.sync.shutdownCancel()
+
+	// Wait for a shutdown to be signaled.
+	<-manager.sync.masterCtx.Done()
+
+	// Wait for either shutdown complete to be reported OR the shutdown timer to
+	// time out.
+	select {
+	case <-manager.sync.listenersCtx.Done():
+	case <-time.NewTimer(manager.opts.maxShutdownDuration).C:
+	}
+}
+
+// launchListeners launches listener routines that manage the lifecycle of the manager.
+func (manager *Manager) launchListeners() {
+	// Launch a routine that listens for shutdown to start and signals a force-shutdown
+	// if the maximum shutdown duration is exceeded.
+	manager.sync.listenersExited.Add(1)
+	go func() {
+		defer manager.sync.listenersExited.Done()
+		manager.timeoutShutdown()
+	}()
+
+	// Launch a routine to listen for an interrupt signal and exit.
+	manager.sync.listenersExited.Add(1)
+	go func() {
+		defer manager.sync.listenersExited.Done()
+		manager.listenForSignal()
+	}()
 }
 
 // Reset resets the manager for a new run.
@@ -311,6 +383,7 @@ func (manager *Manager) Reset() {
 	masterCtx, masterCancel := context.WithCancel(context.Background())
 	resourcesCtx, resourcesCancel := context.WithCancel(context.Background())
 	servicesCtx, servicesCancel := context.WithCancel(context.Background())
+	listenersCtx, listenersCancel := context.WithCancel(context.Background())
 	shutdownCtx, shutdownCancel := context.WithCancel(context.Background())
 
 	manager.sync = managerSync{
@@ -321,6 +394,9 @@ func (manager *Manager) Reset() {
 		resourcesReleased: new(sync.WaitGroup),
 		servicesCtx:       servicesCtx,
 		servicesCancel:    servicesCancel,
+		listenersCtx:      listenersCtx,
+		listenersCancel:   listenersCancel,
+		listenersExited:   new(sync.WaitGroup),
 		shutdownCtx:       shutdownCtx,
 		shutdownCancel:    shutdownCancel,
 		shutdownComplete:  make(chan struct{}),
@@ -330,36 +406,38 @@ func (manager *Manager) Reset() {
 // Run runs the manager and all it's services / resources. Run blocks until the manager
 // has fully shut down.
 func (manager *Manager) Run() error {
-	// Release the resources and start shutdown on exit in case of panic.
+	managerErr := ManagerError{}
+
+	// Release all resources and start shutdown on exit in case of panic or unexpected
+	// error.
 	defer close(manager.sync.shutdownComplete)
+	defer manager.sync.shutdownCancel()
+	defer manager.sync.listenersCancel()
 	defer manager.StartShutdown()
 	defer manager.sync.resourcesCancel()
 
-	// Launch a routine to listen for an interrupt signal and exit.
-	go manager.listenForSignal()
+	// Launch event listeners (such as interrupt signals and shutdown timeout)
+	manager.launchListeners()
 
-	// Setup the services.
-	err := manager.setupServices()
-	if err != nil {
-		return fmt.Errorf("error setting up services: %w", err)
-	}
-
-	// Run the services.
-	err = manager.runAllServices()
-	if err != nil {
-		return fmt.Errorf("error running services: %w", err)
+	// Setup the services. Do not advance to the run stage if there is a setup error.
+	managerErr.SetupErr = manager.setupServices()
+	if managerErr.SetupErr == nil {
+		// If there was not error, run the services.
+		managerErr.RunErr = manager.runAllServices()
 	}
 
 	// Release resources now that the services are done running.
 	manager.sync.resourcesCancel()
 
 	// Wait for the services to shut down.
-	err = manager.waitForShutdownComplete()
-	if err != nil {
-		return fmt.Errorf("error shutting down: %w", err)
+	managerErr.ShutdownErr = manager.waitForShutdownComplete()
+
+	// If our manager error has errors to report, return it.
+	if managerErr.hasErrors() {
+		return managerErr
 	}
 
-	// Return
+	// Otherwise, exit.
 	return nil
 }
 

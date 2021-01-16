@@ -76,6 +76,7 @@ doc:
 	# Rip API docs from godoc. This tools spins up a godoc server and downloads
 	# module docs
 	docmodule-go
+	python3 ./zdevelop/make_scripts/proto_docs.py
 	python setup.py build_sphinx -E
 	sleep 1
 	-python3 ./zdevelop/make_scripts/open_docs.py

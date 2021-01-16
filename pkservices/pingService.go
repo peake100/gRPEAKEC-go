@@ -21,16 +21,25 @@ var NewPingClient = protogen.NewPingClient
 // connectivity to the server.
 type pingService struct{}
 
+// Id implements Service and returns "gPEAKERC Ping".
+func (ping pingService) Id() string {
+	return "gPEAKERC Ping"
+}
+
+// Setup implements Service.
 func (ping pingService) Setup(
 	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
 ) error {
 	return nil
 }
 
+// RegisterOnServer implements GrpcService.
 func (ping pingService) RegisterOnServer(server *grpc.Server) {
 	protogen.RegisterPingServer(server, ping)
 }
 
+// Ping implements PingServer. It receives an empty message and returns the
+// result.
 func (ping pingService) Ping(
 	ctx context.Context, msg *empty.Empty,
 ) (*empty.Empty, error) {

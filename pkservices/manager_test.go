@@ -19,6 +19,10 @@ type MockService struct {
 	ResourcesReleased bool
 }
 
+func (service *MockService) Id() string {
+	return "MockService"
+}
+
 func (service *MockService) Setup(
 	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
 ) error {
@@ -106,4 +110,44 @@ func TestManager_gRPCLifetime(t *testing.T) {
 
 	// Check that resources were released
 	assert.True(mockService.ResourcesReleased, "resources released set")
+}
+
+type MockGeneralGeneric struct {
+	SetupCalled        chan struct{}
+	ResourcesReleased  chan struct{}
+	RunCalled          chan struct{}
+	ServicesReleased   chan struct{}
+	StatShutdownCalled chan struct{}
+}
+
+func (mock *MockGeneralGeneric) Setup(
+	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
+) error {
+	defer close(mock.SetupCalled)
+
+	resourcesReleased.Add(1)
+	go func() {
+		defer close(mock.ResourcesReleased)
+		defer resourcesReleased.Done()
+		<-resourcesCtx.Done()
+	}()
+
+	return nil
+}
+
+func (mock *MockGeneralGeneric) Run(
+	runCtx context.Context,
+) error {
+	defer close(mock.RunCalled)
+
+	go func() {
+		defer close(mock.ServicesReleased)
+		<-runCtx.Done()
+	}()
+
+	return nil
+}
+
+func (mock *MockGeneralGeneric) StartGracefulShutdown(shutdownCtx context.Context) {
+	panic("implement me")
 }

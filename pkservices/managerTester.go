@@ -5,6 +5,8 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"testing"
 	"time"
@@ -15,6 +17,12 @@ import (
 type ManagerTesting struct {
 	t       *testing.T
 	manager *Manager
+}
+
+// Services returns the list of registered services. This method is for testing purposes
+// only and returned values should not be modified unless you know what you are doing!
+func (tester ManagerTesting) Services() []Service {
+	return tester.manager.services
 }
 
 // GrpcClientConn generates a grpc.ClientConn with the passed opts connected to the gRPC
@@ -73,6 +81,43 @@ func (tester ManagerTesting) GrpcPingClient(
 	return NewPingClient(clientConn)
 }
 
+func (tester ManagerTesting) retryPing(
+	ctx context.Context, client PingClient, retryCount int,
+) (ok bool) {
+	// Ping the server
+	_, err := client.Ping(ctx, new(emptypb.Empty))
+
+	// If there was no error, we successfully pinged the server, and can return.
+	if err == nil {
+		return true
+	}
+
+	// If the error returns as a context error, our context expired, we should log
+	// thee error and return.
+	if errors.Is(err, context.DeadlineExceeded) ||
+		errors.Is(err, context.Canceled) {
+
+		assert.NoError(
+			tester.t, err, "ping gRPC server after %v tries", retryCount,
+		)
+		tester.t.FailNow()
+	}
+
+	// Check if we got a status message back
+	responseStatus, ok := status.FromError(err)
+	if !ok {
+		return false
+	}
+
+	// If we got a status back, and the status is unimplemented, then that means the
+	// server is up, it just does not implement Ping, which is fine.
+	if responseStatus.Code() == codes.Unimplemented {
+		return true
+	}
+
+	return false
+}
+
 // PingGrpcServer will continually ping the gRPC server's PingServer.Ping method until
 // a connection is established or the passed context times out. All errors will be
 // ignored and ping will be tried again on failure.
@@ -81,7 +126,7 @@ func (tester ManagerTesting) GrpcPingClient(
 //
 // If ctx expires, the ctx.Error() will be logged and FailNow() called on the test.
 //
-// If ctx is nil, a default 3-second context will be used
+// If ctx is nil, a default 3-second context will be used.
 func (tester ManagerTesting) PingGrpcServer(ctx context.Context) {
 	if ctx == nil {
 		defaultCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -90,25 +135,11 @@ func (tester ManagerTesting) PingGrpcServer(ctx context.Context) {
 	}
 
 	client := tester.GrpcPingClient(true, grpc.WithInsecure())
-	message := new(emptypb.Empty)
 
 	retries := 0
 
-	for {
+	for ok := false; !ok; {
 		retries++
-
-		_, err := client.Ping(ctx, message)
-		if errors.Is(err, context.DeadlineExceeded) ||
-			errors.Is(err, context.Canceled) {
-
-			assert.NoError(
-				tester.t, err, "ping gRPC server after %v tries", retries,
-			)
-			tester.t.FailNow()
-		}
-
-		if err == nil {
-			break
-		}
+		ok = tester.retryPing(ctx, client, retries)
 	}
 }

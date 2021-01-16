@@ -8,4 +8,3 @@ import (
 func (x *Error) Error() string {
 	return fmt.Sprintf("(%v | %v | %v) %v", x.Name, x.Issuer, x.Code, x.Message)
 }
-

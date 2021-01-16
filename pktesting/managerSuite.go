@@ -11,12 +11,8 @@ type ManagerSuite struct {
 	Manager *pkservices.Manager
 }
 
-func (m *ManagerSuite) TearDownSuite() {
-	if m.Manager != nil {
-		m.Manager.StartShutdown()
-	}
-}
-
+// SetupSuite implements suite.SetupAllSuite, and starts the manager running in it's own
+// routine, and blocks until it can ping the gRPC server if there are any gRPC services.
 func (m *ManagerSuite) SetupSuite() {
 	if !m.NotNil(m.Manager, "manager is set") {
 		m.FailNow("manager is nil")
@@ -26,4 +22,36 @@ func (m *ManagerSuite) SetupSuite() {
 		err := m.Manager.Run()
 		m.NoError(err, "run manager")
 	}()
+
+	tester := m.Manager.Test(m.T())
+
+	hasGrpc := false
+	for _, service := range tester.Services() {
+		_, ok := service.(pkservices.GrpcService)
+		if ok {
+			hasGrpc = true
+			break
+		}
+	}
+
+	// If the manager is not managing gRPC services, we can return.
+	if !hasGrpc {
+		return
+	}
+
+	ctx, cancel := New3SecondCtx()
+	defer cancel()
+
+	tester.PingGrpcServer(ctx)
+}
+
+// TearDownSuite implements suite.TearDownAllSuite and shuts down the manager.
+func (m *ManagerSuite) TearDownSuite() {
+	if m.Manager != nil {
+		// Signal shutdown of the manager.
+		m.Manager.StartShutdown()
+		// Block until shutdown complete.
+		m.Manager.WaitForShutdown()
+	}
+
 }

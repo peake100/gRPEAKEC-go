@@ -8,6 +8,11 @@ import (
 
 // Service is an interface that a service must implement to be run by the Manager
 type Service interface {
+	// Id should return a unique, but human readable id for the service. This id is
+	// used for both logging and ServiceError context. If two services share the same
+	// id, the manger will return an error.
+	Id() string
+
 	// Setup is called before Run to set up any resources the service requires.
 	//
 	// resourcesCtx will be cancelled AFTER Run returns to signal that all the main
@@ -21,22 +26,17 @@ type Service interface {
 // Generic framework for registering non-grpc based services to the monitor, so multiple
 // services can be run in parallel by the same monitor.
 type GenericService interface {
+	Service
 	// Run is called to run the main service. Run should not exit until an irrecoverable
-	// error occurs or StartGracefulShutdown is called.
+	// error occurs or runCtx is cancelled.
+	//
+	// runCtx cancelling indicates that the service should begin to gracefully shutdown.
+	//
+	// When shutdownCtx is cancelled, the manager will stop waiting for run to return
+	// and continue with the shutdown process.
 	//
 	// After Run returns, the resourcesCtx passed to Setup will be cancelled.
-	Run(runCtx context.Context) error
-
-	// StartGracefulShutdown is called when the manager gets a signal to exit.
-	// StartGracefulShutdown should not block, but begin the graceful shutdown of the
-	// main server.
-	//
-	// When shutdownCtx cancels, the manger will stop waiting for a graceful shutdown
-	// and move towards a forced shutdown.
-	//
-	// StartGracefulShutdown does not return an error. Any errors that occur during
-	// shutdown should be returned by Run.
-	StartGracefulShutdown(shutdownCtx context.Context)
+	Run(runCtx context.Context, shutdownCtx context.Context) error
 }
 
 // GrpcService is a Service with methods to support running a gRPC service.
