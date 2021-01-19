@@ -2,8 +2,14 @@ package pkservices
 
 import (
 	"fmt"
+	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"strings"
 )
+
+const indent = "    "
+
+// PanicError is a type alias for pkerr.PanicError.
+type PanicError = pkerr.PanicError
 
 // ServiceError reports an error from a specific service.
 type ServiceError struct {
@@ -15,7 +21,7 @@ type ServiceError struct {
 
 // Error implements builtins.error.
 func (err ServiceError) Error() string {
-	return fmt.Sprintf("error occured in service %v: %v", err.ServiceId, err.Err)
+	return fmt.Sprintf("service '%v': %v", err.ServiceId, err.Err)
 }
 
 // Unwrap implements xerrors.Wrapper and returns the underlying error.
@@ -23,13 +29,13 @@ func (err ServiceError) Unwrap() error {
 	return err.Err
 }
 
-// ServiceErrors stores errors from multiple services as a single error.
-type ServiceErrors struct {
+// ServicesErrors stores errors from multiple services as a single error.
+type ServicesErrors struct {
 	Errs []error
 }
 
 // Error implements builtins.errors, and reports the number of errors.
-func (err ServiceErrors) Error() string {
+func (err ServicesErrors) Error() string {
 	// Create a string builder.
 	builder := new(strings.Builder)
 
@@ -38,7 +44,7 @@ func (err ServiceErrors) Error() string {
 
 	// Put each sub-error on it's own indented line.
 	for _, thisErr := range err.Errs {
-		_, _ = builder.WriteString(fmt.Sprintf("\n\t%v", thisErr))
+		_, _ = builder.WriteString(fmt.Sprintf("\n%v- %v", indent, thisErr))
 	}
 
 	return builder.String()
@@ -48,9 +54,10 @@ func (err ServiceErrors) Error() string {
 // of the run.
 type ManagerError struct {
 	// SetupErr is an error that was returned during setup of the services. This error
-	// will always be a
+	// will be a ServicesErrors if the cause of the error was one or more services.
 	SetupErr error
-	// RunErr is an error that occurred during running of 1 or more services.
+	// RunErr is an error that occurred during running of 1 or more services.This error
+	// will be a ServicesErrors if the cause of the error was one or more services.
 	RunErr error
 	// ShutdownErr is an error that occurred during the shutdown of 1 or more services.
 	ShutdownErr error
@@ -60,7 +67,7 @@ type ManagerError struct {
 func indentErr(err error, indentCount int) string {
 	lines := strings.Split(err.Error(), "\n")
 	for i, thisLine := range lines {
-		lines[i] = strings.Repeat("\t", indentCount) + thisLine
+		lines[i] = strings.Repeat(indent, indentCount) + thisLine
 	}
 
 	return strings.Join(lines, "\n")
@@ -70,8 +77,10 @@ func indentErr(err error, indentCount int) string {
 func (err ManagerError) errorAddStageErr(
 	builder *strings.Builder, stage string, stageErr error,
 ) {
-	_, _ = builder.WriteString(fmt.Sprintf("\n\t:" + stage))
-	_, _ = builder.WriteString(fmt.Sprintf("\n" + indentErr(stageErr, 2)))
+	_, _ = builder.WriteString(
+		fmt.Sprintf("\n%v---- %v ERRORS ----", indent, stage),
+	)
+	_, _ = builder.WriteString(fmt.Sprintf("\n" + indentErr(stageErr, 1)))
 }
 
 // Error implements builtins.error
@@ -84,17 +93,17 @@ func (err ManagerError) Error() string {
 
 	// Write the setup section.
 	if err.SetupErr != nil {
-		err.errorAddStageErr(builder, "setup", err.SetupErr)
+		err.errorAddStageErr(builder, "SETUP", err.SetupErr)
 	}
 
 	// Write the run section.
 	if err.RunErr != nil {
-		err.errorAddStageErr(builder, "run", err.RunErr)
+		err.errorAddStageErr(builder, "RUN", err.RunErr)
 	}
 
 	// Write the shutdown section.
 	if err.ShutdownErr != nil {
-		err.errorAddStageErr(builder, "shutdown", err.ShutdownErr)
+		err.errorAddStageErr(builder, "SHUTDOWN", err.ShutdownErr)
 	}
 
 	// Return the string.

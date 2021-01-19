@@ -25,6 +25,17 @@ func (tester ManagerTesting) Services() []Service {
 	return tester.manager.services
 }
 
+func (tester ManagerTesting) checkForGrpcService() {
+	for _, service := range tester.Services() {
+		_, ok := service.(GrpcService)
+		if ok {
+			return
+		}
+	}
+
+	tester.t.Fatalf("manager does not have registered gRPC services")
+}
+
 // GrpcClientConn generates a grpc.ClientConn with the passed opts connected to the gRPC
 // server address in the manager options.
 //
@@ -39,6 +50,8 @@ func (tester ManagerTesting) Services() []Service {
 func (tester ManagerTesting) GrpcClientConn(
 	cleanup bool, opts ...grpc.DialOption,
 ) *grpc.ClientConn {
+	tester.checkForGrpcService()
+
 	// Add client interceptors to opts if we are using them.
 	if tester.manager.opts.errGenerator != nil {
 		errGen := tester.manager.opts.errGenerator
@@ -71,6 +84,8 @@ func (tester ManagerTesting) GrpcClientConn(
 func (tester ManagerTesting) GrpcPingClient(
 	cleanup bool, opts ...grpc.DialOption,
 ) PingClient {
+	tester.checkForGrpcService()
+
 	if !assert.True(
 		tester.t, tester.manager.opts.addPingService, "ping service in use",
 	) {
@@ -128,11 +143,15 @@ func (tester ManagerTesting) retryPing(
 //
 // If ctx is nil, a default 3-second context will be used.
 func (tester ManagerTesting) PingGrpcServer(ctx context.Context) {
+	tester.checkForGrpcService()
+
 	if ctx == nil {
 		defaultCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()
 		ctx = defaultCtx
 	}
+
+	// check if there are actually any gRPCServices in the manager.
 
 	client := tester.GrpcPingClient(true, grpc.WithInsecure())
 

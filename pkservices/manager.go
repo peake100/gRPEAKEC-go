@@ -18,11 +18,6 @@ const DefaultGrpcAddress = "0.0.0.0:50051"
 
 // managerSync holds all the sync objects for Manager.
 type managerSync struct {
-	// masterCtx is the master context of the Manager.
-	masterCtx context.Context
-	// masterCancel cancels ctx and signals the manager to shutdown.
-	masterCancel context.CancelFunc
-
 	// resourcesCtx is the context passed to Service.Setup() to signal resources to
 	// shutdown.
 	resourcesCtx context.Context
@@ -65,12 +60,19 @@ type Manager struct {
 	// sync holds all the sync objects for Manager.
 	sync managerSync
 
+	// osSignals holds the channel we are accepting os signals on. We store this here
+	// so we can expose it for testing.
+	osSignals chan os.Signal
+
 	// services is all the services the manager is tasked with running.
 	services []Service
 	// opts are the options to run the manager with.
 	opts *ManagerOpts
 }
 
+// mapServicesMapSingle applies an action to a single service. Errors are wrapped in
+// a ServiceError value. Panics are wrapped in a PanicError before being wrapped in
+// ServiceError.
 func (*Manager) mapServicesMapSingle(
 	action func(service Service) error, service Service,
 ) error {
@@ -90,7 +92,40 @@ func (*Manager) mapServicesMapSingle(
 	return actionErr
 }
 
-// mapServices maps action across every service concurrently.
+// collectServicesErrors takes in an slice of error results from goroutine launches and
+// collects any non-nil errors into a ServicesErrors.
+//
+// if results contains only nil values (no errors), a nil value is returned.
+func (manager *Manager) collectServicesErrors(results []error) error {
+	// We're going to store our errors in here.
+	var errorList []error
+
+	// Check the returns for non-nil errors.
+	for _, err := range results {
+		if err == nil {
+			continue
+		}
+
+		// Extract service errors and add their internal error list to our list.
+		if thisErr, ok := err.(ServicesErrors); ok {
+			errorList = append(errorList, thisErr.Errs...)
+			continue
+		}
+
+		// Otherwise add the error.
+		errorList = append(errorList, err)
+	}
+
+	// If there were errors, report them in a service error
+	if len(errorList) > 0 {
+		return ServicesErrors{Errs: errorList}
+	}
+
+	return nil
+}
+
+// mapServices maps action across every service concurrently, and returns a
+// ServicesError.
 func (manager *Manager) mapServices(action func(service Service) error) error {
 	// We're going to store the results of each start up in this array.
 	errs := make([]error, len(manager.services))
@@ -104,12 +139,23 @@ func (manager *Manager) mapServices(action func(service Service) error) error {
 
 		// Run the action on each service in it's own routine.
 		go func(service Service, i int) {
-
 			// Release the WaitGroup on completion
 			defer actionComplete.Done()
 
-			// Store the result of this setup in the index passed to the routine.
-			errs[i] = manager.mapServicesMapSingle(action, service)
+			// apply the action to the service.
+			serviceErr := manager.mapServicesMapSingle(action, service)
+
+			// If the error is not nil, we need to signal shutdown here, during long
+			// blocking maps, this should cancel the context of the action.
+			//
+			// TODO: The control logic feels a little indirect here, I feel like maybe
+			// 	a context should be passed into each action and cancelled?
+			if serviceErr != nil {
+				manager.StartShutdown()
+			}
+
+			// Store the error in the results array for collection.
+			errs[i] = serviceErr
 
 		}(service, i)
 	}
@@ -123,14 +169,13 @@ func (manager *Manager) mapServices(action func(service Service) error) error {
 	}
 
 	// Collect our results into a single error.
-	err = manager.collectServiceErrors(errs)
+	err = manager.collectServicesErrors(errs)
 	if err != nil {
 		return err
 	}
 
 	// Otherwise, return.
 	return nil
-
 }
 
 // setupServices starts all the services
@@ -211,38 +256,6 @@ func (manager *Manager) genericServicesRun() error {
 	})
 }
 
-// collectServiceErrors takes in an slice of error results from goroutine launches and
-// collects any non-nil errors into a ServiceErrors.
-//
-// if results contains only nil values (no errors), a nil value is returned.
-func (manager *Manager) collectServiceErrors(results []error) error {
-	// We're going to store our errors in here.
-	var errorList []error
-
-	// Check the returns for non-nil errors.
-	for _, err := range results {
-		if err == nil {
-			continue
-		}
-
-		// Extract service errors and add their internal error list to our list.
-		if thisErr, ok := err.(ServiceErrors); ok {
-			errorList = append(errorList, thisErr.Errs...)
-			continue
-		}
-
-		// Otherwise add the error.
-		errorList = append(errorList, err)
-	}
-
-	// If there were errors, report them in a service error
-	if len(errorList) > 0 {
-		return ServiceErrors{Errs: errorList}
-	}
-
-	return nil
-}
-
 // runAllServices runs all services.
 func (manager *Manager) runAllServices() error {
 	defer manager.StartShutdown()
@@ -256,10 +269,7 @@ func (manager *Manager) runAllServices() error {
 
 	go func() {
 		defer runsComplete.Done()
-		err := manager.genericServicesRun()
-		if err != nil {
-			runErrors[0] = fmt.Errorf("error running grpc: %w", err)
-		}
+		runErrors[0] = manager.genericServicesRun()
 	}()
 
 	// Run our gRPC services in another.
@@ -267,13 +277,9 @@ func (manager *Manager) runAllServices() error {
 	go func() {
 		defer runsComplete.Done()
 
-		err := pkerr.CatchPanic(func() error {
+		runErrors[1] = pkerr.CatchPanic(func() error {
 			return manager.runGrpcServices()
 		})
-
-		if err != nil {
-			runErrors[1] = fmt.Errorf("error running grpc: %w", err)
-		}
 	}()
 
 	err := runsComplete.Wait()
@@ -282,7 +288,7 @@ func (manager *Manager) runAllServices() error {
 	}
 
 	// Collect our results.
-	err = manager.collectServiceErrors(runErrors)
+	err = manager.collectServicesErrors(runErrors)
 	if err != nil {
 		return fmt.Errorf("error running services: %w", err)
 	}
@@ -332,7 +338,7 @@ func (manager *Manager) listenForSignal() {
 	// Wait for an interrupt to happen OR our master context to be cancelled.
 	select {
 	case <-events:
-	case <-manager.sync.masterCtx.Done():
+	case <-manager.sync.servicesCtx.Done():
 	case <-manager.sync.listenersCtx.Done():
 	}
 }
@@ -350,7 +356,7 @@ func (manager *Manager) timeoutShutdown() {
 	defer manager.sync.shutdownCancel()
 
 	// Wait for a shutdown to be signaled.
-	<-manager.sync.masterCtx.Done()
+	<-manager.sync.servicesCtx.Done()
 
 	// Wait for either shutdown complete to be reported OR the shutdown timer to
 	// time out.
@@ -380,15 +386,12 @@ func (manager *Manager) launchListeners() {
 
 // Reset resets the manager for a new run.
 func (manager *Manager) Reset() {
-	masterCtx, masterCancel := context.WithCancel(context.Background())
 	resourcesCtx, resourcesCancel := context.WithCancel(context.Background())
 	servicesCtx, servicesCancel := context.WithCancel(context.Background())
 	listenersCtx, listenersCancel := context.WithCancel(context.Background())
 	shutdownCtx, shutdownCancel := context.WithCancel(context.Background())
 
 	manager.sync = managerSync{
-		masterCtx:         masterCtx,
-		masterCancel:      masterCancel,
 		resourcesCtx:      resourcesCtx,
 		resourcesCancel:   resourcesCancel,
 		resourcesReleased: new(sync.WaitGroup),
@@ -413,8 +416,8 @@ func (manager *Manager) Run() error {
 	defer close(manager.sync.shutdownComplete)
 	defer manager.sync.shutdownCancel()
 	defer manager.sync.listenersCancel()
-	defer manager.StartShutdown()
 	defer manager.sync.resourcesCancel()
+	defer manager.StartShutdown()
 
 	// Launch event listeners (such as interrupt signals and shutdown timeout)
 	manager.launchListeners()
@@ -444,7 +447,6 @@ func (manager *Manager) Run() error {
 // StartShutdown begins shutdown of the manager. Can be called multiple times. This
 // methods returns immediately rather than blocking until the manager shuts down.
 func (manager *Manager) StartShutdown() {
-	manager.sync.masterCancel()
 	manager.sync.servicesCancel()
 }
 

@@ -54,8 +54,12 @@ func (group *CtxWaitGroup) handleEvent(event waitEvent) (stop bool) {
 
 	// If the counter is greater than or equal to 0, the operation is a success.
 	if group.counter >= 0 {
-		// Return a nil result to the caller, indicating success.
-		close(event.Success)
+		// Return a nil result to the caller, indicating success. We need to send an
+		// event here so we block until the caller gets the result. If we were to just
+		// close the channel, the caller might select the closed context before seeing
+		// the closed success channel.
+		event.Success <- struct{}{}
+
 		// If the counter has hit 0, signalClose the WaitGroup.
 		if group.counter == 0 {
 			// Close the group
