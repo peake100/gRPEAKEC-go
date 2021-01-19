@@ -14,6 +14,7 @@ import (
 	"time"
 )
 
+// DefaultGrpcAddress is the default address the gRPC server will listen on.
 const DefaultGrpcAddress = "0.0.0.0:50051"
 
 // managerSync holds all the sync objects for Manager.
@@ -70,28 +71,6 @@ type Manager struct {
 	opts *ManagerOpts
 }
 
-// mapServicesMapSingle applies an action to a single service. Errors are wrapped in
-// a ServiceError value. Panics are wrapped in a PanicError before being wrapped in
-// ServiceError.
-func (*Manager) mapServicesMapSingle(
-	action func(service Service) error, service Service,
-) error {
-	// Run the action while catching panics.
-	actionErr := pkerr.CatchPanic(func() error {
-		return action(service)
-	})
-
-	// If there was an error, wrap it in a service error.
-	if actionErr != nil {
-		actionErr = ServiceError{
-			ServiceId: service.Id(),
-			Err:       actionErr,
-		}
-	}
-
-	return actionErr
-}
-
 // collectServicesErrors takes in an slice of error results from goroutine launches and
 // collects any non-nil errors into a ServicesErrors.
 //
@@ -126,52 +105,46 @@ func (manager *Manager) collectServicesErrors(results []error) error {
 
 // mapServices maps action across every service concurrently, and returns a
 // ServicesError.
-func (manager *Manager) mapServices(action func(service Service) error) error {
-	// We're going to store the results of each start up in this array.
-	errs := make([]error, len(manager.services))
+//
+// If any action() invocation returns an error, Manager.StartShutdown is called
+// immediately.
+func (manager *Manager) mapServices(
+	action func(service Service) error,
+) error {
+	// We're going to errors in this array.
+	errs := make([]error, 0)
 
-	// Create a CtxWaitGroup to mark when the action is complete
-	actionComplete := pksync.NewCtxWaitGroup(manager.sync.shutdownCtx)
-
-	// Iterate over each service and run the action on it concurrently.
-	for i, service := range manager.services {
-		_ = actionComplete.Add(1)
-
-		// Run the action on each service in it's own routine.
-		go func(service Service, i int) {
-			// Release the WaitGroup on completion
-			defer actionComplete.Done()
-
-			// apply the action to the service.
-			serviceErr := manager.mapServicesMapSingle(action, service)
-
-			// If the error is not nil, we need to signal shutdown here, during long
-			// blocking maps, this should cancel the context of the action.
-			//
-			// TODO: The control logic feels a little indirect here, I feel like maybe
-			// 	a context should be passed into each action and cancelled?
-			if serviceErr != nil {
-				manager.StartShutdown()
+	var mapFunc pksync.ConcurrentMapFunc = func(
+		ctx context.Context, value interface{}, index int,
+	) error {
+		service := value.(Service)
+		err := pkerr.CatchPanic(func() error {
+			return action(service)
+		})
+		if err != nil {
+			return ServiceError{
+				ServiceId: service.Id(),
+				Err:       err,
 			}
-
-			// Store the error in the results array for collection.
-			errs[i] = serviceErr
-
-		}(service, i)
+		}
+		return nil
 	}
 
-	// Wait for all the setup routines to complete.
-	err := actionComplete.Wait()
-	if err != nil {
-		return fmt.Errorf(
-			"shutdown timed out: %w", err,
-		)
+	// Range over our error channel, collecting errors.
+	servicesCtx := manager.sync.servicesCtx
+	for err := range pksync.ConcurrentMap(servicesCtx, manager.services, mapFunc) {
+		// Add the underlying error to our errors list (will always be a service error)
+		if mapErr, ok := err.(pksync.ConcurrentMapError); ok {
+			errs = append(errs, mapErr.MapFuncErr)
+
+			// If there is an error, start shutdown of the manager.
+			manager.StartShutdown()
+		}
 	}
 
-	// Collect our results into a single error.
-	err = manager.collectServicesErrors(errs)
-	if err != nil {
-		return err
+	// Collect errors.
+	if len(errs) > 0 {
+		return manager.collectServicesErrors(errs)
 	}
 
 	// Otherwise, return.
@@ -181,14 +154,18 @@ func (manager *Manager) mapServices(action func(service Service) error) error {
 // setupServices starts all the services
 func (manager *Manager) setupServices() error {
 	return manager.mapServices(func(service Service) error {
-		return service.Setup(
+		err := service.Setup(
 			manager.sync.resourcesCtx, manager.sync.resourcesReleased,
 		)
+
+		return err
 	})
 }
 
 // runGrpcServices runs all gRPC services.
 func (manager *Manager) runGrpcServices() error {
+	defer manager.StartShutdown()
+
 	// Iterate over the services and see if there are any grpc ones
 	var hasGrpc bool
 	// We know this will not result in an error.
@@ -409,14 +386,12 @@ func (manager *Manager) Reset() {
 // Run runs the manager and all it's services / resources. Run blocks until the manager
 // has fully shut down.
 func (manager *Manager) Run() error {
+	// We're going to store the different stage errors here.
 	managerErr := ManagerError{}
 
 	// Release all resources and start shutdown on exit in case of panic or unexpected
 	// error.
 	defer close(manager.sync.shutdownComplete)
-	defer manager.sync.shutdownCancel()
-	defer manager.sync.listenersCancel()
-	defer manager.sync.resourcesCancel()
 	defer manager.StartShutdown()
 
 	// Launch event listeners (such as interrupt signals and shutdown timeout)
