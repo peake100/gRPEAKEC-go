@@ -23,16 +23,13 @@ import (
 
 const testAddress = ":7090"
 
-var errorGenerator = pkerr.NewErrGenerator(
-	"MockService",
-	"server hostname",
-	true,
+var sentinelIssuer = pkerr.NewSentinelIssuer(
 	"Mock",
 	false,
 )
 
 // Create a test error def.
-var ErrCustom = errorGenerator.NewSentinel(
+var ErrCustom = sentinelIssuer.NewSentinel(
 	"ErrCustom",
 	2000,
 	codes.DataLoss,
@@ -209,8 +206,6 @@ func NewMockService() *MockService {
 		"MockService",
 		"server hostname",
 		true,
-		"Test",
-		false,
 	)
 
 	return &MockService{errors: errorGen}

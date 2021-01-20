@@ -9,20 +9,16 @@ import (
 )
 
 // Tests that we can change the Issuer and Code of sentinel errors after the fact.
-func TestErrorGenerator_ApplyNewIssuer(t *testing.T) {
+func TestSentinelIssuer_ApplyNewIssuer(t *testing.T) {
 	assert := assert.New(t)
 
-	// Create the generator
-	generator := pkerr.NewErrGenerator(
-		"testApp",
-		"testHost",
-		true,
+	issuer := pkerr.NewSentinelIssuer(
 		"testIssuer",
 		false,
 	)
 
 	// Create a sentinel error.
-	sentinelOne := generator.NewSentinel(
+	sentinelOne := issuer.NewSentinel(
 		"SentinelOne",
 		2000, codes.Canceled,
 		"sentinel one message",
@@ -37,7 +33,7 @@ func TestErrorGenerator_ApplyNewIssuer(t *testing.T) {
 	)
 
 	// Reissue the sentinels with a new issuer and offset
-	generator.ApplyNewIssuer("testIssuer2", 1000)
+	issuer.ApplyNewIssuer("testIssuer2", 1000)
 
 	assert.Equal(
 		"testIssuer2", sentinelOne.Issuer, "second issuer",
@@ -49,7 +45,7 @@ func TestErrorGenerator_ApplyNewIssuer(t *testing.T) {
 
 	// Reissue the sentinels again with a new issuer and offset. This second offset
 	// should be relative to the original codes, not the re-issued ones.
-	generator.ApplyNewIssuer("testIssuer3", 2000)
+	issuer.ApplyNewIssuer("testIssuer3", 2000)
 
 	assert.Equal(
 		"testIssuer3", sentinelOne.Issuer, "second issuer",
@@ -60,28 +56,25 @@ func TestErrorGenerator_ApplyNewIssuer(t *testing.T) {
 	)
 }
 
-func TestErrorGenerator_EnvVars(t *testing.T) {
+func TestSentinelIssuer_EnvVars(t *testing.T) {
 	assert := assert.New(t)
 
-	err := os.Setenv("MockApp"+"_ERROR_ISSUER", "EnvIssuer")
+	err := os.Setenv("OriginalIssuer"+"_ERROR_ISSUER", "EnvIssuer")
 	if !assert.NoError(err, "set issuer env var") {
 		t.FailNow()
 	}
 
-	err = os.Setenv("MockApp"+"_ERROR_CODE_OFFSET", "4000")
+	err = os.Setenv("OriginalIssuer"+"_ERROR_CODE_OFFSET", "4000")
 	if !assert.NoError(err, "set issuer env var") {
 		t.FailNow()
 	}
 
-	errGen := pkerr.NewErrGenerator(
-		"MockApp",
-		"",
-		false,
+	issuer := pkerr.NewSentinelIssuer(
 		"OriginalIssuer",
 		true,
 	)
 
-	err = errGen.NewSentinel("TestErr", 1000, 0, "")
+	err = issuer.NewSentinel("TestErr", 1000, 0, "")
 	sentinelErr := err.(*pkerr.SentinelError)
 
 	assert.Equal(sentinelErr.Issuer, "EnvIssuer", "issuer changed")

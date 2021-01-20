@@ -1,4 +1,5 @@
 /*
-Here we describe the package grpcErr general for the API docs.
+gRPEAKEC offers a variety of utilities to reduce boilerplate when creating and working
+with gRPC services.
 */
 package grpeakec

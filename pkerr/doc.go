@@ -1,4 +1,4 @@
 /*
-package pkerr offers easy-to-use rich errors between services.
+Easy-to-use rich errors between services and clients.
 */
 package pkerr
