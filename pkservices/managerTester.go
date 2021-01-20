@@ -2,12 +2,9 @@ package pkservices
 
 import (
 	"context"
-	"errors"
+	"github.com/peake100/gRPEAKEC-go/pkclients"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"os"
 	"testing"
 	"time"
@@ -102,43 +99,6 @@ func (tester ManagerTesting) GrpcPingClient(
 	return NewPingClient(clientConn)
 }
 
-func (tester ManagerTesting) retryPing(
-	ctx context.Context, client PingClient, retryCount int,
-) (ok bool) {
-	// Ping the server
-	_, err := client.Ping(ctx, new(emptypb.Empty))
-
-	// If there was no error, we successfully pinged the server, and can return.
-	if err == nil {
-		return true
-	}
-
-	// If the error returns as a context error, our context expired, we should log
-	// thee error and return.
-	if errors.Is(err, context.DeadlineExceeded) ||
-		errors.Is(err, context.Canceled) {
-
-		assert.NoError(
-			tester.t, err, "ping gRPC server after %v tries", retryCount,
-		)
-		tester.t.FailNow()
-	}
-
-	// Check if we got a status message back
-	responseStatus, ok := status.FromError(err)
-	if !ok {
-		return false
-	}
-
-	// If we got a status back, and the status is unimplemented, then that means the
-	// server is up, it just does not implement Ping, which is fine.
-	if responseStatus.Code() == codes.Unimplemented {
-		return true
-	}
-
-	return false
-}
-
 // PingGrpcServer will continually ping the gRPC server's PingServer.Ping method until
 // a connection is established or the passed context times out. All errors will be
 // ignored and ping will be tried again on failure.
@@ -158,14 +118,12 @@ func (tester ManagerTesting) PingGrpcServer(ctx context.Context) {
 	}
 
 	// check if there are actually any gRPCServices in the manager.
+	clientConn := tester.GrpcClientConn(false, grpc.WithInsecure())
+	defer clientConn.Close()
 
-	client := tester.GrpcPingClient(true, grpc.WithInsecure())
-
-	retries := 0
-
-	for ok := false; !ok; {
-		retries++
-		ok = tester.retryPing(ctx, client, retries)
+	err := pkclients.WaitForGrpcServer(ctx, clientConn)
+	if !assert.NoError(tester.t, err, "wait for gRPC server") {
+		tester.t.FailNow()
 	}
 }
 

@@ -184,7 +184,9 @@ func (mock *MockService) StreamUnary(
 	return server.SendAndClose(msg)
 }
 
-func (mock *MockService) Dummy(ctx context.Context, empty *empty.Empty) (*empty.Empty, error) {
+func (mock *MockService) Dummy(
+	ctx context.Context, empty *empty.Empty,
+) (*empty.Empty, error) {
 	panic("implement me")
 }
 

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>pksync - Go Documentation Server</title>
+  <title>protogen - Go Documentation Server</title>
 
 <link type="text/css" rel="stylesheet" href="style.css">
 
@@ -43,7 +43,7 @@
 
 
   <h1>
-    Package pksync
+    Package protogen
     <span class="text-muted"></span>
   </h1>
 
@@ -77,7 +77,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "github.com/peake100/gRPEAKEC-go/pksync"</code></dd>
+			<dd><code>import "github.com/peake100/gRPEAKEC-go/pkservices/protogen"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="godoc.6.html#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -93,13 +93,7 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				<p>
-package psync offers some sync helper types and functions.
-</p>
-<p>
-package pksync offers some new quality-of-life sync types.
-</p>
-
+				
 				
 			</div>
 		</div>
@@ -120,40 +114,28 @@ package pksync offers some new quality-of-life sync types.
 			
 			
 				
-				<dd><a href="godoc.6.html#ConcurrentMap">func ConcurrentMap(ctx context.Context, values interface{}, mapFunc ConcurrentMapFunc) &lt;-chan error</a></dd>
+				<dd><a href="godoc.6.html#RegisterPingServer">func RegisterPingServer(s *grpc.Server, srv PingServer)</a></dd>
 			
 			
 				
-				<dd><a href="godoc.6.html#ConcurrentMapError">type ConcurrentMapError</a></dd>
-				
+				<dd><a href="godoc.6.html#PingClient">type PingClient</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.6.html#ConcurrentMapError.Error">func (err ConcurrentMapError) Error() string</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.6.html#ConcurrentMapError.Unwrap">func (err ConcurrentMapError) Unwrap() error</a></dd>
-				
-			
-				
-				<dd><a href="godoc.6.html#ConcurrentMapFunc">type ConcurrentMapFunc</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.6.html#NewPingClient">func NewPingClient(cc grpc.ClientConnInterface) PingClient</a></dd>
 				
 				
 			
 				
-				<dd><a href="godoc.6.html#CtxWaitGroup">type CtxWaitGroup</a></dd>
+				<dd><a href="godoc.6.html#PingServer">type PingServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.6.html#UnimplementedPingServer">type UnimplementedPingServer</a></dd>
+				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.6.html#NewCtxWaitGroup">func NewCtxWaitGroup(ctx context.Context) *CtxWaitGroup</a></dd>
-				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.6.html#CtxWaitGroup.Add">func (group *CtxWaitGroup) Add(delta int) error</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.6.html#CtxWaitGroup.Done">func (group *CtxWaitGroup) Done() error</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.6.html#CtxWaitGroup.Wait">func (group *CtxWaitGroup) Wait() error</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.6.html#UnimplementedPingServer.Ping">func (*UnimplementedPingServer) Ping(context.Context, *empty.Empty) (*empty.Empty, error)</a></dd>
 				
 			
 			
@@ -167,11 +149,7 @@ package pksync offers some new quality-of-life sync types.
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go">concurrentMap.go</a>
-			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go">ctxWaitGroup.go</a>
-			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/doc.go">doc.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go">ping_service.pb.go</a>
 			
 			</span>
 			</p>
@@ -185,52 +163,20 @@ package pksync offers some new quality-of-life sync types.
 		
 			<h2 id="pkg-variables">Variables</h2>
 			
-				<p>
-ErrWaitGroupClosed is returned when Delta() or Done() are called on a closed
-CtxWaitGroup.
-</p>
-
-				<pre>var <span id="ErrWaitGroupClosed">ErrWaitGroupClosed</span> = <a href="http://localhost:6161/pkg/errors/">errors</a>.<a href="http://localhost:6161/pkg/errors/#New">New</a>(&#34;CtxWaitGroup is closed&#34;)</pre>
+				
+				<pre>var <span id="File_grpeakec_proto_pkping_ping_service_proto">File_grpeakec_proto_pkping_ping_service_proto</span> <a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/">protoreflect</a>.<a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/#FileDescriptor">FileDescriptor</a></pre>
 			
 		
 		
 			
 			
-			<h2 id="ConcurrentMap">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1906:2011#L49">ConcurrentMap</a>
-				<a class="permalink" href="godoc.6.html#ConcurrentMap">&#xb6;</a>
+			<h2 id="RegisterPingServer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=5449:5504#L124">RegisterPingServer</a>
+				<a class="permalink" href="godoc.6.html#RegisterPingServer">&#xb6;</a>
 				
 				
 			</h2>
-			<pre>func ConcurrentMap(
-    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
-    values interface{},
-    mapFunc <a href="godoc.6.html#ConcurrentMapFunc">ConcurrentMapFunc</a>,
-) &lt;-chan <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-			<p>
-ConcurrentMap calls mapFunc on each value in value in values. Each mapFunc call is
-made concurrently in it&#39;s own goroutines wrapped in a pkerr.CatchPanic to catch and
-wrap panics as errors..
-</p>
-<p>
-Non-nil errors will be wrapped in a ConcurrentMapError and sent through the returned
-channel.
-</p>
-<p>
-Panics will be wrapped in a pkerr.PanicError before being wrapped in a
-ConcurrentMapError
-</p>
-<p>
-The returned channel will be closed when all ConcurrentMapFunc invocations have
-exited, allowing the caller to ranger over it.
-</p>
-<p>
-ctx is passed to each mapFunc invocations as-is. Context-cancelling is left to the
-caller.
-</p>
-<p>
-Cancelling ctx will stop the mapping process.
-</p>
-
+			<pre>func RegisterPingServer(s *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#Server">Server</a>, srv <a href="godoc.6.html#PingServer">PingServer</a>)</pre>
+			
 			
 			
 
@@ -238,28 +184,86 @@ Cancelling ctx will stop the mapping process.
 		
 			
 			
-			<h2 id="ConcurrentMapError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=262:748#L3">ConcurrentMapError</a>
-				<a class="permalink" href="godoc.6.html#ConcurrentMapError">&#xb6;</a>
+			<h2 id="PingClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=4354:4537#L88">PingClient</a>
+				<a class="permalink" href="godoc.6.html#PingClient">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-ConcurrentMapError is returned by ConcurrentMap and contains the source error, the
-value, and it&#39;s index in the values slice passed to ConcurrentMap.
+PingClient is the client API for Ping service.
+</p>
+<p>
+For semantics around ctx use and closing/ending streaming RPCs, please refer to <a href="https://godoc.org/google.golang.org/grpc#ClientConn.NewStream">https://godoc.org/google.golang.org/grpc#ClientConn.NewStream</a>.
 </p>
 
-			<pre>type ConcurrentMapError struct {
-<span id="ConcurrentMapError.MapFuncErr"></span>    <span class="comment">// MapFuncErr is the error returned by mapFunc. This error wil never be nil. If</span>
-    <span class="comment">// mapFunc panicked, the panic value will be wrapped in a pkerr.PanicError then</span>
-    <span class="comment">// stored here.</span>
-    MapFuncErr <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+			<pre>type PingClient interface {
+    <span class="comment">// Ping is a simple endpoint to test if a service is running.</span>
+    Ping(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, in *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
+}</pre>
 
-<span id="ConcurrentMapError.Value"></span>    <span class="comment">// Value is the value passed to mapFunc. NOTE: if mapFunc mutates this value, Value</span>
-    <span class="comment">// will be in the value&#39;s current state, NOT it&#39;s original state.</span>
-    Value interface{}
+			
 
-<span id="ConcurrentMapError.ValueIndex"></span>    <span class="comment">// ValueIndex is the index of the values where Value was stored.</span>
-    ValueIndex <a href="http://localhost:6161/pkg/builtin/#int">int</a>
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewPingClient">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=4596:4654#L97">NewPingClient</a>
+					<a class="permalink" href="godoc.6.html#NewPingClient">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewPingClient(cc <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConnInterface">ClientConnInterface</a>) <a href="godoc.6.html#PingClient">PingClient</a></pre>
+				
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="PingServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=4994:5145#L111">PingServer</a>
+				<a class="permalink" href="godoc.6.html#PingServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+PingServer is the server API for Ping service.
+</p>
+
+			<pre>type PingServer interface {
+    <span class="comment">// Ping is a simple endpoint to test if a service is running.</span>
+    Ping(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UnimplementedPingServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=5234:5273#L117">UnimplementedPingServer</a>
+				<a class="permalink" href="godoc.6.html#UnimplementedPingServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+UnimplementedPingServer can be embedded to have forward compatible implementations.
+</p>
+
+			<pre>type UnimplementedPingServer struct {
 }
 </pre>
 
@@ -275,147 +279,13 @@ value, and it&#39;s index in the values slice passed to ConcurrentMap.
 
 			
 				
-				<h3 id="ConcurrentMapError.Error">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=897:941#L23">Error</a>
-					<a class="permalink" href="godoc.6.html#ConcurrentMapError.Error">&#xb6;</a>
+				<h3 id="UnimplementedPingServer.Ping">func (*UnimplementedPingServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=5275:5364#L120">Ping</a>
+					<a class="permalink" href="godoc.6.html#UnimplementedPingServer.Ping">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (err <a href="godoc.6.html#ConcurrentMapError">ConcurrentMapError</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
-				<p>
-Error implements builtins.error.
-</p>
-
+				<pre>func (*<a href="godoc.6.html#UnimplementedPingServer">UnimplementedPingServer</a>) Ping(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
 				
-				
-				
-			
-				
-				<h3 id="ConcurrentMapError.Unwrap">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=788:832#L18">Unwrap</a>
-					<a class="permalink" href="godoc.6.html#ConcurrentMapError.Unwrap">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (err <a href="godoc.6.html#ConcurrentMapError">ConcurrentMapError</a>) Unwrap() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				<p>
-Unwrap implements xerrors.Wrapper.
-</p>
-
-				
-				
-				
-			
-		
-			
-			
-			<h2 id="ConcurrentMapFunc">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1128:1214#L30">ConcurrentMapFunc</a>
-				<a class="permalink" href="godoc.6.html#ConcurrentMapFunc">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-ConcurrentMapFunc is the signature fop the mapFunc parameter of ConcurrentMap.
-</p>
-
-			<pre>type ConcurrentMapFunc = func(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, value interface{}, index <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="CtxWaitGroup">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=737:1575#L17">CtxWaitGroup</a>
-				<a class="permalink" href="godoc.6.html#CtxWaitGroup">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-CtxWaitGroup is a WaitGroup where Wait will exit with an error if a context
-cancels. TimeoutWaitGroup cannot be re-used once it closes.
-</p>
-
-			<pre>type CtxWaitGroup struct {
-    <span class="comment">// contains filtered or unexported fields</span>
-}
-</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-				
-				<h3 id="NewCtxWaitGroup">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=5011:5066#L167">NewCtxWaitGroup</a>
-					<a class="permalink" href="godoc.6.html#NewCtxWaitGroup">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func NewCtxWaitGroup(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>) *<a href="godoc.6.html#CtxWaitGroup">CtxWaitGroup</a></pre>
-				<p>
-NewCtxWaitGroup creates a new CtxWaitGroup that will signalClose when it&#39;s internal
-counter hits 0 OR ctx is cancelled.
-</p>
-
-				
-				
-			
-
-			
-				
-				<h3 id="CtxWaitGroup.Add">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4272:4319#L143">Add</a>
-					<a class="permalink" href="godoc.6.html#CtxWaitGroup.Add">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (group *<a href="godoc.6.html#CtxWaitGroup">CtxWaitGroup</a>) Add(delta <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				<p>
-Add adds delta to the WaitGroup. Returns an error if the passed context has been
-cancelled. Panics id the internal counter drops below -1.
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="CtxWaitGroup.Done">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4510:4549#L149">Done</a>
-					<a class="permalink" href="godoc.6.html#CtxWaitGroup.Done">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (group *<a href="godoc.6.html#CtxWaitGroup">CtxWaitGroup</a>) Done() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				<p>
-Done decrements the WaitGroup by 1. Returns an error is the context has been
-cancelled. Panics if the internal counter drops below -1.
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="CtxWaitGroup.Wait">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4656:4695#L154">Wait</a>
-					<a class="permalink" href="godoc.6.html#CtxWaitGroup.Wait">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (group *<a href="godoc.6.html#CtxWaitGroup">CtxWaitGroup</a>) Wait() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				<p>
-Wait waits until the WaitGroup closes OR the ctx expires.
-</p>
-
 				
 				
 				
