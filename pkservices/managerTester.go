@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"os"
 	"testing"
 	"time"
 )
@@ -166,4 +167,9 @@ func (tester ManagerTesting) PingGrpcServer(ctx context.Context) {
 		retries++
 		ok = tester.retryPing(ctx, client, retries)
 	}
+}
+
+// SendSignal sends an os.Signal to the Manager to test shutdown via host signal.
+func (tester ManagerTesting) SendSignal(osSignal os.Signal) {
+	tester.manager.osSignals <- osSignal
 }
