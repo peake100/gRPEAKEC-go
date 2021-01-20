@@ -2,6 +2,7 @@ package pkservices
 
 import (
 	"github.com/peake100/gRPEAKEC-go/pkerr"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"time"
 )
@@ -20,7 +21,12 @@ type ManagerOpts struct {
 	// server.
 	addPingService bool
 
+	// errGenerator holds the pkerr.ErrorGenerator we should use to create grpc.Server
+	// interceptors for error handling.
 	errGenerator *pkerr.ErrorGenerator
+
+	// Logger to use.
+	logger zerolog.Logger
 }
 
 // WithGrpcServerAddress sets the address the gRPC server should handle rpc calls on.
@@ -79,10 +85,19 @@ func (opts *ManagerOpts) WithPkErrInterceptors(
 	)
 }
 
+// WithLogger sets a zerolog.Logger to use for the manger.
+//
+// Default: Global Logger.
+func (opts *ManagerOpts) WithLogger(logger zerolog.Logger) *ManagerOpts {
+	opts.logger = logger
+	return opts
+}
+
 // NewManagerOpts creates a new *ManagerOpts value with default options set.
 func NewManagerOpts() *ManagerOpts {
 	return new(ManagerOpts).
 		WithGrpcServerAddress(DefaultGrpcAddress).
 		WithMaxShutdownDuration(30 * time.Second).
-		WithGrpcPingService(true)
+		WithGrpcPingService(true).
+		WithLogger(zerolog.Logger{})
 }

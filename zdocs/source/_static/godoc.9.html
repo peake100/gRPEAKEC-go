@@ -121,6 +121,9 @@ package pkerr offers easy-to-use rich errors between services.
 			
 			
 				
+				<dd><a href="godoc.9.html#CatchPanic">func CatchPanic(run func() error) (err error)</a></dd>
+			
+				
 				<dd><a href="godoc.9.html#ReissueDefaultSentinels">func ReissueDefaultSentinels(issuer string, offset int)</a></dd>
 			
 			
@@ -187,6 +190,17 @@ package pkerr offers easy-to-use rich errors between services.
 				
 			
 				
+				<dd><a href="godoc.9.html#PanicError">type PanicError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#PanicError.Error">func (err PanicError) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#PanicError.Unwrap">func (err PanicError) Unwrap() error</a></dd>
+				
+			
+				
 				<dd><a href="godoc.9.html#SentinelError">type SentinelError</a></dd>
 				
 				
@@ -220,6 +234,8 @@ package pkerr offers easy-to-use rich errors between services.
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go">generator.go</a>
 			
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go">generatorInterceptors.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/handlePanic.go">handlePanic.go</a>
 			
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogenAliases.go">protogenAliases.go</a>
 			
@@ -258,6 +274,23 @@ when an incoming error is not an APIError, *Error, or SentinelError value.
 )</pre>
 			
 		
+		
+			
+			
+			<h2 id="CatchPanic">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/handlePanic.go?s=1234:1279#L31">CatchPanic</a>
+				<a class="permalink" href="godoc.9.html#CatchPanic">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func CatchPanic(run func() <a href="http://localhost:6161/pkg/builtin/#error">error</a>) (err <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
+			<p>
+CatchPanic takes in a function with an error return, catches any panics that occur,
+and converts them to PanicError. Returned errors are passed up as-is.
+</p>
+
+			
+			
+
 		
 			
 			
@@ -538,7 +571,7 @@ incoming errors to an APIError if the error contains an *Error detail, and a new
 				
 			
 				
-				<h3 id="ErrorGenerator.NewStreamServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=7413:7497#L244">NewStreamServerInterceptor</a>
+				<h3 id="ErrorGenerator.NewStreamServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6869:6953#L228">NewStreamServerInterceptor</a>
 					<a class="permalink" href="godoc.9.html#ErrorGenerator.NewStreamServerInterceptor">&#xb6;</a>
 					
 					
@@ -575,7 +608,7 @@ will be extracted into an APIError, and a new *TraceInfo frame will be added.
 				
 			
 				
-				<h3 id="ErrorGenerator.NewUnaryServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6813:6895#L223">NewUnaryServerInterceptor</a>
+				<h3 id="ErrorGenerator.NewUnaryServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6162:6244#L200">NewUnaryServerInterceptor</a>
 					<a class="permalink" href="godoc.9.html#ErrorGenerator.NewUnaryServerInterceptor">&#xb6;</a>
 					
 					
@@ -656,6 +689,67 @@ specific codes.Code using errors.Is.
 				<pre>func (code <a href="godoc.9.html#GrpcCodeErr">GrpcCodeErr</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
 				<p>
 Error implements builtins.error.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="PanicError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/handlePanic.go?s=86:281#L1">PanicError</a>
+				<a class="permalink" href="godoc.9.html#PanicError">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+PanicError wraps a recover() panic value as an error.
+</p>
+
+			<pre>type PanicError struct {
+    <span class="comment">// Source is the recovered error. If the value from recover() is not an error type</span>
+    <span class="comment">// it will be coerce into an error string with format: &#34;%+v&#34;</span>
+<span id="PanicError.Recovered"></span>    Recovered interface{}
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="PanicError.Error">func (PanicError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/handlePanic.go?s=319:355#L3">Error</a>
+					<a class="permalink" href="godoc.9.html#PanicError.Error">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="godoc.9.html#PanicError">PanicError</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				<p>
+Error implements builtins.error.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PanicError.Unwrap">func (PanicError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/handlePanic.go?s=573:609#L9">Unwrap</a>
+					<a class="permalink" href="godoc.9.html#PanicError.Unwrap">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="godoc.9.html#PanicError">PanicError</a>) Unwrap() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Unwrap implements xerrors.Wrapper. If the underlying Recovered value is an error,
+it will be returned, otherwise an error-string will be returned.
 </p>
 
 				

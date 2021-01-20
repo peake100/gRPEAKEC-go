@@ -119,6 +119,25 @@ package pksync offers some new quality-of-life sync types.
 				<dd><a href="godoc.6.html#pkg-variables">Variables</a></dd>
 			
 			
+				
+				<dd><a href="godoc.6.html#ConcurrentMap">func ConcurrentMap(ctx context.Context, values interface{}, mapFunc ConcurrentMapFunc) &lt;-chan error</a></dd>
+			
+			
+				
+				<dd><a href="godoc.6.html#ConcurrentMapError">type ConcurrentMapError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.6.html#ConcurrentMapError.Error">func (err ConcurrentMapError) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.6.html#ConcurrentMapError.Unwrap">func (err ConcurrentMapError) Unwrap() error</a></dd>
+				
+			
+				
+				<dd><a href="godoc.6.html#ConcurrentMapFunc">type ConcurrentMapFunc</a></dd>
+				
+				
 			
 				
 				<dd><a href="godoc.6.html#CtxWaitGroup">type CtxWaitGroup</a></dd>
@@ -148,6 +167,8 @@ package pksync offers some new quality-of-life sync types.
 			<p>
 			<span style="font-size:90%">
 			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go">concurrentMap.go</a>
+			
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go">ctxWaitGroup.go</a>
 			
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/doc.go">doc.go</a>
@@ -173,6 +194,141 @@ CtxWaitGroup.
 			
 		
 		
+			
+			
+			<h2 id="ConcurrentMap">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1906:2011#L49">ConcurrentMap</a>
+				<a class="permalink" href="godoc.6.html#ConcurrentMap">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func ConcurrentMap(
+    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
+    values interface{},
+    mapFunc <a href="godoc.6.html#ConcurrentMapFunc">ConcurrentMapFunc</a>,
+) &lt;-chan <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+			<p>
+ConcurrentMap calls mapFunc on each value in value in values. Each mapFunc call is
+made concurrently in it&#39;s own goroutines wrapped in a pkerr.CatchPanic to catch and
+wrap panics as errors..
+</p>
+<p>
+Non-nil errors will be wrapped in a ConcurrentMapError and sent through the returned
+channel.
+</p>
+<p>
+Panics will be wrapped in a pkerr.PanicError before being wrapped in a
+ConcurrentMapError
+</p>
+<p>
+The returned channel will be closed when all ConcurrentMapFunc invocations have
+exited, allowing the caller to ranger over it.
+</p>
+<p>
+ctx is passed to each mapFunc invocations as-is. Context-cancelling is left to the
+caller.
+</p>
+<p>
+Cancelling ctx will stop the mapping process.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ConcurrentMapError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=262:748#L3">ConcurrentMapError</a>
+				<a class="permalink" href="godoc.6.html#ConcurrentMapError">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+ConcurrentMapError is returned by ConcurrentMap and contains the source error, the
+value, and it&#39;s index in the values slice passed to ConcurrentMap.
+</p>
+
+			<pre>type ConcurrentMapError struct {
+<span id="ConcurrentMapError.MapFuncErr"></span>    <span class="comment">// MapFuncErr is the error returned by mapFunc. This error wil never be nil. If</span>
+    <span class="comment">// mapFunc panicked, the panic value will be wrapped in a pkerr.PanicError then</span>
+    <span class="comment">// stored here.</span>
+    MapFuncErr <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+
+<span id="ConcurrentMapError.Value"></span>    <span class="comment">// Value is the value passed to mapFunc. NOTE: if mapFunc mutates this value, Value</span>
+    <span class="comment">// will be in the value&#39;s current state, NOT it&#39;s original state.</span>
+    Value interface{}
+
+<span id="ConcurrentMapError.ValueIndex"></span>    <span class="comment">// ValueIndex is the index of the values where Value was stored.</span>
+    ValueIndex <a href="http://localhost:6161/pkg/builtin/#int">int</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ConcurrentMapError.Error">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=897:941#L23">Error</a>
+					<a class="permalink" href="godoc.6.html#ConcurrentMapError.Error">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="godoc.6.html#ConcurrentMapError">ConcurrentMapError</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				<p>
+Error implements builtins.error.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ConcurrentMapError.Unwrap">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=788:832#L18">Unwrap</a>
+					<a class="permalink" href="godoc.6.html#ConcurrentMapError.Unwrap">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="godoc.6.html#ConcurrentMapError">ConcurrentMapError</a>) Unwrap() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Unwrap implements xerrors.Wrapper.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ConcurrentMapFunc">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1128:1214#L30">ConcurrentMapFunc</a>
+				<a class="permalink" href="godoc.6.html#ConcurrentMapFunc">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+ConcurrentMapFunc is the signature fop the mapFunc parameter of ConcurrentMap.
+</p>
+
+			<pre>type ConcurrentMapFunc = func(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, value interface{}, index <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
 		
 			
 			
@@ -201,7 +357,7 @@ cancels. TimeoutWaitGroup cannot be re-used once it closes.
 
 			
 				
-				<h3 id="NewCtxWaitGroup">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4789:4844#L163">NewCtxWaitGroup</a>
+				<h3 id="NewCtxWaitGroup">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=5011:5066#L167">NewCtxWaitGroup</a>
 					<a class="permalink" href="godoc.6.html#NewCtxWaitGroup">&#xb6;</a>
 					
 					
@@ -218,7 +374,7 @@ counter hits 0 OR ctx is cancelled.
 
 			
 				
-				<h3 id="CtxWaitGroup.Add">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4050:4097#L139">Add</a>
+				<h3 id="CtxWaitGroup.Add">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4272:4319#L143">Add</a>
 					<a class="permalink" href="godoc.6.html#CtxWaitGroup.Add">&#xb6;</a>
 					
 					
@@ -234,7 +390,7 @@ cancelled. Panics id the internal counter drops below -1.
 				
 			
 				
-				<h3 id="CtxWaitGroup.Done">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4288:4327#L145">Done</a>
+				<h3 id="CtxWaitGroup.Done">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4510:4549#L149">Done</a>
 					<a class="permalink" href="godoc.6.html#CtxWaitGroup.Done">&#xb6;</a>
 					
 					
@@ -250,7 +406,7 @@ cancelled. Panics if the internal counter drops below -1.
 				
 			
 				
-				<h3 id="CtxWaitGroup.Wait">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4434:4473#L150">Wait</a>
+				<h3 id="CtxWaitGroup.Wait">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4656:4695#L154">Wait</a>
 					<a class="permalink" href="godoc.6.html#CtxWaitGroup.Wait">&#xb6;</a>
 					
 					

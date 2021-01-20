@@ -22,7 +22,12 @@ type ManagerTesting struct {
 // Services returns the list of registered services. This method is for testing purposes
 // only and returned values should not be modified unless you know what you are doing!
 func (tester ManagerTesting) Services() []Service {
-	return tester.manager.services
+	services := make([]Service, len(tester.manager.services))
+	for i, service := range tester.manager.services {
+		services[i] = service.Service
+	}
+
+	return services
 }
 
 func (tester ManagerTesting) checkForGrpcService() {

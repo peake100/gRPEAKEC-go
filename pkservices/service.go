@@ -2,6 +2,7 @@ package pkservices
 
 import (
 	"context"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"sync"
 )
@@ -20,7 +21,14 @@ type Service interface {
 	//
 	// resourcesReleased should be incremented and decremented by individual resources,
 	// and the Manager will block on it until the context passed to Shutdown cancels.
-	Setup(resourcesCtx context.Context, resourcesReleased *sync.WaitGroup) error
+	//
+	// logger is a zerolog.Logger with a
+	// zerolog.Logger.WithString("SERVICE", [Service.Id()]) entry already on it.
+	Setup(
+		resourcesCtx context.Context,
+		resourcesReleased *sync.WaitGroup,
+		logger zerolog.Logger,
+	) error
 }
 
 // Generic framework for registering non-grpc based services to the monitor, so multiple

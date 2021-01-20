@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/peake100/gRPEAKEC-go/pkservices/protogen"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"sync"
 )
@@ -19,7 +20,8 @@ var NewPingClient = protogen.NewPingClient
 
 // pingService is a basic implementation of PingServer that the manager can use to test
 // connectivity to the server.
-type pingService struct{}
+type pingService struct{
+}
 
 // Id implements Service and returns "gPEAKERC Ping".
 func (ping pingService) Id() string {
@@ -28,7 +30,9 @@ func (ping pingService) Id() string {
 
 // Setup implements Service.
 func (ping pingService) Setup(
-	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
+	resourcesCtx context.Context,
+	resourcesReleased *sync.WaitGroup,
+	logger zerolog.Logger,
 ) error {
 	return nil
 }

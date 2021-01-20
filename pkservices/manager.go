@@ -2,9 +2,11 @@ package pkservices
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"github.com/peake100/gRPEAKEC-go/pksync"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"net"
 	"os"
@@ -56,6 +58,15 @@ type managerSync struct {
 	shutdownComplete chan struct{}
 }
 
+// serviceInfo holds each service and any additional relevant data
+type serviceInfo struct {
+	// Service is the service itself.
+	Service Service
+
+	// Logger is the logger for the service.
+	Logger zerolog.Logger
+}
+
 // Manager manages the lifetime of the service.
 type Manager struct {
 	// sync holds all the sync objects for Manager.
@@ -66,7 +77,7 @@ type Manager struct {
 	osSignals chan os.Signal
 
 	// services is all the services the manager is tasked with running.
-	services []Service
+	services []serviceInfo
 	// opts are the options to run the manager with.
 	opts *ManagerOpts
 }
@@ -109,7 +120,7 @@ func (manager *Manager) collectServicesErrors(results []error) error {
 // If any action() invocation returns an error, Manager.StartShutdown is called
 // immediately.
 func (manager *Manager) mapServices(
-	action func(service Service) error,
+	action func(service serviceInfo) error,
 ) error {
 	// We're going to errors in this array.
 	errs := make([]error, 0)
@@ -117,13 +128,13 @@ func (manager *Manager) mapServices(
 	var mapFunc pksync.ConcurrentMapFunc = func(
 		ctx context.Context, value interface{}, index int,
 	) error {
-		service := value.(Service)
+		info := value.(serviceInfo)
 		err := pkerr.CatchPanic(func() error {
-			return action(service)
+			return action(info)
 		})
 		if err != nil {
 			return ServiceError{
-				ServiceId: service.Id(),
+				ServiceId: info.Service.Id(),
 				Err:       err,
 			}
 		}
@@ -153,10 +164,12 @@ func (manager *Manager) mapServices(
 
 // setupServices starts all the services
 func (manager *Manager) setupServices() error {
-	return manager.mapServices(func(service Service) error {
-		err := service.Setup(
-			manager.sync.resourcesCtx, manager.sync.resourcesReleased,
+	return manager.mapServices(func(info serviceInfo) error {
+		info.Logger.Info().Msg("running setup")
+		err := info.Service.Setup(
+			manager.sync.resourcesCtx, manager.sync.resourcesReleased, info.Logger,
 		)
+		info.Logger.Info().Msg("setup complete")
 
 		return err
 	})
@@ -169,8 +182,8 @@ func (manager *Manager) runGrpcServices() error {
 	// Iterate over the services and see if there are any grpc ones
 	var hasGrpc bool
 	// We know this will not result in an error.
-	_ = manager.mapServices(func(service Service) error {
-		_, ok := service.(GrpcService)
+	_ = manager.mapServices(func(info serviceInfo) error {
+		_, ok := info.Service.(GrpcService)
 		if ok {
 			hasGrpc = true
 		}
@@ -186,8 +199,8 @@ func (manager *Manager) runGrpcServices() error {
 	// in the mapServices function so that if a Registration method panics, we will
 	// get the error.
 	server := grpc.NewServer(manager.opts.grpcServerOpts...)
-	err := manager.mapServices(func(service Service) error {
-		grpcService, ok := service.(GrpcService)
+	err := manager.mapServices(func(info serviceInfo) error {
+		grpcService, ok := info.Service.(GrpcService)
 		if !ok {
 			return nil
 		}
@@ -214,6 +227,10 @@ func (manager *Manager) runGrpcServices() error {
 	}()
 
 	// Serve the gRPC services.
+	manager.opts.logger.Info().
+		Str("SERVER_ADDRESS", manager.opts.grpcServiceAddress).
+		Msg("serving gRPC")
+
 	err = server.Serve(listener)
 	if err != nil {
 		return fmt.Errorf("error serving gRPC: %w", err)
@@ -224,12 +241,15 @@ func (manager *Manager) runGrpcServices() error {
 
 // genericServicesRun runs all generic services
 func (manager *Manager) genericServicesRun() error {
-	return manager.mapServices(func(service Service) error {
-		serviceGeneric, ok := service.(GenericService)
+	return manager.mapServices(func(info serviceInfo) error {
+		serviceGeneric, ok := info.Service.(GenericService)
 		if !ok {
 			return nil
 		}
-		return serviceGeneric.Run(manager.sync.servicesCtx, manager.sync.shutdownCtx)
+		info.Logger.Info().Msg("running")
+		err := serviceGeneric.Run(manager.sync.servicesCtx, manager.sync.shutdownCtx)
+		info.Logger.Info().Msg("run complete")
+		return err
 	})
 }
 
@@ -314,7 +334,10 @@ func (manager *Manager) listenForSignal() {
 
 	// Wait for an interrupt to happen OR our master context to be cancelled.
 	select {
-	case <-events:
+	case osSignal := <-events:
+		manager.opts.logger.Error().
+			Str("SIGNAL", osSignal.String()).
+			Msg("signal received from host")
 	case <-manager.sync.servicesCtx.Done():
 	case <-manager.sync.listenersCtx.Done():
 	}
@@ -335,11 +358,15 @@ func (manager *Manager) timeoutShutdown() {
 	// Wait for a shutdown to be signaled.
 	<-manager.sync.servicesCtx.Done()
 
+	deadline := time.NewTimer(manager.opts.maxShutdownDuration)
+	defer deadline.Stop()
+
 	// Wait for either shutdown complete to be reported OR the shutdown timer to
 	// time out.
 	select {
 	case <-manager.sync.listenersCtx.Done():
-	case <-time.NewTimer(manager.opts.maxShutdownDuration).C:
+	case <-deadline.C:
+		manager.opts.logger.Error().Msg("shutdown exceeded max timeout")
 	}
 }
 
@@ -383,9 +410,65 @@ func (manager *Manager) Reset() {
 	}
 }
 
+// logServicesErrors logs a ServicesErrors for a given stage using the passed
+// stageLogger.
+func (manager *Manager) logServicesErrors(
+	errs ServicesErrors, stageLogger zerolog.Logger,
+) {
+	var serviceErr ServiceError
+	for _, err := range errs.Errs {
+		serviceName := "unknown"
+		if errors.As(err, &serviceErr) {
+			serviceName = serviceErr.ServiceId
+			err = serviceErr.Err
+		}
+		stageLogger.Err(err).Str("SERVICE", serviceName)
+	}
+}
+
+// logErrors runs any errors returned from a ManagerError.
+func (manager *Manager) logErrors(err ManagerError) {
+	stages := []struct{
+		Name string
+		Err error
+	}{
+		{
+			Name: "setup",
+			Err:  err.SetupErr,
+		},
+		{
+			Name: "run",
+			Err:  err.RunErr,
+		},
+		{
+			Name: "shutdown",
+			Err:  err.ShutdownErr,
+		},
+	}
+
+	var servicesErrors ServicesErrors
+	for _, stage := range stages {
+		if stage.Err == nil {
+			continue
+		}
+
+		stageLogger := manager.opts.logger.With().Str("STAGE", stage.Name).Logger()
+
+		if errors.As(stage.Err, &servicesErrors) {
+			manager.logServicesErrors(servicesErrors, stageLogger)
+		} else {
+			stageLogger.Err(stage.Err)
+		}
+	}
+}
+
 // Run runs the manager and all it's services / resources. Run blocks until the manager
 // has fully shut down.
 func (manager *Manager) Run() error {
+	manager.opts.logger.Info().
+		Dur("MAX_SHUTDOWN", manager.opts.maxShutdownDuration).
+		Bool("WITH_PING", manager.opts.addPingService).
+		Msg("running service manager")
 	// We're going to store the different stage errors here.
 	managerErr := ManagerError{}
 
@@ -412,6 +495,7 @@ func (manager *Manager) Run() error {
 
 	// If our manager error has errors to report, return it.
 	if managerErr.hasErrors() {
+		manager.logErrors(managerErr)
 		return managerErr
 	}
 
@@ -447,8 +531,22 @@ func NewManager(opts *ManagerOpts, services ...Service) *Manager {
 		services = append(services, pingService{})
 	}
 
+	serviceInfos := make([]serviceInfo, len(services))
+	for i, thisService := range services {
+		serviceLogger := opts.logger.With().
+			Str("SERVICE", thisService.Id()).
+			Logger()
+
+		thisInfo := serviceInfo{
+			Service: thisService,
+			Logger:  serviceLogger,
+		}
+
+		serviceInfos[i] = thisInfo
+	}
+
 	manager := &Manager{
-		services: services,
+		services: serviceInfos,
 		opts:     opts,
 	}
 	manager.Reset()

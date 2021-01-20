@@ -9,6 +9,7 @@ import (
 	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
 	"github.com/peake100/gRPEAKEC-go/pktesting"
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"
@@ -62,7 +63,9 @@ func (mock *MockService) Id() string {
 }
 
 func (mock *MockService) Setup(
-	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
+	resourcesCtx context.Context,
+	resourcesReleased *sync.WaitGroup,
+	logger zerolog.Logger,
 ) error {
 	return nil
 }

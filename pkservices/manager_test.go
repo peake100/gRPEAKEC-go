@@ -6,6 +6,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
 	"github.com/peake100/gRPEAKEC-go/pktesting"
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -26,7 +27,9 @@ func (service *MockService) Id() string {
 }
 
 func (service *MockService) Setup(
-	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
+	resourcesCtx context.Context,
+	resourcesReleased *sync.WaitGroup,
+	logger zerolog.Logger,
 ) error {
 	resourcesReleased.Add(1)
 	// Set up a dummy resource that reports it has been closed.
@@ -150,7 +153,9 @@ func (mock *MockGenericService) Id() string {
 }
 
 func (mock *MockGenericService) Setup(
-	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
+	resourcesCtx context.Context,
+	resourcesReleased *sync.WaitGroup,
+	logger zerolog.Logger,
 ) error {
 	resourcesReleased.Add(1)
 	go func() {
@@ -293,7 +298,9 @@ func (s GenericErrService) Id() string {
 }
 
 func (s GenericErrService) Setup(
-	resourcesCtx context.Context, resourcesReleased *sync.WaitGroup,
+	resourcesCtx context.Context,
+	resourcesReleased *sync.WaitGroup,
+	logger zerolog.Logger,
 ) error {
 	if s.ErrOnSetup {
 		return io.EOF

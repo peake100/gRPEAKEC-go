@@ -589,25 +589,32 @@ ManagerSuite offers some
 
 			
 				
-				<h3 id="ManagerSuite.SetupSuite">func (*ManagerSuite) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go?s=312:347#L10">SetupSuite</a>
+				<h3 id="ManagerSuite.SetupSuite">func (*ManagerSuite) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go?s=392:427#L6">SetupSuite</a>
 					<a class="permalink" href="godoc.7.html#ManagerSuite.SetupSuite">&#xb6;</a>
 					
 					
 				</h3>
 				<pre>func (m *<a href="godoc.7.html#ManagerSuite">ManagerSuite</a>) SetupSuite()</pre>
-				
+				<p>
+SetupSuite implements suite.SetupAllSuite, and starts the manager running in it&#39;s own
+routine, and blocks until it can ping the gRPC server if there are any gRPC services.
+</p>
+
 				
 				
 				
 			
 				
-				<h3 id="ManagerSuite.TearDownSuite">func (*ManagerSuite) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go?s=214:252#L4">TearDownSuite</a>
+				<h3 id="ManagerSuite.TearDownSuite">func (*ManagerSuite) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/managerSuite.go?s=1023:1061#L39">TearDownSuite</a>
 					<a class="permalink" href="godoc.7.html#ManagerSuite.TearDownSuite">&#xb6;</a>
 					
 					
 				</h3>
 				<pre>func (m *<a href="godoc.7.html#ManagerSuite">ManagerSuite</a>) TearDownSuite()</pre>
-				
+				<p>
+TearDownSuite implements suite.TearDownAllSuite and shuts down the manager.
+</p>
+
 				
 				
 				
