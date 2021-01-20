@@ -428,9 +428,9 @@ func (manager *Manager) logServicesErrors(
 
 // logErrors runs any errors returned from a ManagerError.
 func (manager *Manager) logErrors(err ManagerError) {
-	stages := []struct{
+	stages := []struct {
 		Name string
-		Err error
+		Err  error
 	}{
 		{
 			Name: "setup",

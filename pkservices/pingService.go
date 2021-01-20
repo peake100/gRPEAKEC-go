@@ -20,7 +20,7 @@ var NewPingClient = protogen.NewPingClient
 
 // pingService is a basic implementation of PingServer that the manager can use to test
 // connectivity to the server.
-type pingService struct{
+type pingService struct {
 }
 
 // Id implements Service and returns "gPEAKERC Ping".
