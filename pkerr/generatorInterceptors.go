@@ -66,7 +66,7 @@ func (gen *ErrorGenerator) extractClientErrorFromInvoker(err error) error {
 		// Return an APIError object.
 		return APIError{
 			// Put our error info in here.
-			Err: errProto,
+			Proto: errProto,
 			// Delta the original error so it can be unwrapped if desired.
 			Source: clientErr{statusErr: err},
 		}
@@ -152,7 +152,7 @@ func (gen *ErrorGenerator) errToAPIErrConvertType(
 	} else if errors.As(source, &apiErr) {
 		// If this is an APIError that has been wrapped, multiple times, put the full
 		// error in additional context.
-		apiErr = gen.applyTraceSettings(apiErr)
+		apiErr = gen.applySettings(apiErr)
 		if apiErr.Error() != source.Error() {
 			pkText = apiErr.Error()
 		}
@@ -173,7 +173,7 @@ func (gen *ErrorGenerator) errToAPIErr(source error) APIError {
 	// If baseText is not empty, replace it with "[error]" and set that to
 	// "Additional Context"
 	if pkText != "" {
-		latestTrace := apiErr.Err.Trace[len(apiErr.Err.Trace)-1]
+		latestTrace := apiErr.Proto.Trace[len(apiErr.Proto.Trace)-1]
 		latestTrace.AdditionalContext = strings.Replace(
 			source.Error(), pkText, "[error]", -1,
 		)
@@ -189,12 +189,12 @@ func (gen *ErrorGenerator) errToStatus(source error) error {
 
 	// Create a new status with the correct error code and message.
 	thisStatus := status.New(
-		codes.Code(apiErr.Err.GrpcCode),
+		codes.Code(apiErr.Proto.GrpcCode),
 		apiErr.Error(),
 	)
 
 	// Delta our *Error message as a detail.
-	withDetails, err := thisStatus.WithDetails(apiErr.Err)
+	withDetails, err := thisStatus.WithDetails(apiErr.Proto)
 	if err == nil {
 		// If there was no error, make it our returned status
 		thisStatus = withDetails

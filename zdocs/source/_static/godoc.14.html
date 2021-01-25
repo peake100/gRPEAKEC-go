@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>examples - Go Documentation Server</title>
+  <title>pkclients - Go Documentation Server</title>
 
 <link type="text/css" rel="stylesheet" href="style.css">
 
@@ -26,7 +26,7 @@
 <div id="topbar" class="wide"><div class="container">
 <div class="top-heading" id="heading-wide"><a href="http://localhost:6161/pkg/">Go Documentation Server</a></div>
 <div class="top-heading" id="heading-narrow"><a href="http://localhost:6161/pkg/">GoDoc</a></div>
-<a href="godoc.5.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
+<a href="godoc.14.html#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
 <form method="GET" action="http://localhost:6161/search">
 <div id="menu">
 
@@ -43,7 +43,7 @@
 
 
   <h1>
-    Package examples
+    Package pkclients
     <span class="text-muted"></span>
   </h1>
 
@@ -77,11 +77,11 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "github.com/peake100/gRPEAKEC-go/zdocs/examples/sortinghat"</code></dd>
+			<dd><code>import "github.com/peake100/gRPEAKEC-go/pkclients"</code></dd>
 			</dl>
 			<dl>
-			<dd><a href="godoc.5.html#pkg-overview" class="overviewLink">Overview</a></dd>
-			<dd><a href="godoc.5.html#pkg-index" class="indexLink">Index</a></dd>
+			<dd><a href="godoc.14.html#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="godoc.14.html#pkg-index" class="indexLink">Index</a></dd>
 			
 			
 			</dl>
@@ -94,7 +94,7 @@
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
 				<p>
-package examples holds testable examples used in sphinx documentation.
+quality-of-life utilities for working with gRPC clients.
 </p>
 
 				
@@ -114,6 +114,9 @@ package examples holds testable examples used in sphinx documentation.
 			
 			
 			
+				
+				<dd><a href="godoc.14.html#WaitForGrpcServer">func WaitForGrpcServer(ctx context.Context, clientConn grpc.ClientConnInterface) error</a></dd>
+			
 			
 			
 			</dl>
@@ -126,7 +129,9 @@ package examples holds testable examples used in sphinx documentation.
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/zdocs/examples/sortinghat/doc.go">doc.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkclients/doc.go">doc.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkclients/waitForGrpcServer.go">waitForGrpcServer.go</a>
 			
 			</span>
 			</p>
@@ -138,6 +143,25 @@ package examples holds testable examples used in sphinx documentation.
 
 		
 		
+		
+			
+			
+			<h2 id="WaitForGrpcServer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkclients/waitForGrpcServer.go?s=1504:1594#L45">WaitForGrpcServer</a>
+				<a class="permalink" href="godoc.14.html#WaitForGrpcServer">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func WaitForGrpcServer(
+    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, clientConn <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConnInterface">ClientConnInterface</a>,
+) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+			<p>
+WaitForGrpcServer blocks until the gRPC server clientConn is connected to is
+handling requests.
+</p>
+
+			
+			
+
 		
 		
 	

@@ -17,7 +17,6 @@ develop-eggs/
 .coverage
 zdevelop/tests/_reports/*
 coverage.out
-zdocs/examples/*
 
 # venvs
 .venv/

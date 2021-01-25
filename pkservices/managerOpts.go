@@ -69,13 +69,13 @@ func (opts *ManagerOpts) WithMaxShutdownDuration(max time.Duration) *ManagerOpts
 	return opts
 }
 
-// WithPkErrInterceptors adds error-handling interceptors from the passed generator to
+// WithErrInterceptors adds error-handling interceptors from the passed generator to
 // the list of gRPC server options.
 //
 // Test clients will have corresponding interceptors added to them as well.
 //
 // Default: nil
-func (opts *ManagerOpts) WithPkErrInterceptors(
+func (opts *ManagerOpts) WithErrInterceptors(
 	generator *pkerr.ErrorGenerator,
 ) *ManagerOpts {
 	opts.errGenerator = generator

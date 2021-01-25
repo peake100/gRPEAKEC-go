@@ -72,37 +72,37 @@ func (asserter *AssertErr) Is(expected error) bool {
 
 func (asserter *AssertErr) Name(expected string) bool {
 	return asserter.assertions.Equal(
-		expected, asserter.err.Err.GetName(), "error name",
+		expected, asserter.err.Proto.GetName(), "error name",
 	)
 }
 
 func (asserter *AssertErr) Code(expected uint32) bool {
 	return asserter.assertions.Equal(
-		expected, asserter.err.Err.GetCode(), "error code",
+		expected, asserter.err.Proto.GetCode(), "error code",
 	)
 }
 
 func (asserter *AssertErr) Issuer(expected string) bool {
 	return asserter.assertions.Equal(
-		expected, asserter.err.Err.GetIssuer(), "error code issuer",
+		expected, asserter.err.Proto.GetIssuer(), "error code issuer",
 	)
 }
 
 func (asserter *AssertErr) GrpcCode(expected codes.Code) bool {
 	return asserter.assertions.Equal(
-		int32(expected), asserter.err.Err.GetIssuer(), "grpc code",
+		int32(expected), asserter.err.Proto.GetIssuer(), "grpc code",
 	)
 }
 
 func (asserter *AssertErr) Message(expected string) bool {
 	return asserter.assertions.Equal(
-		expected, asserter.err.Err.GetMessage(), "message is equal",
+		expected, asserter.err.Proto.GetMessage(), "message is equal",
 	)
 }
 
 func (asserter *AssertErr) MessageContains(contains string) bool {
 	return asserter.assertions.Contains(
-		asserter.err.Err.GetMessage(), contains, "message contains",
+		asserter.err.Proto.GetMessage(), contains, "message contains",
 	)
 }
 
@@ -135,20 +135,20 @@ func (asserter *AssertErr) ErrorDef(
 
 func (asserter *AssertErr) TraceLength(expected int) bool {
 	return asserter.assertions.Len(
-		asserter.err.Err.Trace, expected, "trace length",
+		asserter.err.Proto.Trace, expected, "trace length",
 	)
 }
 
 func (asserter *AssertErr) TraceIndex(index int) TraceInfoAssert {
 	if !asserter.assertions.GreaterOrEqual(
-		len(asserter.err.Err.Trace), index+1, "trace has index",
+		len(asserter.err.Proto.Trace), index+1, "trace has index",
 	) {
 		asserter.t.FailNow()
 	}
 
 	return TraceInfoAssert{
 		assertions: asserter.assertions,
-		traceInfo:  asserter.err.Err.Trace[index],
+		traceInfo:  asserter.err.Proto.Trace[index],
 		index:      index,
 	}
 }

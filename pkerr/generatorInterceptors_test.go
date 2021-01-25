@@ -206,6 +206,8 @@ func NewMockService() *MockService {
 		"MockService",
 		"server hostname",
 		true,
+		true,
+		true,
 	)
 
 	return &MockService{errors: errorGen}
@@ -230,7 +232,7 @@ func (suite *InterceptorSuite) SetupSuite() {
 
 	managerOpts := pkservices.NewManagerOpts().
 		WithGrpcServerAddress(testAddress).
-		WithPkErrInterceptors(mockService.errors)
+		WithErrInterceptors(mockService.errors)
 
 	suite.Manager = pkservices.NewManager(managerOpts, mockService)
 	suite.ManagerSuite.SetupSuite()

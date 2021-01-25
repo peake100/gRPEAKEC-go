@@ -42,7 +42,7 @@ func TestNewCtxWaitGroup_Basic(t *testing.T) {
 
 }
 
-// Tests that cancelling context returns error for Wait, Done, and Err
+// Tests that cancelling context returns error for Wait, Done, and Proto
 func TestNewCtxWaitGroup_ContextCancelled(t *testing.T) {
 	assert := assert.New(t)
 

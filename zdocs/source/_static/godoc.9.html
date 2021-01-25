@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>protogen - Go Documentation Server</title>
+  <title>pksync - Go Documentation Server</title>
 
 <link type="text/css" rel="stylesheet" href="style.css">
 
@@ -43,7 +43,7 @@
 
 
   <h1>
-    Package protogen
+    Package pksync
     <span class="text-muted"></span>
   </h1>
 
@@ -77,7 +77,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "github.com/peake100/gRPEAKEC-go/pktesting/protogen"</code></dd>
+			<dd><code>import "github.com/peake100/gRPEAKEC-go/pksync"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="godoc.9.html#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -93,7 +93,13 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+package psync offers some sync helper types and functions.
+</p>
+<p>
+quality-of-life sync types.
+</p>
+
 				
 			</div>
 		</div>
@@ -114,172 +120,40 @@
 			
 			
 				
-				<dd><a href="godoc.9.html#RegisterMockStreamServiceServer">func RegisterMockStreamServiceServer(s *grpc.Server, srv MockStreamServiceServer)</a></dd>
-			
-				
-				<dd><a href="godoc.9.html#RegisterMockStreamUnaryServiceServer">func RegisterMockStreamUnaryServiceServer(s *grpc.Server, srv MockStreamUnaryServiceServer)</a></dd>
-			
-				
-				<dd><a href="godoc.9.html#RegisterMockUnaryServiceServer">func RegisterMockUnaryServiceServer(s *grpc.Server, srv MockUnaryServiceServer)</a></dd>
-			
-				
-				<dd><a href="godoc.9.html#RegisterMockUnaryStreamServiceServer">func RegisterMockUnaryStreamServiceServer(s *grpc.Server, srv MockUnaryStreamServiceServer)</a></dd>
+				<dd><a href="godoc.9.html#ConcurrentMap">func ConcurrentMap(ctx context.Context, values interface{}, mapFunc ConcurrentMapFunc) &lt;-chan error</a></dd>
 			
 			
 				
-				<dd><a href="godoc.9.html#MockStreamServiceClient">type MockStreamServiceClient</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#NewMockStreamServiceClient">func NewMockStreamServiceClient(cc grpc.ClientConnInterface) MockStreamServiceClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamServiceServer">type MockStreamServiceServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamService_DummyStreamClient">type MockStreamService_DummyStreamClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamService_DummyStreamServer">type MockStreamService_DummyStreamServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamService_StreamClient">type MockStreamService_StreamClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamService_StreamServer">type MockStreamService_StreamServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamUnaryServiceClient">type MockStreamUnaryServiceClient</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#NewMockStreamUnaryServiceClient">func NewMockStreamUnaryServiceClient(cc grpc.ClientConnInterface) MockStreamUnaryServiceClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamUnaryServiceServer">type MockStreamUnaryServiceServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamUnaryService_DummyStreamUnaryClient">type MockStreamUnaryService_DummyStreamUnaryClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamUnaryService_DummyStreamUnaryServer">type MockStreamUnaryService_DummyStreamUnaryServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamUnaryService_StreamUnaryClient">type MockStreamUnaryService_StreamUnaryClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockStreamUnaryService_StreamUnaryServer">type MockStreamUnaryService_StreamUnaryServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryServiceClient">type MockUnaryServiceClient</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#NewMockUnaryServiceClient">func NewMockUnaryServiceClient(cc grpc.ClientConnInterface) MockUnaryServiceClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryServiceServer">type MockUnaryServiceServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryStreamServiceClient">type MockUnaryStreamServiceClient</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#NewMockUnaryStreamServiceClient">func NewMockUnaryStreamServiceClient(cc grpc.ClientConnInterface) MockUnaryStreamServiceClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryStreamServiceServer">type MockUnaryStreamServiceServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryStreamService_DummyUnaryStreamClient">type MockUnaryStreamService_DummyUnaryStreamClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryStreamService_DummyUnaryStreamServer">type MockUnaryStreamService_DummyUnaryStreamServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryStreamService_UnaryStreamClient">type MockUnaryStreamService_UnaryStreamClient</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#MockUnaryStreamService_UnaryStreamServer">type MockUnaryStreamService_UnaryStreamServer</a></dd>
-				
-				
-			
-				
-				<dd><a href="godoc.9.html#UnimplementedMockStreamServiceServer">type UnimplementedMockStreamServiceServer</a></dd>
+				<dd><a href="godoc.9.html#ConcurrentMapError">type ConcurrentMapError</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockStreamServiceServer.DummyStream">func (*UnimplementedMockStreamServiceServer) DummyStream(MockStreamService_DummyStreamServer) error</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#ConcurrentMapError.Error">func (err ConcurrentMapError) Error() string</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockStreamServiceServer.Stream">func (*UnimplementedMockStreamServiceServer) Stream(MockStreamService_StreamServer) error</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#ConcurrentMapError.Unwrap">func (err ConcurrentMapError) Unwrap() error</a></dd>
 				
 			
 				
-				<dd><a href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer">type UnimplementedMockStreamUnaryServiceServer</a></dd>
+				<dd><a href="godoc.9.html#ConcurrentMapFunc">type ConcurrentMapFunc</a></dd>
 				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer.DummyStreamUnary">func (*UnimplementedMockStreamUnaryServiceServer) DummyStreamUnary(MockStreamUnaryService_DummyStreamUnaryServer) error</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer.StreamUnary">func (*UnimplementedMockStreamUnaryServiceServer) StreamUnary(MockStreamUnaryService_StreamUnaryServer) error</a></dd>
 				
 			
 				
-				<dd><a href="godoc.9.html#UnimplementedMockUnaryServiceServer">type UnimplementedMockUnaryServiceServer</a></dd>
+				<dd><a href="godoc.9.html#CtxWaitGroup">type CtxWaitGroup</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#NewCtxWaitGroup">func NewCtxWaitGroup(ctx context.Context) *CtxWaitGroup</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockUnaryServiceServer.Dummy">func (*UnimplementedMockUnaryServiceServer) Dummy(context.Context, *empty.Empty) (*empty.Empty, error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#CtxWaitGroup.Add">func (group *CtxWaitGroup) Add(delta int) error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockUnaryServiceServer.Unary">func (*UnimplementedMockUnaryServiceServer) Unary(context.Context, *any.Any) (*any.Any, error)</a></dd>
-				
-			
-				
-				<dd><a href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer">type UnimplementedMockUnaryStreamServiceServer</a></dd>
-				
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#CtxWaitGroup.Done">func (group *CtxWaitGroup) Done() error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer.DummyUnaryStream">func (*UnimplementedMockUnaryStreamServiceServer) DummyUnaryStream(*empty.Empty, MockUnaryStreamService_DummyUnaryStreamServer) error</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer.UnaryStream">func (*UnimplementedMockUnaryStreamServiceServer) UnaryStream(*any.Any, MockUnaryStreamService_UnaryStreamServer) error</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.9.html#CtxWaitGroup.Wait">func (group *CtxWaitGroup) Wait() error</a></dd>
 				
 			
 			
@@ -293,7 +167,11 @@
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go">mock_service.pb.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go">concurrentMap.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go">ctxWaitGroup.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/doc.go">doc.go</a>
 			
 			</span>
 			</p>
@@ -307,682 +185,81 @@
 		
 			<h2 id="pkg-variables">Variables</h2>
 			
-				
-				<pre>var <span id="File_grpeakec_proto_pktesting_mock_service_proto">File_grpeakec_proto_pktesting_mock_service_proto</span> <a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/">protoreflect</a>.<a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/#FileDescriptor">FileDescriptor</a></pre>
-			
-		
-		
-			
-			
-			<h2 id="RegisterMockStreamServiceServer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=16296:16377#L347">RegisterMockStreamServiceServer</a>
-				<a class="permalink" href="godoc.9.html#RegisterMockStreamServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<pre>func RegisterMockStreamServiceServer(s *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#Server">Server</a>, srv <a href="godoc.9.html#MockStreamServiceServer">MockStreamServiceServer</a>)</pre>
-			
-			
-			
+				<p>
+ErrWaitGroupClosed is returned when Delta() or Done() are called on a closed
+CtxWaitGroup.
+</p>
 
+				<pre>var <span id="ErrWaitGroupClosed">ErrWaitGroupClosed</span> = <a href="http://localhost:6161/pkg/errors/">errors</a>.<a href="http://localhost:6161/pkg/errors/#New">New</a>(&#34;CtxWaitGroup is closed&#34;)</pre>
+			
+		
 		
 			
 			
-			<h2 id="RegisterMockStreamUnaryServiceServer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=28052:28143#L697">RegisterMockStreamUnaryServiceServer</a>
-				<a class="permalink" href="godoc.9.html#RegisterMockStreamUnaryServiceServer">&#xb6;</a>
+			<h2 id="ConcurrentMap">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1906:2011#L49">ConcurrentMap</a>
+				<a class="permalink" href="godoc.9.html#ConcurrentMap">&#xb6;</a>
 				
 				
 			</h2>
-			<pre>func RegisterMockStreamUnaryServiceServer(s *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#Server">Server</a>, srv <a href="godoc.9.html#MockStreamUnaryServiceServer">MockStreamUnaryServiceServer</a>)</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="RegisterMockUnaryServiceServer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=11165:11244#L191">RegisterMockUnaryServiceServer</a>
-				<a class="permalink" href="godoc.9.html#RegisterMockUnaryServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<pre>func RegisterMockUnaryServiceServer(s *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#Server">Server</a>, srv <a href="godoc.9.html#MockUnaryServiceServer">MockUnaryServiceServer</a>)</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="RegisterMockUnaryStreamServiceServer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=22160:22251#L525">RegisterMockUnaryStreamServiceServer</a>
-				<a class="permalink" href="godoc.9.html#RegisterMockUnaryStreamServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<pre>func RegisterMockUnaryStreamServiceServer(s *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#Server">Server</a>, srv <a href="godoc.9.html#MockUnaryStreamServiceServer">MockUnaryStreamServiceServer</a>)</pre>
-			
-			
-			
-
-		
-		
-			
-			
-			<h2 id="MockStreamServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=13213:13559#L251">MockStreamServiceClient</a>
-				<a class="permalink" href="godoc.9.html#MockStreamServiceClient">&#xb6;</a>
-				
-				
-			</h2>
+			<pre>func ConcurrentMap(
+    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
+    values interface{},
+    mapFunc <a href="godoc.9.html#ConcurrentMapFunc">ConcurrentMapFunc</a>,
+) &lt;-chan <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
 			<p>
-MockStreamServiceClient is the client API for MockStreamService service.
+ConcurrentMap calls mapFunc on each value in value in values. Each mapFunc call is
+made concurrently in it&#39;s own goroutines wrapped in a pkerr.CatchPanic to catch and
+wrap panics as errors..
 </p>
 <p>
-For semantics around ctx use and closing/ending streaming RPCs, please refer to <a href="https://godoc.org/google.golang.org/grpc#ClientConn.NewStream">https://godoc.org/google.golang.org/grpc#ClientConn.NewStream</a>.
-</p>
-
-			<pre>type MockStreamServiceClient interface {
-    <span class="comment">// Stream streams any messages bi-directionally.</span>
-    Stream(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (<a href="godoc.9.html#MockStreamService_StreamClient">MockStreamService_StreamClient</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <span class="comment">// DummyStream streams emtpy messages bi-directionally</span>
-    DummyStream(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (<a href="godoc.9.html#MockStreamService_DummyStreamClient">MockStreamService_DummyStreamClient</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-				
-				<h3 id="NewMockStreamServiceClient">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=13631:13715#L262">NewMockStreamServiceClient</a>
-					<a class="permalink" href="godoc.9.html#NewMockStreamServiceClient">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func NewMockStreamServiceClient(cc <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConnInterface">ClientConnInterface</a>) <a href="godoc.9.html#MockStreamServiceClient">MockStreamServiceClient</a></pre>
-				
-				
-				
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=15534:15784#L329">MockStreamServiceServer</a>
-				<a class="permalink" href="godoc.9.html#MockStreamServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-MockStreamServiceServer is the server API for MockStreamService service.
-</p>
-
-			<pre>type MockStreamServiceServer interface {
-    <span class="comment">// Stream streams any messages bi-directionally.</span>
-    Stream(<a href="godoc.9.html#MockStreamService_StreamServer">MockStreamService_StreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    <span class="comment">// DummyStream streams emtpy messages bi-directionally</span>
-    DummyStream(<a href="godoc.9.html#MockStreamService_DummyStreamServer">MockStreamService_DummyStreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamService_DummyStreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=14956:15085#L306">MockStreamService_DummyStreamClient</a>
-				<a class="permalink" href="godoc.9.html#MockStreamService_DummyStreamClient">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamService_DummyStreamClient interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientStream">ClientStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamService_DummyStreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=17273:17402#L381">MockStreamService_DummyStreamServer</a>
-				<a class="permalink" href="godoc.9.html#MockStreamService_DummyStreamServer">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamService_DummyStreamServer interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerStream">ServerStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamService_StreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=14116:14232#L275">MockStreamService_StreamClient</a>
-				<a class="permalink" href="godoc.9.html#MockStreamService_StreamClient">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamService_StreamClient interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientStream">ClientStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamService_StreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=16618:16734#L355">MockStreamService_StreamServer</a>
-				<a class="permalink" href="godoc.9.html#MockStreamService_StreamServer">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamService_StreamServer interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerStream">ServerStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamUnaryServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=24313:24768#L593">MockStreamUnaryServiceClient</a>
-				<a class="permalink" href="godoc.9.html#MockStreamUnaryServiceClient">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-MockStreamUnaryServiceClient is the client API for MockStreamUnaryService service.
+Non-nil errors will be wrapped in a ConcurrentMapError and sent through the returned
+channel.
 </p>
 <p>
-For semantics around ctx use and closing/ending streaming RPCs, please refer to <a href="https://godoc.org/google.golang.org/grpc#ClientConn.NewStream">https://godoc.org/google.golang.org/grpc#ClientConn.NewStream</a>.
-</p>
-
-			<pre>type MockStreamUnaryServiceClient interface {
-    <span class="comment">// StreamUnary streams Any messages as a request and receives a single Any response.</span>
-    StreamUnary(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (<a href="godoc.9.html#MockStreamUnaryService_StreamUnaryClient">MockStreamUnaryService_StreamUnaryClient</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <span class="comment">// DummyStreamUnary streams emtpy request messages and receives a single Empty</span>
-    <span class="comment">// response.</span>
-    DummyStreamUnary(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (<a href="godoc.9.html#MockStreamUnaryService_DummyStreamUnaryClient">MockStreamUnaryService_DummyStreamUnaryClient</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-				
-				<h3 id="NewMockStreamUnaryServiceClient">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=24845:24939#L605">NewMockStreamUnaryServiceClient</a>
-					<a class="permalink" href="godoc.9.html#NewMockStreamUnaryServiceClient">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func NewMockStreamUnaryServiceClient(cc <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConnInterface">ClientConnInterface</a>) <a href="godoc.9.html#MockStreamUnaryServiceClient">MockStreamUnaryServiceClient</a></pre>
-				
-				
-				
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamUnaryServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=27121:27480#L678">MockStreamUnaryServiceServer</a>
-				<a class="permalink" href="godoc.9.html#MockStreamUnaryServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-MockStreamUnaryServiceServer is the server API for MockStreamUnaryService service.
-</p>
-
-			<pre>type MockStreamUnaryServiceServer interface {
-    <span class="comment">// StreamUnary streams Any messages as a request and receives a single Any response.</span>
-    StreamUnary(<a href="godoc.9.html#MockStreamUnaryService_StreamUnaryServer">MockStreamUnaryService_StreamUnaryServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    <span class="comment">// DummyStreamUnary streams emtpy request messages and receives a single Empty</span>
-    <span class="comment">// response.</span>
-    DummyStreamUnary(<a href="godoc.9.html#MockStreamUnaryService_DummyStreamUnaryServer">MockStreamUnaryService_DummyStreamUnaryServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamUnaryService_DummyStreamUnaryClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=26404:26551#L652">MockStreamUnaryService_DummyStreamUnaryClient</a>
-				<a class="permalink" href="godoc.9.html#MockStreamUnaryService_DummyStreamUnaryClient">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamUnaryService_DummyStreamUnaryClient interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    CloseAndRecv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientStream">ClientStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamUnaryService_DummyStreamUnaryServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=29160:29307#L731">MockStreamUnaryService_DummyStreamUnaryServer</a>
-				<a class="permalink" href="godoc.9.html#MockStreamUnaryService_DummyStreamUnaryServer">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamUnaryService_DummyStreamUnaryServer interface {
-    SendAndClose(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerStream">ServerStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamUnaryService_StreamUnaryClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=25390:25524#L618">MockStreamUnaryService_StreamUnaryClient</a>
-				<a class="permalink" href="godoc.9.html#MockStreamUnaryService_StreamUnaryClient">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamUnaryService_StreamUnaryClient interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    CloseAndRecv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientStream">ClientStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockStreamUnaryService_StreamUnaryServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=28419:28553#L705">MockStreamUnaryService_StreamUnaryServer</a>
-				<a class="permalink" href="godoc.9.html#MockStreamUnaryService_StreamUnaryServer">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockStreamUnaryService_StreamUnaryServer interface {
-    SendAndClose(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerStream">ServerStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockUnaryServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=9193:9533#L139">MockUnaryServiceClient</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryServiceClient">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-MockUnaryServiceClient is the client API for MockUnaryService service.
+Panics will be wrapped in a pkerr.PanicError before being wrapped in a
+ConcurrentMapError
 </p>
 <p>
-For semantics around ctx use and closing/ending streaming RPCs, please refer to <a href="https://godoc.org/google.golang.org/grpc#ClientConn.NewStream">https://godoc.org/google.golang.org/grpc#ClientConn.NewStream</a>.
-</p>
-
-			<pre>type MockUnaryServiceClient interface {
-    <span class="comment">// Unary takes in an Any request and returns an Any message.</span>
-    Unary(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, in *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <span class="comment">// Dummy sends an empty request and gets an empty response.</span>
-    Dummy(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, in *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-				
-				<h3 id="NewMockUnaryServiceClient">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=9604:9686#L150">NewMockUnaryServiceClient</a>
-					<a class="permalink" href="godoc.9.html#NewMockUnaryServiceClient">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func NewMockUnaryServiceClient(cc <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConnInterface">ClientConnInterface</a>) <a href="godoc.9.html#MockUnaryServiceClient">MockUnaryServiceClient</a></pre>
-				
-				
-				
-			
-
-			
-		
-			
-			
-			<h2 id="MockUnaryServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=10368:10644#L173">MockUnaryServiceServer</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-MockUnaryServiceServer is the server API for MockUnaryService service.
-</p>
-
-			<pre>type MockUnaryServiceServer interface {
-    <span class="comment">// Unary takes in an Any request and returns an Any message.</span>
-    Unary(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <span class="comment">// Dummy sends an empty request and gets an empty response.</span>
-    Dummy(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockUnaryStreamServiceClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=18572:19011#L427">MockUnaryStreamServiceClient</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryStreamServiceClient">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-MockUnaryStreamServiceClient is the client API for MockUnaryStreamService service.
+The returned channel will be closed when all ConcurrentMapFunc invocations have
+exited, allowing the caller to ranger over it.
 </p>
 <p>
-For semantics around ctx use and closing/ending streaming RPCs, please refer to <a href="https://godoc.org/google.golang.org/grpc#ClientConn.NewStream">https://godoc.org/google.golang.org/grpc#ClientConn.NewStream</a>.
+ctx is passed to each mapFunc invocations as-is. Context-cancelling is left to the
+caller.
+</p>
+<p>
+Cancelling ctx will stop the mapping process.
 </p>
 
-			<pre>type MockUnaryStreamServiceClient interface {
-    <span class="comment">// UnaryStream send a unary Any request and receives an Any response stream.</span>
-    UnaryStream(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, in *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (<a href="godoc.9.html#MockUnaryStreamService_UnaryStreamClient">MockUnaryStreamService_UnaryStreamClient</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <span class="comment">// DummyStream streams emtpy messages bi-directionally</span>
-    DummyUnaryStream(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, in *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (<a href="godoc.9.html#MockUnaryStreamService_DummyUnaryStreamClient">MockUnaryStreamService_DummyUnaryStreamClient</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-}</pre>
-
-			
-
-			
-
-			
 			
 			
 
-			
-				
-				<h3 id="NewMockUnaryStreamServiceClient">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=19088:19182#L438">NewMockUnaryStreamServiceClient</a>
-					<a class="permalink" href="godoc.9.html#NewMockUnaryStreamServiceClient">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func NewMockUnaryStreamServiceClient(cc <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConnInterface">ClientConnInterface</a>) <a href="godoc.9.html#MockUnaryStreamServiceClient">MockUnaryStreamServiceClient</a></pre>
-				
-				
-				
-			
-
-			
+		
 		
 			
 			
-			<h2 id="MockUnaryStreamServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=21227:21564#L507">MockUnaryStreamServiceServer</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryStreamServiceServer">&#xb6;</a>
+			<h2 id="ConcurrentMapError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=262:748#L3">ConcurrentMapError</a>
+				<a class="permalink" href="godoc.9.html#ConcurrentMapError">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-MockUnaryStreamServiceServer is the server API for MockUnaryStreamService service.
+ConcurrentMapError is returned by ConcurrentMap and contains the source error, the
+value, and it&#39;s index in the values slice passed to ConcurrentMap.
 </p>
 
-			<pre>type MockUnaryStreamServiceServer interface {
-    <span class="comment">// UnaryStream send a unary Any request and receives an Any response stream.</span>
-    UnaryStream(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="godoc.9.html#MockUnaryStreamService_UnaryStreamServer">MockUnaryStreamService_UnaryStreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    <span class="comment">// DummyStream streams emtpy messages bi-directionally</span>
-    DummyUnaryStream(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="godoc.9.html#MockUnaryStreamService_DummyUnaryStreamServer">MockUnaryStreamService_DummyUnaryStreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-}</pre>
+			<pre>type ConcurrentMapError struct {
+<span id="ConcurrentMapError.MapFuncErr"></span>    <span class="comment">// MapFuncErr is the error returned by mapFunc. This error wil never be nil. If</span>
+    <span class="comment">// mapFunc panicked, the panic value will be wrapped in a pkerr.PanicError then</span>
+    <span class="comment">// stored here.</span>
+    MapFuncErr <a href="http://localhost:6161/pkg/builtin/#error">error</a>
 
-			
+<span id="ConcurrentMapError.Value"></span>    <span class="comment">// Value is the value passed to mapFunc. NOTE: if mapFunc mutates this value, Value</span>
+    <span class="comment">// will be in the value&#39;s current state, NOT it&#39;s original state.</span>
+    Value interface{}
 
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockUnaryStreamService_DummyUnaryStreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=20746:20859#L489">MockUnaryStreamService_DummyUnaryStreamClient</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryStreamService_DummyUnaryStreamClient">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockUnaryStreamService_DummyUnaryStreamClient interface {
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientStream">ClientStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockUnaryStreamService_DummyUnaryStreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=23206:23315#L558">MockUnaryStreamService_DummyUnaryStreamServer</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryStreamService_DummyUnaryStreamServer">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockUnaryStreamService_DummyUnaryStreamServer interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerStream">ServerStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockUnaryStreamService_UnaryStreamClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=19792:19896#L457">MockUnaryStreamService_UnaryStreamClient</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryStreamService_UnaryStreamClient">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockUnaryStreamService_UnaryStreamClient interface {
-    Recv() (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientStream">ClientStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="MockUnaryStreamService_UnaryStreamServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=22608:22708#L537">MockUnaryStreamService_UnaryStreamServer</a>
-				<a class="permalink" href="godoc.9.html#MockUnaryStreamService_UnaryStreamServer">&#xb6;</a>
-				
-				
-			</h2>
-			
-			<pre>type MockUnaryStreamService_UnaryStreamServer interface {
-    Send(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
-    <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerStream">ServerStream</a>
-}</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="UnimplementedMockStreamServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=15886:15938#L337">UnimplementedMockStreamServiceServer</a>
-				<a class="permalink" href="godoc.9.html#UnimplementedMockStreamServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-UnimplementedMockStreamServiceServer can be embedded to have forward compatible implementations.
-</p>
-
-			<pre>type UnimplementedMockStreamServiceServer struct {
+<span id="ConcurrentMapError.ValueIndex"></span>    <span class="comment">// ValueIndex is the index of the values where Value was stored.</span>
+    ValueIndex <a href="http://localhost:6161/pkg/builtin/#int">int</a>
 }
 </pre>
 
@@ -998,25 +275,31 @@ UnimplementedMockStreamServiceServer can be embedded to have forward compatible 
 
 			
 				
-				<h3 id="UnimplementedMockStreamServiceServer.DummyStream">func (*UnimplementedMockStreamServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=16110:16209#L343">DummyStream</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockStreamServiceServer.DummyStream">&#xb6;</a>
+				<h3 id="ConcurrentMapError.Error">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=897:941#L23">Error</a>
+					<a class="permalink" href="godoc.9.html#ConcurrentMapError.Error">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockStreamServiceServer">UnimplementedMockStreamServiceServer</a>) DummyStream(<a href="godoc.9.html#MockStreamService_DummyStreamServer">MockStreamService_DummyStreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				
+				<pre>func (err <a href="godoc.9.html#ConcurrentMapError">ConcurrentMapError</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				<p>
+Error implements builtins.error.
+</p>
+
 				
 				
 				
 			
 				
-				<h3 id="UnimplementedMockStreamServiceServer.Stream">func (*UnimplementedMockStreamServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=15940:16029#L340">Stream</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockStreamServiceServer.Stream">&#xb6;</a>
+				<h3 id="ConcurrentMapError.Unwrap">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=788:832#L18">Unwrap</a>
+					<a class="permalink" href="godoc.9.html#ConcurrentMapError.Unwrap">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockStreamServiceServer">UnimplementedMockStreamServiceServer</a>) Stream(<a href="godoc.9.html#MockStreamService_StreamServer">MockStreamService_StreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				
+				<pre>func (err <a href="godoc.9.html#ConcurrentMapError">ConcurrentMapError</a>) Unwrap() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Unwrap implements xerrors.Wrapper.
+</p>
+
 				
 				
 				
@@ -1024,16 +307,43 @@ UnimplementedMockStreamServiceServer can be embedded to have forward compatible 
 		
 			
 			
-			<h2 id="UnimplementedMockStreamUnaryServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=27587:27644#L687">UnimplementedMockStreamUnaryServiceServer</a>
-				<a class="permalink" href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer">&#xb6;</a>
+			<h2 id="ConcurrentMapFunc">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1128:1214#L30">ConcurrentMapFunc</a>
+				<a class="permalink" href="godoc.9.html#ConcurrentMapFunc">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-UnimplementedMockStreamUnaryServiceServer can be embedded to have forward compatible implementations.
+ConcurrentMapFunc is the signature fop the mapFunc parameter of ConcurrentMap.
 </p>
 
-			<pre>type UnimplementedMockStreamUnaryServiceServer struct {
+			<pre>type ConcurrentMapFunc = func(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, value interface{}, index <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="CtxWaitGroup">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=737:1575#L17">CtxWaitGroup</a>
+				<a class="permalink" href="godoc.9.html#CtxWaitGroup">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+CtxWaitGroup is a WaitGroup where Wait will exit with an error if a context
+cancels. TimeoutWaitGroup cannot be re-used once it closes.
+</p>
+
+			<pre>type CtxWaitGroup struct {
+    <span class="comment">// contains filtered or unexported fields</span>
 }
 </pre>
 
@@ -1046,130 +356,66 @@ UnimplementedMockStreamUnaryServiceServer can be embedded to have forward compat
 			
 
 			
-
-			
 				
-				<h3 id="UnimplementedMockStreamUnaryServiceServer.DummyStreamUnary">func (*UnimplementedMockStreamUnaryServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=27841:27960#L693">DummyStreamUnary</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer.DummyStreamUnary">&#xb6;</a>
+				<h3 id="NewCtxWaitGroup">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=5011:5066#L167">NewCtxWaitGroup</a>
+					<a class="permalink" href="godoc.9.html#NewCtxWaitGroup">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer">UnimplementedMockStreamUnaryServiceServer</a>) DummyStreamUnary(<a href="godoc.9.html#MockStreamUnaryService_DummyStreamUnaryServer">MockStreamUnaryService_DummyStreamUnaryServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="UnimplementedMockStreamUnaryServiceServer.StreamUnary">func (*UnimplementedMockStreamUnaryServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=27646:27755#L690">StreamUnary</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer.StreamUnary">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockStreamUnaryServiceServer">UnimplementedMockStreamUnaryServiceServer</a>) StreamUnary(<a href="godoc.9.html#MockStreamUnaryService_StreamUnaryServer">MockStreamUnaryService_StreamUnaryServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				
-				
-				
-				
-			
-		
-			
-			
-			<h2 id="UnimplementedMockUnaryServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=10745:10796#L181">UnimplementedMockUnaryServiceServer</a>
-				<a class="permalink" href="godoc.9.html#UnimplementedMockUnaryServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-UnimplementedMockUnaryServiceServer can be embedded to have forward compatible implementations.
+				<pre>func NewCtxWaitGroup(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>) *<a href="godoc.9.html#CtxWaitGroup">CtxWaitGroup</a></pre>
+				<p>
+NewCtxWaitGroup creates a new CtxWaitGroup that will signalClose when it&#39;s internal
+counter hits 0 OR ctx is cancelled.
 </p>
 
-			<pre>type UnimplementedMockUnaryServiceServer struct {
-}
-</pre>
-
-			
-
-			
-
-			
-			
-			
-
+				
+				
 			
 
 			
 				
-				<h3 id="UnimplementedMockUnaryServiceServer.Dummy">func (*UnimplementedMockUnaryServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=10977:11079#L187">Dummy</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockUnaryServiceServer.Dummy">&#xb6;</a>
+				<h3 id="CtxWaitGroup.Add">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4272:4319#L143">Add</a>
+					<a class="permalink" href="godoc.9.html#CtxWaitGroup.Add">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockUnaryServiceServer">UnimplementedMockUnaryServiceServer</a>) Dummy(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="UnimplementedMockUnaryServiceServer.Unary">func (*UnimplementedMockUnaryServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=10798:10892#L184">Unary</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockUnaryServiceServer.Unary">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockUnaryServiceServer">UnimplementedMockUnaryServiceServer</a>) Unary(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
-				
-				
-				
-				
-			
-		
-			
-			
-			<h2 id="UnimplementedMockUnaryStreamServiceServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=21671:21728#L515">UnimplementedMockUnaryStreamServiceServer</a>
-				<a class="permalink" href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-UnimplementedMockUnaryStreamServiceServer can be embedded to have forward compatible implementations.
+				<pre>func (group *<a href="godoc.9.html#CtxWaitGroup">CtxWaitGroup</a>) Add(delta <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Add adds delta to the WaitGroup. Returns an error if the passed context has been
+cancelled. Panics id the internal counter drops below -1.
 </p>
 
-			<pre>type UnimplementedMockUnaryStreamServiceServer struct {
-}
-</pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
+				
+				
+				
 			
 				
-				<h3 id="UnimplementedMockUnaryStreamServiceServer.DummyUnaryStream">func (*UnimplementedMockUnaryStreamServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=21935:22068#L521">DummyUnaryStream</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer.DummyUnaryStream">&#xb6;</a>
+				<h3 id="CtxWaitGroup.Done">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4510:4549#L149">Done</a>
+					<a class="permalink" href="godoc.9.html#CtxWaitGroup.Done">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer">UnimplementedMockUnaryStreamServiceServer</a>) DummyUnaryStream(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="godoc.9.html#MockUnaryStreamService_DummyUnaryStreamServer">MockUnaryStreamService_DummyUnaryStreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				
+				<pre>func (group *<a href="godoc.9.html#CtxWaitGroup">CtxWaitGroup</a>) Done() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Done decrements the WaitGroup by 1. Returns an error is the context has been
+cancelled. Panics if the internal counter drops below -1.
+</p>
+
 				
 				
 				
 			
 				
-				<h3 id="UnimplementedMockUnaryStreamServiceServer.UnaryStream">func (*UnimplementedMockUnaryStreamServiceServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pktesting/protogen/mock_service.pb.go?s=21730:21849#L518">UnaryStream</a>
-					<a class="permalink" href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer.UnaryStream">&#xb6;</a>
+				<h3 id="CtxWaitGroup.Wait">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4656:4695#L154">Wait</a>
+					<a class="permalink" href="godoc.9.html#CtxWaitGroup.Wait">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (*<a href="godoc.9.html#UnimplementedMockUnaryStreamServiceServer">UnimplementedMockUnaryStreamServiceServer</a>) UnaryStream(*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/">any</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/any/#Any">Any</a>, <a href="godoc.9.html#MockUnaryStreamService_UnaryStreamServer">MockUnaryStreamService_UnaryStreamServer</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				
+				<pre>func (group *<a href="godoc.9.html#CtxWaitGroup">CtxWaitGroup</a>) Wait() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Wait waits until the WaitGroup closes OR the ctx expires.
+</p>
+
 				
 				
 				

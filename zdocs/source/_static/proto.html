@@ -217,6 +217,33 @@
         
           
           <li>
+            <a href="#grpeakec_proto%2fdocs%2fsorting_hat.proto">grpeakec_proto/docs/sorting_hat.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#sortinghat.Pupil"><span class="badge">M</span>Pupil</a>
+                </li>
+              
+                <li>
+                  <a href="#sortinghat.Sorted"><span class="badge">M</span>Sorted</a>
+                </li>
+              
+              
+                <li>
+                  <a href="#sortinghat.House"><span class="badge">E</span>House</a>
+                </li>
+              
+              
+              
+                <li>
+                  <a href="#sortinghat.SortingHat"><span class="badge">S</span>SortingHat</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
             <a href="#grpeakec_proto%2fpkerr%2ferror.proto">grpeakec_proto/pkerr/error.proto</a>
             <ul>
               
@@ -408,6 +435,122 @@ response.</p></td>
     
       
       <div class="file-heading">
+        <h2 id="grpeakec_proto/docs/sorting_hat.proto">grpeakec_proto/docs/sorting_hat.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="sortinghat.Pupil">Pupil</h3>
+        <p>Pupil is the wizard-to-be for sorting.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>name</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="sortinghat.Sorted">Sorted</h3>
+        <p>Sorted returns the House the pupil has been placed into.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>house</td>
+                  <td><a href="#sortinghat.House">House</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+        <h3 id="sortinghat.House">House</h3>
+        <p>House is the house a Wizard is getting sorted into.</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>Gryffindor</td>
+                <td>0</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>Hufflepuff</td>
+                <td>1</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>Ravenclaw</td>
+                <td>2</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>Slytherin</td>
+                <td>3</td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+        <h3 id="sortinghat.SortingHat">SortingHat</h3>
+        <p>SortingHat sorts pupils into houses</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>Sort</td>
+                <td><a href="#sortinghat.Pupil">Pupil</a></td>
+                <td><a href="#sortinghat.Sorted">Sorted</a></td>
+                <td><p>Sort sorts the pupil into a house.</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+      
+      <div class="file-heading">
         <h2 id="grpeakec_proto/pkerr/error.proto">grpeakec_proto/pkerr/error.proto</h2><a href="#title">Top</a>
       </div>
       <p></p>
@@ -466,6 +609,21 @@ definitions do not overlap, they can share an Issuer value. </p></td>
                   <td><a href="#string">string</a></td>
                   <td></td>
                   <td><p>message is the error message. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>source_error</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>source_err is a string representation of the original native error that lead to
+this gRPEAKEC Error. Can be blank. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>source_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>source_type is the type of source_err. Can be blank. </p></td>
                 </tr>
               
                 <tr>

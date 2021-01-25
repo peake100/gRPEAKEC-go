@@ -12,6 +12,10 @@ type ErrorGenerator struct {
 	appHost string
 	// addStackTrace will add the stack trace of the error call to Error.Trace if true.
 	addStackTrace bool
+	// sendContext will send additional context the error is wrapped in if true.
+	sendContext bool
+	// sendSource will send the source error text if true.
+	sendSource bool
 }
 
 // revive:disable:modifies-value-receiver revive thinks we are wring to try and assign
@@ -32,14 +36,23 @@ func (gen ErrorGenerator) WithAppHost(appHost string) *ErrorGenerator {
 
 // revive:enable:modifies-value-receiver
 
-// applyTraceSettings takes in an APIError and applies the correct information to the
+// applySettings takes in an APIError and applies the correct information to the
 // trace-settings of the host.
-func (gen *ErrorGenerator) applyTraceSettings(err APIError) APIError {
-	lastTrace := err.Err.Trace[len(err.Err.Trace)-1]
+func (gen *ErrorGenerator) applySettings(err APIError) APIError {
+	if !gen.sendSource {
+		err.Proto.SourceError = ""
+		err.Proto.SourceType = ""
+	}
+
+	lastTrace := err.Proto.Trace[len(err.Proto.Trace)-1]
 	lastTrace.AppName = gen.appName
 	lastTrace.AppHost = gen.appHost
 	if !gen.addStackTrace {
 		lastTrace.StackTrace = ""
+	}
+
+	if !gen.sendContext {
+		lastTrace.AdditionalContext = ""
 	}
 
 	return err
@@ -55,7 +68,7 @@ func (gen *ErrorGenerator) NewErr(
 ) (apiErr error) {
 
 	newErr := newAPIErrBasic(sentinel, message, details, source)
-	apiErr = gen.applyTraceSettings(newErr)
+	apiErr = gen.applySettings(newErr)
 
 	return newErr
 }
@@ -72,11 +85,15 @@ func NewErrGenerator(
 	appName string,
 	appHost string,
 	addStackTrace bool,
+	sendContext bool,
+	sendSource bool,
 ) *ErrorGenerator {
 	gen := &ErrorGenerator{
 		appName:       appName,
 		appHost:       appHost,
 		addStackTrace: addStackTrace,
+		sendContext:   sendContext,
+		sendSource:    sendSource,
 	}
 
 	return gen

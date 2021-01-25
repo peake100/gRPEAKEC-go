@@ -98,7 +98,7 @@
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
 				<p>
-package pkerr offers easy-to-use rich errors between services.
+Easy-to-use rich errors between services and clients.
 </p>
 
 				
@@ -152,17 +152,11 @@ package pkerr offers easy-to-use rich errors between services.
 				<dd><a href="godoc.3.html#ErrorGenerator">type ErrorGenerator</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.3.html#NewErrGenerator">func NewErrGenerator(appName string, appHost string, addStackTrace bool, sentinelIssuer string, applyEnvSettings bool) *ErrorGenerator</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#NewErrGenerator">func NewErrGenerator(appName string, appHost string, addStackTrace bool, sendContext bool, sendSource bool) *ErrorGenerator</a></dd>
 				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.ApplyNewIssuer">func (gen *ErrorGenerator) ApplyNewIssuer(issuer string, offset int)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewErr">func (gen *ErrorGenerator) NewErr(sentinel *SentinelError, message string, details []proto.Message, source error) (apiErr error)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewSentinel">func (gen *ErrorGenerator) NewSentinel(name string, code uint32, grpcCode codes.Code, defaultMessage string) *SentinelError</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewStreamClientInterceptor">func (gen *ErrorGenerator) NewStreamClientInterceptor() grpc.StreamClientInterceptor</a></dd>
@@ -214,6 +208,20 @@ package pkerr offers easy-to-use rich errors between services.
 				
 			
 				
+				<dd><a href="godoc.3.html#SentinelIssuer">type SentinelIssuer</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#NewSentinelIssuer">func NewSentinelIssuer(issuer string, applyEnvSettings bool) *SentinelIssuer</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#SentinelIssuer.ApplyNewIssuer">func (sentinels *SentinelIssuer) ApplyNewIssuer(issuer string, offset int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#SentinelIssuer.NewSentinel">func (sentinels *SentinelIssuer) NewSentinel(name string, code uint32, grpcCode codes.Code, defaultMessage string) *SentinelError</a></dd>
+				
+			
+				
 				<dd><a href="godoc.3.html#TraceInfo">type TraceInfo</a></dd>
 				
 				
@@ -228,7 +236,7 @@ package pkerr offers easy-to-use rich errors between services.
 			<div class="js-expandAll expandAll collapsed">(Expand All)</div>
 			<dl>
 			
-			<dd><a class="exampleLink" href="godoc.3.html#example_ErrorGenerator_NewSentinel">ErrorGenerator.NewSentinel</a></dd>
+			<dd><a class="exampleLink" href="godoc.3.html#example_NewErrGenerator">NewErrGenerator</a></dd>
 			
 			</dl>
 		</div>
@@ -255,6 +263,8 @@ package pkerr offers easy-to-use rich errors between services.
 			
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelErrDefaults.go">sentinelErrDefaults.go</a>
 			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelIssuer.go">sentinelIssuer.go</a>
+			
 			</span>
 			</p>
 		
@@ -274,15 +284,48 @@ package pkerr offers easy-to-use rich errors between services.
 			<h2 id="pkg-variables">Variables</h2>
 			
 				<p>
+ErrAlreadyExists is the default error for requesting a resource that already exists.
+</p>
+
+				<pre>var <span id="ErrAlreadyExists">ErrAlreadyExists</span> = sentinelIssuer.<a href="godoc.3.html#NewSentinel">NewSentinel</a>(
+    &#34;AlreadyExists&#34;,
+    1002,
+    <a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/">codes</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/#AlreadyExists">AlreadyExists</a>,
+    &#34;resource already exists&#34;,
+)</pre>
+			
+				<p>
+ErrNotFound is the default error for requesting a resource that does not exist.
+</p>
+
+				<pre>var <span id="ErrNotFound">ErrNotFound</span> = sentinelIssuer.<a href="godoc.3.html#NewSentinel">NewSentinel</a>(
+    &#34;ResourceExists&#34;,
+    1001,
+    <a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/">codes</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/#NotFound">NotFound</a>,
+    &#34;requested resource not found&#34;,
+)</pre>
+			
+				<p>
 ErrUnknown is the default fallback error that is returned from a server interceptor
 when an incoming error is not an APIError, *Error, or SentinelError value.
 </p>
 
-				<pre>var <span id="ErrUnknown">ErrUnknown</span> = errorGen.<a href="godoc.3.html#NewSentinel">NewSentinel</a>(
+				<pre>var <span id="ErrUnknown">ErrUnknown</span> = sentinelIssuer.<a href="godoc.3.html#NewSentinel">NewSentinel</a>(
     &#34;Unknown&#34;,
     1000,
     <a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/">codes</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/#Unknown">Unknown</a>,
     &#34;an unknown error occurred&#34;,
+)</pre>
+			
+				<p>
+ErrValidation should be returned when a request fails validation.
+</p>
+
+				<pre>var <span id="ErrValidation">ErrValidation</span> = sentinelIssuer.<a href="godoc.3.html#NewSentinel">NewSentinel</a>(
+    &#34;Validation&#34;,
+    1003,
+    <a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/">codes</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/#InvalidArgument">InvalidArgument</a>,
+    &#34;client argument failed validation&#34;,
 )</pre>
 			
 		
@@ -306,7 +349,7 @@ and converts them to PanicError. Returned errors are passed up as-is.
 		
 			
 			
-			<h2 id="ReissueDefaultSentinels">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelErrDefaults.go?s=670:725#L17">ReissueDefaultSentinels</a>
+			<h2 id="ReissueDefaultSentinels">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelErrDefaults.go?s=1289:1344#L38">ReissueDefaultSentinels</a>
 				<a class="permalink" href="godoc.3.html#ReissueDefaultSentinels">&#xb6;</a>
 				
 				
@@ -324,7 +367,7 @@ SentinelError values found in this package, such as ErrUnknown.
 		
 			
 			
-			<h2 id="APIError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=745:798#L16">APIError</a>
+			<h2 id="APIError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=756:838#L17">APIError</a>
 				<a class="permalink" href="godoc.3.html#APIError">&#xb6;</a>
 				
 				
@@ -336,8 +379,9 @@ APIError instead.
 </p>
 
 			<pre>type APIError struct {
-<span id="APIError.Err"></span>    Err    *<a href="godoc.3.html#Error">Error</a>
-<span id="APIError.Source"></span>    Source <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+<span id="APIError.Proto"></span>    Proto    *<a href="godoc.3.html#Error">Error</a>
+<span id="APIError.Sentinel"></span>    Sentinel *<a href="godoc.3.html#SentinelError">SentinelError</a>
+<span id="APIError.Source"></span>    Source   <a href="http://localhost:6161/pkg/builtin/#error">error</a>
 }
 </pre>
 
@@ -353,7 +397,7 @@ APIError instead.
 
 			
 				
-				<h3 id="APIError.Error">func (APIError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=835:869#L22">Error</a>
+				<h3 id="APIError.Error">func (APIError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=875:909#L24">Error</a>
 					<a class="permalink" href="godoc.3.html#APIError.Error">&#xb6;</a>
 					
 					
@@ -368,7 +412,7 @@ Error implements builtins.error
 				
 			
 				
-				<h3 id="APIError.Is">func (APIError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=1191:1232#L37">Is</a>
+				<h3 id="APIError.Is">func (APIError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=1235:1276#L39">Is</a>
 					<a class="permalink" href="godoc.3.html#APIError.Is">&#xb6;</a>
 					
 					
@@ -384,7 +428,7 @@ errors.Is().
 				
 			
 				
-				<h3 id="APIError.Unwrap">func (APIError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=1039:1073#L31">Unwrap</a>
+				<h3 id="APIError.Unwrap">func (APIError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=1083:1117#L33">Unwrap</a>
 					<a class="permalink" href="godoc.3.html#APIError.Unwrap">&#xb6;</a>
 					
 					
@@ -410,7 +454,7 @@ Unwrap implements xerrors.Wrapper
 Error is an type alias of protogen.Error.
 </p>
 
-			<pre>type Error = <a href="godoc.4.html">protogen</a>.<a href="godoc.4.html#Error">Error</a></pre>
+			<pre>type Error = <a href="godoc.6.html">protogen</a>.<a href="godoc.6.html#Error">Error</a></pre>
 
 			
 
@@ -426,7 +470,7 @@ Error is an type alias of protogen.Error.
 		
 			
 			
-			<h2 id="ErrorGenerator">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=182:772#L2">ErrorGenerator</a>
+			<h2 id="ErrorGenerator">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=126:532#L1">ErrorGenerator</a>
 				<a class="permalink" href="godoc.3.html#ErrorGenerator">&#xb6;</a>
 				
 				
@@ -450,7 +494,7 @@ ErrorGenerator generates errors with app-specific settings.
 
 			
 				
-				<h3 id="NewErrGenerator">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=5929:6071#L180">NewErrGenerator</a>
+				<h3 id="NewErrGenerator">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=2397:2528#L74">NewErrGenerator</a>
 					<a class="permalink" href="godoc.3.html#NewErrGenerator">&#xb6;</a>
 					
 					
@@ -459,8 +503,8 @@ ErrorGenerator generates errors with app-specific settings.
     appName <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
     appHost <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
     addStackTrace <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
-    sentinelIssuer <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
-    applyEnvSettings <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+    sendContext <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+    sendSource <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
 ) *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a></pre>
 				<p>
 Creates a new Error generator.
@@ -474,54 +518,44 @@ ErrorGenerator.NewErr.
 addStackTrace will cause a full debug stacktrace to be added when a *TraceInfo value
 is created by this generator.
 </p>
-<p>
-sentinelIssuer is the value to use for all SentinelError values created with
-ErrorGenerator.NewSentinel.
-</p>
-<p>
-applyEnvSettings loads issuer and code offset information from environmental
-variables and applies them to the generator, using the current settings as default
-if no env var is found.
-</p>
-<p>
-The environmental variables are the following:
-</p>
-<p>
-- [AppName]_ERROR_ISSUER
-- [AppName]_ERROR_CODE_OFFSET
-</p>
-<p>
-By having these settings configurable as environmental variables, two generic
-services that both use this error library can be merged into a single backend, and
-appear more uniform to a caller by having the same issuer.
-</p>
-<p>
-The code offset ensures that error codes can be shifted so they do not collide when
-two generic services are used in the same backend.
-</p>
 
-				
+				<div id="example_NewErrGenerator" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
+		
+		
+		
+			<p>Code:</p>
+			<pre class="code">
+hostname, err := os.Hostname()
+if err != nil {
+    panic(err)
+}
+
+<span class="comment">// This error generator can be used to create sentinels and errors on the client</span>
+<span class="comment">// side.</span>
+_ = pkerr.NewErrGenerator(
+    &#34;PingServer&#34;, <span class="comment">// appName</span>
+    hostname,     <span class="comment">// appHost</span>
+    true,         <span class="comment">// addStackTrace</span>
+    true,         <span class="comment">// sendContext</span>
+    true,         <span class="comment">// sendSource</span>
+)
+</pre>
+			
+		
+	</div>
+</div>
+
 				
 			
 
 			
 				
-				<h3 id="ErrorGenerator.ApplyNewIssuer">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=2583:2651#L79">ApplyNewIssuer</a>
-					<a class="permalink" href="godoc.3.html#ErrorGenerator.ApplyNewIssuer">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) ApplyNewIssuer(issuer <a href="http://localhost:6161/pkg/builtin/#string">string</a>, offset <a href="http://localhost:6161/pkg/builtin/#int">int</a>)</pre>
-				<p>
-ApplyNewIssuer rewrites all issued sentinels to have the given issuer and offset.
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="ErrorGenerator.NewErr">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=4523:4658#L140">NewErr</a>
+				<h3 id="ErrorGenerator.NewErr">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=1799:1934#L53">NewErr</a>
 					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewErr">&#xb6;</a>
 					
 					
@@ -542,68 +576,7 @@ sentinel.
 				
 			
 				
-				<h3 id="ErrorGenerator.NewSentinel">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=1910:2040#L54">NewSentinel</a>
-					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewSentinel">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) NewSentinel(
-    name <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
-    code <a href="http://localhost:6161/pkg/builtin/#uint32">uint32</a>,
-    grpcCode <a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/">codes</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/#Code">Code</a>,
-    defaultMessage <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
-) *<a href="godoc.3.html#SentinelError">SentinelError</a></pre>
-				<p>
-NewSentinel creates a new *SentinelError and saves the pointer so it can be altered /
-offset later.
-</p>
-
-				
-				<div id="example_ErrorGenerator_NewSentinel" class="toggle">
-	<div class="collapsed">
-		<p class="exampleHeading toggleButton">▹ <span class="text">Example</span></p>
-	</div>
-	<div class="expanded">
-		<p class="exampleHeading toggleButton">▾ <span class="text">Example</span></p>
-		<p>Create new sentinel errors.
-</p>
-		
-		
-			<p>Code:</p>
-			<pre class="code">
-hostname, err := os.Hostname()
-if err != nil {
-    panic(err)
-}
-
-<span class="comment">// This error generator can be used to create sentinels and</span>
-generator := pkerr.NewErrGenerator(
-    &#34;PingServer&#34;, <span class="comment">// appName</span>
-    hostname,     <span class="comment">// hostName</span>
-    true,         <span class="comment">// addStackTrace</span>
-    &#34;Backend&#34;,    <span class="comment">// sentinelIssuer</span>
-    false,        <span class="comment">// applyEnvSettings</span>
-)
-
-<span class="comment">// This error acts as a sentinel error, like io.EOF.</span>
-var ErrNotATeapot = generator.NewSentinel(
-    &#34;NotATeapot&#34;,             <span class="comment">// name</span>
-    2000,                     <span class="comment">// code</span>
-    codes.FailedPrecondition, <span class="comment">// grpcCode</span>
-    &#34;target is not a teapot&#34;, <span class="comment">// defaultMessage</span>
-)
-
-fmt.Println(&#34;SENTINEL:&#34;, ErrNotATeapot)
-</pre>
-			
-		
-	</div>
-</div>
-
-				
-			
-				
-				<h3 id="ErrorGenerator.NewStreamClientInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=3374:3458#L106">NewStreamClientInterceptor</a>
+				<h3 id="ErrorGenerator.NewStreamClientInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=3376:3460#L106">NewStreamClientInterceptor</a>
 					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewStreamClientInterceptor">&#xb6;</a>
 					
 					
@@ -623,7 +596,7 @@ incoming errors to an APIError if the error contains an *Error detail, and a new
 				
 			
 				
-				<h3 id="ErrorGenerator.NewStreamServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6869:6953#L228">NewStreamServerInterceptor</a>
+				<h3 id="ErrorGenerator.NewStreamServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6874:6958#L228">NewStreamServerInterceptor</a>
 					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewStreamServerInterceptor">&#xb6;</a>
 					
 					
@@ -640,7 +613,7 @@ status.Status.
 				
 			
 				
-				<h3 id="ErrorGenerator.NewUnaryClientInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=2409:2491#L74">NewUnaryClientInterceptor</a>
+				<h3 id="ErrorGenerator.NewUnaryClientInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=2411:2493#L74">NewUnaryClientInterceptor</a>
 					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewUnaryClientInterceptor">&#xb6;</a>
 					
 					
@@ -660,7 +633,7 @@ will be extracted into an APIError, and a new *TraceInfo frame will be added.
 				
 			
 				
-				<h3 id="ErrorGenerator.NewUnaryServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6162:6244#L200">NewUnaryServerInterceptor</a>
+				<h3 id="ErrorGenerator.NewUnaryServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6167:6249#L200">NewUnaryServerInterceptor</a>
 					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewUnaryServerInterceptor">&#xb6;</a>
 					
 					
@@ -677,7 +650,7 @@ status.Status.
 				
 			
 				
-				<h3 id="ErrorGenerator.WithAppHost">func (ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=1275:1344#L32">WithAppHost</a>
+				<h3 id="ErrorGenerator.WithAppHost">func (ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=1035:1104#L22">WithAppHost</a>
 					<a class="permalink" href="godoc.3.html#ErrorGenerator.WithAppHost">&#xb6;</a>
 					
 					
@@ -692,7 +665,7 @@ WithAppHost returns a copy of the ErrorGenerator with the appHost setting replac
 				
 			
 				
-				<h3 id="ErrorGenerator.WithAppName">func (ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=1077:1146#L26">WithAppName</a>
+				<h3 id="ErrorGenerator.WithAppName">func (ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go?s=837:906#L16">WithAppName</a>
 					<a class="permalink" href="godoc.3.html#ErrorGenerator.WithAppName">&#xb6;</a>
 					
 					
@@ -709,7 +682,7 @@ WithAppName returns a copy of the ErrorGenerator with the appName setting replac
 		
 			
 			
-			<h2 id="GrpcCodeErr">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=411:438#L6">GrpcCodeErr</a>
+			<h2 id="GrpcCodeErr">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=422:449#L7">GrpcCodeErr</a>
 				<a class="permalink" href="godoc.3.html#GrpcCodeErr">&#xb6;</a>
 				
 				
@@ -733,7 +706,7 @@ specific codes.Code using errors.Is.
 
 			
 				
-				<h3 id="GrpcCodeErr.Error">func (GrpcCodeErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=476:514#L9">Error</a>
+				<h3 id="GrpcCodeErr.Error">func (GrpcCodeErr) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/apiError.go?s=487:525#L10">Error</a>
 					<a class="permalink" href="godoc.3.html#GrpcCodeErr.Error">&#xb6;</a>
 					
 					
@@ -891,6 +864,109 @@ Error implements builtins.error
 		
 			
 			
+			<h2 id="SentinelIssuer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelIssuer.go?s=135:517#L2">SentinelIssuer</a>
+				<a class="permalink" href="godoc.3.html#SentinelIssuer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+SentinelIssuer issues new sentinel errors
+</p>
+
+			<pre>type SentinelIssuer struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewSentinelIssuer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelIssuer.go?s=4113:4189#L120">NewSentinelIssuer</a>
+					<a class="permalink" href="godoc.3.html#NewSentinelIssuer">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewSentinelIssuer(issuer <a href="http://localhost:6161/pkg/builtin/#string">string</a>, applyEnvSettings <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>) *<a href="godoc.3.html#SentinelIssuer">SentinelIssuer</a></pre>
+				<p>
+NewSentinelIssuer returns a new *SentinelIssuer.
+</p>
+<p>
+issuer is the value to use for all *SentinelError values created with
+ErrorGenerator.NewSentinel.
+</p>
+<p>
+applyEnvSettings loads issuer and code offset information from environmental
+variables and applies them to the generator, using the current settings as default
+if no env var is found.
+</p>
+<p>
+The environmental variables are the following:
+</p>
+<p>
+- [AppName]_ERROR_ISSUER
+- [AppName]_ERROR_CODE_OFFSET
+</p>
+<p>
+By having these settings configurable as environmental variables, two generic
+services that both use this error library can be merged into a single backend, and
+appear more uniform to a caller by having the same issuer.
+</p>
+<p>
+The code offset ensures that error codes can be shifted so they do not collide when
+two generic services are used in the same backend.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="SentinelIssuer.ApplyNewIssuer">func (*SentinelIssuer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelIssuer.go?s=1328:1402#L41">ApplyNewIssuer</a>
+					<a class="permalink" href="godoc.3.html#SentinelIssuer.ApplyNewIssuer">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (sentinels *<a href="godoc.3.html#SentinelIssuer">SentinelIssuer</a>) ApplyNewIssuer(issuer <a href="http://localhost:6161/pkg/builtin/#string">string</a>, offset <a href="http://localhost:6161/pkg/builtin/#int">int</a>)</pre>
+				<p>
+ApplyNewIssuer rewrites all issued sentinels to have the given issuer and offset.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="SentinelIssuer.NewSentinel">func (*SentinelIssuer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/sentinelIssuer.go?s=625:761#L16">NewSentinel</a>
+					<a class="permalink" href="godoc.3.html#SentinelIssuer.NewSentinel">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (sentinels *<a href="godoc.3.html#SentinelIssuer">SentinelIssuer</a>) NewSentinel(
+    name <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
+    code <a href="http://localhost:6161/pkg/builtin/#uint32">uint32</a>,
+    grpcCode <a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/">codes</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/codes/#Code">Code</a>,
+    defaultMessage <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
+) *<a href="godoc.3.html#SentinelError">SentinelError</a></pre>
+				<p>
+NewSentinel creates a new *SentinelError and saves the pointer so it can be altered /
+offset later.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
 			<h2 id="TraceInfo">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/protogenAliases.go?s=199:234#L1">TraceInfo</a>
 				<a class="permalink" href="godoc.3.html#TraceInfo">&#xb6;</a>
 				
@@ -900,7 +976,7 @@ Error implements builtins.error
 TraceInfo is an type alias of protogen.TraceInfo.
 </p>
 
-			<pre>type TraceInfo = <a href="godoc.4.html">protogen</a>.<a href="godoc.4.html#TraceInfo">TraceInfo</a></pre>
+			<pre>type TraceInfo = <a href="godoc.6.html">protogen</a>.<a href="godoc.6.html#TraceInfo">TraceInfo</a></pre>
 
 			
 
@@ -943,11 +1019,11 @@ TraceInfo is an type alias of protogen.TraceInfo.
 				<tr>
 				
 					<td class="pkg-name" style="padding-left: 0px;">
-						<a href="godoc.4.html">protogen</a>
+						<a href="godoc.6.html">protogen</a>
 					</td>
 				
 					<td class="pkg-synopsis">
-						
+						For internal use.
 					</td>
 				</tr>
 			

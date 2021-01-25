@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>pksync - Go Documentation Server</title>
+  <title>pkservices - Go Documentation Server</title>
 
 <link type="text/css" rel="stylesheet" href="style.css">
 
@@ -43,7 +43,7 @@
 
 
   <h1>
-    Package pksync
+    Package pkservices
     <span class="text-muted"></span>
   </h1>
 
@@ -77,12 +77,16 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "github.com/peake100/gRPEAKEC-go/pksync"</code></dd>
+			<dd><code>import "github.com/peake100/gRPEAKEC-go/pkservices"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="godoc.7.html#pkg-overview" class="overviewLink">Overview</a></dd>
 			<dd><a href="godoc.7.html#pkg-index" class="indexLink">Index</a></dd>
 			
+				<dd><a href="godoc.7.html#pkg-examples" class="examplesLink">Examples</a></dd>
+			
+			
+				<dd><a href="godoc.7.html#pkg-subdirectories">Subdirectories</a></dd>
 			
 			</dl>
 		</div>
@@ -94,10 +98,8 @@
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
 				<p>
-package psync offers some sync helper types and functions.
-</p>
-<p>
-package pksync offers some new quality-of-life sync types.
+A lightweight framework for managing the lifetime of multiple services and their
+resource dependencies (db connector, etc).
 </p>
 
 				
@@ -115,45 +117,137 @@ package pksync offers some new quality-of-life sync types.
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="godoc.7.html#pkg-constants">Constants</a></dd>
+			
 			
 				<dd><a href="godoc.7.html#pkg-variables">Variables</a></dd>
 			
 			
-				
-				<dd><a href="godoc.7.html#ConcurrentMap">func ConcurrentMap(ctx context.Context, values interface{}, mapFunc ConcurrentMapFunc) &lt;-chan error</a></dd>
-			
 			
 				
-				<dd><a href="godoc.7.html#ConcurrentMapError">type ConcurrentMapError</a></dd>
-				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ConcurrentMapError.Error">func (err ConcurrentMapError) Error() string</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ConcurrentMapError.Unwrap">func (err ConcurrentMapError) Unwrap() error</a></dd>
-				
-			
-				
-				<dd><a href="godoc.7.html#ConcurrentMapFunc">type ConcurrentMapFunc</a></dd>
+				<dd><a href="godoc.7.html#GenericService">type GenericService</a></dd>
 				
 				
 			
 				
-				<dd><a href="godoc.7.html#CtxWaitGroup">type CtxWaitGroup</a></dd>
+				<dd><a href="godoc.7.html#GrpcService">type GrpcService</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#Manager">type Manager</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.7.html#NewCtxWaitGroup">func NewCtxWaitGroup(ctx context.Context) *CtxWaitGroup</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#NewManager">func NewManager(opts *ManagerOpts, services ...Service) *Manager</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.7.html#CtxWaitGroup.Add">func (group *CtxWaitGroup) Add(delta int) error</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Manager.Reset">func (manager *Manager) Reset()</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.7.html#CtxWaitGroup.Done">func (group *CtxWaitGroup) Done() error</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Manager.Run">func (manager *Manager) Run() error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.7.html#CtxWaitGroup.Wait">func (group *CtxWaitGroup) Wait() error</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Manager.StartShutdown">func (manager *Manager) StartShutdown()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Manager.Test">func (manager *Manager) Test(t *testing.T) ManagerTesting</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Manager.WaitForShutdown">func (manager *Manager) WaitForShutdown()</a></dd>
+				
+			
+				
+				<dd><a href="godoc.7.html#ManagerError">type ManagerError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerError.Error">func (err ManagerError) Error() string</a></dd>
+				
+			
+				
+				<dd><a href="godoc.7.html#ManagerOpts">type ManagerOpts</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#NewManagerOpts">func NewManagerOpts() *ManagerOpts</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerOpts.WithErrInterceptors">func (opts *ManagerOpts) WithErrInterceptors(generator *pkerr.ErrorGenerator) *ManagerOpts</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerOpts.WithGrpcPingService">func (opts *ManagerOpts) WithGrpcPingService(addService bool) *ManagerOpts</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerOpts.WithGrpcServerAddress">func (opts *ManagerOpts) WithGrpcServerAddress(address string) *ManagerOpts</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerOpts.WithGrpcServerOpts">func (opts *ManagerOpts) WithGrpcServerOpts(grpcOpts ...grpc.ServerOption) *ManagerOpts</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerOpts.WithLogger">func (opts *ManagerOpts) WithLogger(logger zerolog.Logger) *ManagerOpts</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerOpts.WithMaxShutdownDuration">func (opts *ManagerOpts) WithMaxShutdownDuration(max time.Duration) *ManagerOpts</a></dd>
+				
+			
+				
+				<dd><a href="godoc.7.html#ManagerTesting">type ManagerTesting</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerTesting.GrpcClientConn">func (tester ManagerTesting) GrpcClientConn(cleanup bool, opts ...grpc.DialOption) *grpc.ClientConn</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerTesting.GrpcPingClient">func (tester ManagerTesting) GrpcPingClient(cleanup bool, opts ...grpc.DialOption) PingClient</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerTesting.PingGrpcServer">func (tester ManagerTesting) PingGrpcServer(ctx context.Context)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerTesting.SendSignal">func (tester ManagerTesting) SendSignal(osSignal os.Signal)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ManagerTesting.Services">func (tester ManagerTesting) Services() []Service</a></dd>
+				
+			
+				
+				<dd><a href="godoc.7.html#PanicError">type PanicError</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#PingClient">type PingClient</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#PingServer">type PingServer</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#Service">type Service</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.7.html#ServiceError">type ServiceError</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ServiceError.Error">func (err ServiceError) Error() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ServiceError.Unwrap">func (err ServiceError) Unwrap() error</a></dd>
+				
+			
+				
+				<dd><a href="godoc.7.html#ServicesErrors">type ServicesErrors</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#ServicesErrors.Error">func (err ServicesErrors) Error() string</a></dd>
 				
 			
 			
@@ -161,17 +255,35 @@ package pksync offers some new quality-of-life sync types.
 			</div><!-- #manual-nav -->
 
 		
+		<div id="pkg-examples">
+			<h3>Examples</h3>
+			<div class="js-expandAll expandAll collapsed">(Expand All)</div>
+			<dl>
+			
+			<dd><a class="exampleLink" href="godoc.7.html#example_Manager_basic">Manager (Basic)</a></dd>
+			
+			</dl>
+		</div>
+		
 
 		
 			<h3>Package files</h3>
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go">concurrentMap.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/doc.go">doc.go</a>
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go">ctxWaitGroup.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go">errs.go</a>
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/doc.go">doc.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go">manager.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go">managerOpts.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerTester.go">managerTester.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/pingService.go">pingService.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/service.go">service.go</a>
 			
 			</span>
 			</p>
@@ -182,84 +294,389 @@ package pksync offers some new quality-of-life sync types.
 		
 
 		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<p>
+DefaultGrpcAddress is the default address the gRPC server will listen on.
+</p>
+
+				<pre>const <span id="DefaultGrpcAddress">DefaultGrpcAddress</span> = &#34;0.0.0.0:50051&#34;</pre>
+			
+		
 		
 			<h2 id="pkg-variables">Variables</h2>
 			
 				<p>
-ErrWaitGroupClosed is returned when Delta() or Done() are called on a closed
-CtxWaitGroup.
+NewPingClient is a type alias to protogen.NewPingClient
 </p>
 
-				<pre>var <span id="ErrWaitGroupClosed">ErrWaitGroupClosed</span> = <a href="http://localhost:6161/pkg/errors/">errors</a>.<a href="http://localhost:6161/pkg/errors/#New">New</a>(&#34;CtxWaitGroup is closed&#34;)</pre>
+				<pre>var <span id="NewPingClient">NewPingClient</span> = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#NewPingClient">NewPingClient</a></pre>
 			
 		
-		
-			
-			
-			<h2 id="ConcurrentMap">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1906:2011#L49">ConcurrentMap</a>
-				<a class="permalink" href="godoc.7.html#ConcurrentMap">&#xb6;</a>
-				
-				
-			</h2>
-			<pre>func ConcurrentMap(
-    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
-    values interface{},
-    mapFunc <a href="godoc.7.html#ConcurrentMapFunc">ConcurrentMapFunc</a>,
-) &lt;-chan <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-			<p>
-ConcurrentMap calls mapFunc on each value in value in values. Each mapFunc call is
-made concurrently in it&#39;s own goroutines wrapped in a pkerr.CatchPanic to catch and
-wrap panics as errors..
-</p>
-<p>
-Non-nil errors will be wrapped in a ConcurrentMapError and sent through the returned
-channel.
-</p>
-<p>
-Panics will be wrapped in a pkerr.PanicError before being wrapped in a
-ConcurrentMapError
-</p>
-<p>
-The returned channel will be closed when all ConcurrentMapFunc invocations have
-exited, allowing the caller to ranger over it.
-</p>
-<p>
-ctx is passed to each mapFunc invocations as-is. Context-cancelling is left to the
-caller.
-</p>
-<p>
-Cancelling ctx will stop the mapping process.
-</p>
-
-			
-			
-
 		
 		
 			
 			
-			<h2 id="ConcurrentMapError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=262:748#L3">ConcurrentMapError</a>
-				<a class="permalink" href="godoc.7.html#ConcurrentMapError">&#xb6;</a>
+			<h2 id="GenericService">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/service.go?s=1204:1737#L26">GenericService</a>
+				<a class="permalink" href="godoc.7.html#GenericService">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-ConcurrentMapError is returned by ConcurrentMap and contains the source error, the
-value, and it&#39;s index in the values slice passed to ConcurrentMap.
+Generic framework for registering non-grpc based services to the monitor, so multiple
+services can be run in parallel by the same monitor.
 </p>
 
-			<pre>type ConcurrentMapError struct {
-<span id="ConcurrentMapError.MapFuncErr"></span>    <span class="comment">// MapFuncErr is the error returned by mapFunc. This error wil never be nil. If</span>
-    <span class="comment">// mapFunc panicked, the panic value will be wrapped in a pkerr.PanicError then</span>
-    <span class="comment">// stored here.</span>
-    MapFuncErr <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+			<pre>type GenericService interface {
+    <a href="godoc.7.html#Service">Service</a>
+    <span class="comment">// Run is called to run the main service. Run should not exit until an irrecoverable</span>
+    <span class="comment">// error occurs or runCtx is cancelled.</span>
+    <span class="comment">//</span>
+    <span class="comment">// runCtx cancelling indicates that the service should begin to gracefully shutdown.</span>
+    <span class="comment">//</span>
+    <span class="comment">// When shutdownCtx is cancelled, the manager will stop waiting for run to return</span>
+    <span class="comment">// and continue with the shutdown process.</span>
+    <span class="comment">//</span>
+    <span class="comment">// After Run returns, the resourcesCtx passed to Setup will be cancelled.</span>
+    Run(runCtx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, shutdownCtx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+}</pre>
 
-<span id="ConcurrentMapError.Value"></span>    <span class="comment">// Value is the value passed to mapFunc. NOTE: if mapFunc mutates this value, Value</span>
-    <span class="comment">// will be in the value&#39;s current state, NOT it&#39;s original state.</span>
-    Value interface{}
+			
 
-<span id="ConcurrentMapError.ValueIndex"></span>    <span class="comment">// ValueIndex is the index of the values where Value was stored.</span>
-    ValueIndex <a href="http://localhost:6161/pkg/builtin/#int">int</a>
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="GrpcService">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/service.go?s=2139:2415#L47">GrpcService</a>
+				<a class="permalink" href="godoc.7.html#GrpcService">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+GrpcService is a Service with methods to support running a gRPC service.
+</p>
+<p>
+grpc Server options are passed to the monitor, which is responsible for the lifetime
+and spin up, and shutdown of the server hosting and GrpcService values.
+</p>
+<p>
+The service just needs to expose a generic server registration method that calls
+the specific protoc generated registration method for that service.
+</p>
+
+			<pre>type GrpcService interface {
+    <a href="godoc.7.html#Service">Service</a>
+    <span class="comment">// RegisterOnServer is invoked before Service.Setup to allow the service to</span>
+    <span class="comment">// register itself with the server.</span>
+    <span class="comment">//</span>
+    <span class="comment">// RegisterOnServer need only call the protoc generated registration function.</span>
+    RegisterOnServer(server *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#Server">Server</a>)
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Manager">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go?s=2180:2579#L62">Manager</a>
+				<a class="permalink" href="godoc.7.html#Manager">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+Manager manages the lifetime of the service.
+</p>
+
+			<pre>type Manager struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			<div id="example_Manager_basic" class="toggle">
+	<div class="collapsed">
+		<p class="exampleHeading toggleButton">▹ <span class="text">Example (Basic)</span></p>
+	</div>
+	<div class="expanded">
+		<p class="exampleHeading toggleButton">▾ <span class="text">Example (Basic)</span></p>
+		<p>Run a basic gRPC service with a manger.
+</p>
+		
+		
+			<p>Code:</p>
+			<pre class="code">package pkservices_test
+
+import (
+    &#34;context&#34;
+    &#34;fmt&#34;
+    &#34;github.com/golang/protobuf/ptypes/empty&#34;
+    &#34;github.com/peake100/gRPEAKEC-go/pkclients&#34;
+    &#34;github.com/peake100/gRPEAKEC-go/pkservices&#34;
+    &#34;github.com/peake100/gRPEAKEC-go/pkservices/protogen&#34;
+    &#34;github.com/rs/zerolog&#34;
+    &#34;google.golang.org/grpc&#34;
+    &#34;google.golang.org/protobuf/types/known/emptypb&#34;
+    &#34;sync&#34;
+)
+
+<span class="comment">// pingService is a basic implementation of PingServer that the manager can use to test</span>
+<span class="comment">// connectivity to the server.</span>
+type ExampleService struct {
+}
+
+<span class="comment">// Id implements Service and returns &#34;ExampleService&#34;.</span>
+func (ping ExampleService) Id() string {
+    return &#34;ExampleService&#34;
+}
+
+<span class="comment">// Setup implements Service.</span>
+func (ping ExampleService) Setup(
+    resourcesCtx context.Context,
+    resourcesReleased *sync.WaitGroup,
+    logger zerolog.Logger,
+) error {
+    <span class="comment">// Add 1 to the resourcesReleased waitGroup</span>
+    resourcesReleased.Add(1)
+
+    <span class="comment">// Run some sort of resource (like a db connector, message broker, etc) inside</span>
+    <span class="comment">// a goroutine.</span>
+    go func() {
+        <span class="comment">// When resourcesCtx is cancelled, this resource should be released and the</span>
+        <span class="comment">// WaitGroup should be decremented.</span>
+        defer resourcesReleased.Done()
+        logger.Info().Msg(&#34;Resource 1 starting&#34;)
+        &lt;-resourcesCtx.Done()
+        logger.Info().Msg(&#34;Resource 1 released&#34;)
+    }()
+
+    <span class="comment">// Add another to the resource.</span>
+    resourcesReleased.Add(1)
+    go func() {
+        defer resourcesReleased.Done()
+        logger.Info().Msg(&#34;Resource 2 starting&#34;)
+        &lt;-resourcesCtx.Done()
+        logger.Info().Msg(&#34;Resource 2 released&#34;)
+    }()
+
+    <span class="comment">// When this function returns, the manager will move on to the run stage.</span>
+    return nil
+}
+
+<span class="comment">// RegisterOnServer implements GrpcService, and handles registering it onto the</span>
+<span class="comment">// manager&#39;s gRPC server.</span>
+func (ping ExampleService) RegisterOnServer(server *grpc.Server) {
+    protogen.RegisterPingServer(server, ping)
+}
+
+<span class="comment">// Ping implements PingServer. It receives an empty message and returns the</span>
+<span class="comment">// result.</span>
+func (ping ExampleService) Ping(
+    ctx context.Context, msg *empty.Empty,
+) (*empty.Empty, error) {
+    fmt.Println(&#34;PING RECEIVED!&#34;)
+    return msg, nil
+}
+
+<span class="comment">// Run a basic gRPC service with a manger.</span>
+func ExampleManager_basic() {
+    <span class="comment">// Our manager options.</span>
+    managerOpts := pkservices.NewManagerOpts().
+        <span class="comment">// We are adding our own implementation of Ping, so we don&#39;t need to register</span>
+        <span class="comment">// The default one.</span>
+        WithGrpcPingService(false)
+
+    <span class="comment">// Create a new manager to manage our service. Example service implements</span>
+    <span class="comment">// pkservices.PingServer.</span>
+    manager := pkservices.NewManager(managerOpts, ExampleService{})
+
+    <span class="comment">// Run the manager in it&#39;s own goroutine and return errors to our error channel.</span>
+    errChan := make(chan error)
+    go func() {
+        defer close(errChan)
+        errChan &lt;- manager.Run()
+    }()
+
+    <span class="comment">// make a gRPC client to ping the service</span>
+    clientConn, err := grpc.Dial(pkservices.DefaultGrpcAddress, grpc.WithInsecure())
+    if err != nil {
+        panic(err)
+    }
+
+    <span class="comment">// create a new client to interact with our server</span>
+    pingClient := pkservices.NewPingClient(clientConn)
+
+    <span class="comment">// Wait for the server to be serving requests.</span>
+    err = pkclients.WaitForGrpcServer(context.Background(), clientConn)
+    if err != nil {
+        panic(err)
+    }
+
+    <span class="comment">// Send a ping</span>
+    _, err = pingClient.Ping(context.Background(), new(emptypb.Empty))
+    if err != nil {
+        panic(err)
+    }
+
+    <span class="comment">// Start shutdown.</span>
+    manager.StartShutdown()
+
+    <span class="comment">// Grab our error from the error channel (blocks until the manager is shutdown)</span>
+    err = &lt;-errChan
+    if err != nil {
+        panic(err)
+    }
+
+    <span class="comment">// Exit.</span>
+
+    <span class="comment">// Output:</span>
+    <span class="comment">// PING RECEIVED!</span>
+}
+</pre>
+			
+		
+	</div>
+</div>
+
+			
+			
+
+			
+				
+				<h3 id="NewManager">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go?s=15975:16039#L533">NewManager</a>
+					<a class="permalink" href="godoc.7.html#NewManager">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewManager(opts *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a>, services ...<a href="godoc.7.html#Service">Service</a>) *<a href="godoc.7.html#Manager">Manager</a></pre>
+				<p>
+NewManager creates a new Manager to run the given Service values with the passed
+ManagerOpts. If opts is nil, NewManagerOpts will be used to generate default options.
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Manager.Reset">func (*Manager) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go?s=11278:11309#L386">Reset</a>
+					<a class="permalink" href="godoc.7.html#Manager.Reset">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (manager *<a href="godoc.7.html#Manager">Manager</a>) Reset()</pre>
+				<p>
+Reset resets the manager for a new run.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Manager.Run">func (*Manager) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go?s=13392:13427#L463">Run</a>
+					<a class="permalink" href="godoc.7.html#Manager.Run">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (manager *<a href="godoc.7.html#Manager">Manager</a>) Run() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Run runs the manager and all it&#39;s services / resources. Run blocks until the manager
+has fully shut down.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Manager.StartShutdown">func (*Manager) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go?s=14803:14842#L505">StartShutdown</a>
+					<a class="permalink" href="godoc.7.html#Manager.StartShutdown">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (manager *<a href="godoc.7.html#Manager">Manager</a>) StartShutdown()</pre>
+				<p>
+StartShutdown begins shutdown of the manager. Can be called multiple times. This
+methods returns immediately rather than blocking until the manager shuts down.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Manager.Test">func (*Manager) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go?s=15692:15749#L527">Test</a>
+					<a class="permalink" href="godoc.7.html#Manager.Test">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (manager *<a href="godoc.7.html#Manager">Manager</a>) Test(t *<a href="http://localhost:6161/pkg/testing/">testing</a>.<a href="http://localhost:6161/pkg/testing/#T">T</a>) <a href="godoc.7.html#ManagerTesting">ManagerTesting</a></pre>
+				<p>
+Test returns a test harness with helper methods for testing the manager.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Manager.WaitForShutdown">func (*Manager) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/manager.go?s=15454:15495#L521">WaitForShutdown</a>
+					<a class="permalink" href="godoc.7.html#Manager.WaitForShutdown">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (manager *<a href="godoc.7.html#Manager">Manager</a>) WaitForShutdown()</pre>
+				<p>
+WaitForShutdown blocks until the manager is fully shutdown.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ManagerError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=1386:1879#L45">ManagerError</a>
+				<a class="permalink" href="godoc.7.html#ManagerError">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+ManagerError is returned from Manager.Run, and returns errors from the various stages
+of the run.
+</p>
+
+			<pre>type ManagerError struct {
+<span id="ManagerError.SetupErr"></span>    <span class="comment">// SetupErr is an error that was returned during setup of the services. This error</span>
+    <span class="comment">// will be a ServicesErrors if the cause of the error was one or more services.</span>
+    SetupErr <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+<span id="ManagerError.RunErr"></span>    <span class="comment">// RunErr is an error that occurred during running of 1 or more services.This error</span>
+    <span class="comment">// will be a ServicesErrors if the cause of the error was one or more services.</span>
+    RunErr <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+<span id="ManagerError.ShutdownErr"></span>    <span class="comment">// ShutdownErr is an error that occurred during the shutdown of 1 or more services.</span>
+    ShutdownErr <a href="http://localhost:6161/pkg/builtin/#error">error</a>
 }
 </pre>
 
@@ -275,29 +692,14 @@ value, and it&#39;s index in the values slice passed to ConcurrentMap.
 
 			
 				
-				<h3 id="ConcurrentMapError.Error">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=897:941#L23">Error</a>
-					<a class="permalink" href="godoc.7.html#ConcurrentMapError.Error">&#xb6;</a>
+				<h3 id="ManagerError.Error">func (ManagerError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=2550:2588#L77">Error</a>
+					<a class="permalink" href="godoc.7.html#ManagerError.Error">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (err <a href="godoc.7.html#ConcurrentMapError">ConcurrentMapError</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				<pre>func (err <a href="godoc.7.html#ManagerError">ManagerError</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
 				<p>
-Error implements builtins.error.
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="ConcurrentMapError.Unwrap">func (ConcurrentMapError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=788:832#L18">Unwrap</a>
-					<a class="permalink" href="godoc.7.html#ConcurrentMapError.Unwrap">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (err <a href="godoc.7.html#ConcurrentMapError">ConcurrentMapError</a>) Unwrap() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-				<p>
-Unwrap implements xerrors.Wrapper.
+Error implements builtins.error
 </p>
 
 				
@@ -307,42 +709,16 @@ Unwrap implements xerrors.Wrapper.
 		
 			
 			
-			<h2 id="ConcurrentMapFunc">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/concurrentMap.go?s=1128:1214#L30">ConcurrentMapFunc</a>
-				<a class="permalink" href="godoc.7.html#ConcurrentMapFunc">&#xb6;</a>
+			<h2 id="ManagerOpts">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=185:900#L1">ManagerOpts</a>
+				<a class="permalink" href="godoc.7.html#ManagerOpts">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-ConcurrentMapFunc is the signature fop the mapFunc parameter of ConcurrentMap.
+ManagerOpts are the options for running a manager
 </p>
 
-			<pre>type ConcurrentMapFunc = func(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, value interface{}, index <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="CtxWaitGroup">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=737:1575#L17">CtxWaitGroup</a>
-				<a class="permalink" href="godoc.7.html#CtxWaitGroup">&#xb6;</a>
-				
-				
-			</h2>
-			<p>
-CtxWaitGroup is a WaitGroup where Wait will exit with an error if a context
-cancels. TimeoutWaitGroup cannot be re-used once it closes.
-</p>
-
-			<pre>type CtxWaitGroup struct {
+			<pre>type ManagerOpts struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }
 </pre>
@@ -357,15 +733,14 @@ cancels. TimeoutWaitGroup cannot be re-used once it closes.
 
 			
 				
-				<h3 id="NewCtxWaitGroup">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=5011:5066#L167">NewCtxWaitGroup</a>
-					<a class="permalink" href="godoc.7.html#NewCtxWaitGroup">&#xb6;</a>
+				<h3 id="NewManagerOpts">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=3072:3106#L87">NewManagerOpts</a>
+					<a class="permalink" href="godoc.7.html#NewManagerOpts">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func NewCtxWaitGroup(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>) *<a href="godoc.7.html#CtxWaitGroup">CtxWaitGroup</a></pre>
+				<pre>func NewManagerOpts() *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a></pre>
 				<p>
-NewCtxWaitGroup creates a new CtxWaitGroup that will signalClose when it&#39;s internal
-counter hits 0 OR ctx is cancelled.
+NewManagerOpts creates a new *ManagerOpts value with default options set.
 </p>
 
 				
@@ -374,15 +749,23 @@ counter hits 0 OR ctx is cancelled.
 
 			
 				
-				<h3 id="CtxWaitGroup.Add">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4272:4319#L143">Add</a>
-					<a class="permalink" href="godoc.7.html#CtxWaitGroup.Add">&#xb6;</a>
+				<h3 id="ManagerOpts.WithErrInterceptors">func (*ManagerOpts) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=2497:2591#L68">WithErrInterceptors</a>
+					<a class="permalink" href="godoc.7.html#ManagerOpts.WithErrInterceptors">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (group *<a href="godoc.7.html#CtxWaitGroup">CtxWaitGroup</a>) Add(delta <a href="http://localhost:6161/pkg/builtin/#int">int</a>) <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<pre>func (opts *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a>) WithErrInterceptors(
+    generator *<a href="godoc.3.html">pkerr</a>.<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>,
+) *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a></pre>
 				<p>
-Add adds delta to the WaitGroup. Returns an error if the passed context has been
-cancelled. Panics id the internal counter drops below -1.
+WithErrInterceptors adds error-handling interceptors from the passed generator to
+the list of gRPC server options.
+</p>
+<p>
+Test clients will have corresponding interceptors added to them as well.
+</p>
+<p>
+Default: nil
 </p>
 
 				
@@ -390,15 +773,22 @@ cancelled. Panics id the internal counter drops below -1.
 				
 			
 				
-				<h3 id="CtxWaitGroup.Done">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4510:4549#L149">Done</a>
-					<a class="permalink" href="godoc.7.html#CtxWaitGroup.Done">&#xb6;</a>
+				<h3 id="ManagerOpts.WithGrpcPingService">func (*ManagerOpts) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=1823:1897#L49">WithGrpcPingService</a>
+					<a class="permalink" href="godoc.7.html#ManagerOpts.WithGrpcPingService">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (group *<a href="godoc.7.html#CtxWaitGroup">CtxWaitGroup</a>) Done() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<pre>func (opts *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a>) WithGrpcPingService(addService <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>) *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a></pre>
 				<p>
-Done decrements the WaitGroup by 1. Returns an error is the context has been
-cancelled. Panics if the internal counter drops below -1.
+WithGrpcPingService adds a protogen.PingServer service to the server that can be used
+to test if the server is taking requests.
+</p>
+<p>
+If true, the service will be added regardless of whether there are any other gRPC
+services the manager is handling.
+</p>
+<p>
+Default: true.
 </p>
 
 				
@@ -406,14 +796,438 @@ cancelled. Panics if the internal counter drops below -1.
 				
 			
 				
-				<h3 id="CtxWaitGroup.Wait">func (*CtxWaitGroup) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pksync/ctxWaitGroup.go?s=4656:4695#L154">Wait</a>
-					<a class="permalink" href="godoc.7.html#CtxWaitGroup.Wait">&#xb6;</a>
+				<h3 id="ManagerOpts.WithGrpcServerAddress">func (*ManagerOpts) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=1012:1087#L25">WithGrpcServerAddress</a>
+					<a class="permalink" href="godoc.7.html#ManagerOpts.WithGrpcServerAddress">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (group *<a href="godoc.7.html#CtxWaitGroup">CtxWaitGroup</a>) Wait() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<pre>func (opts *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a>) WithGrpcServerAddress(address <a href="http://localhost:6161/pkg/builtin/#string">string</a>) *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a></pre>
 				<p>
-Wait waits until the WaitGroup closes OR the ctx expires.
+WithGrpcServerAddress sets the address the gRPC server should handle rpc calls on.
+</p>
+<p>
+Default: &#39;:5051&#39;.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ManagerOpts.WithGrpcServerOpts">func (*ManagerOpts) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=1369:1460#L35">WithGrpcServerOpts</a>
+					<a class="permalink" href="godoc.7.html#ManagerOpts.WithGrpcServerOpts">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (opts *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a>) WithGrpcServerOpts(
+    grpcOpts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerOption">ServerOption</a>,
+) *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a></pre>
+				<p>
+WithGrpcServerOpts stores server opts to create the gRPC server with. When called
+multiple times, new grpc.ServerOption values are added to list, rather than replacing
+values from the previous call.
+</p>
+<p>
+Default: nil.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ManagerOpts.WithLogger">func (*ManagerOpts) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=2883:2954#L81">WithLogger</a>
+					<a class="permalink" href="godoc.7.html#ManagerOpts.WithLogger">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (opts *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a>) WithLogger(logger <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Logger">Logger</a>) *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a></pre>
+				<p>
+WithLogger sets a zerolog.Logger to use for the manger.
+</p>
+<p>
+Default: Global Logger.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ManagerOpts.WithMaxShutdownDuration">func (*ManagerOpts) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerOpts.go?s=2147:2227#L57">WithMaxShutdownDuration</a>
+					<a class="permalink" href="godoc.7.html#ManagerOpts.WithMaxShutdownDuration">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (opts *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a>) WithMaxShutdownDuration(max <a href="http://localhost:6161/pkg/time/">time</a>.<a href="http://localhost:6161/pkg/time/#Duration">Duration</a>) *<a href="godoc.7.html#ManagerOpts">ManagerOpts</a></pre>
+				<p>
+WithMaxShutdownDuration sets the maximum duration the manager should allow for the
+services and resources to shut down gracefully before cancelling the shutdown
+context and force-exiting.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ManagerTesting">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerTester.go?s=307:375#L5">ManagerTesting</a>
+				<a class="permalink" href="godoc.7.html#ManagerTesting">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+ManagerTesting exposes testing methods for testing a service manager. These methods
+are not safe to use in production code.
+</p>
+
+			<pre>type ManagerTesting struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ManagerTesting.GrpcClientConn">func (ManagerTesting) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerTester.go?s=1557:1660#L43">GrpcClientConn</a>
+					<a class="permalink" href="godoc.7.html#ManagerTesting.GrpcClientConn">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (tester <a href="godoc.7.html#ManagerTesting">ManagerTesting</a>) GrpcClientConn(
+    cleanup <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#DialOption">DialOption</a>,
+) *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConn">ClientConn</a></pre>
+				<p>
+GrpcClientConn generates a grpc.ClientConn with the passed opts connected to the gRPC
+server address in the manager options.
+</p>
+<p>
+If Dialing the server results in an error, an error will be added to the test and
+t.FailNow() is called to exit the test immediately.
+</p>
+<p>
+If cleanup is set to true then a cleanup function will be registered that closes
+the connection on test completion.
+</p>
+<p>
+If an error generator was passed to the manager for server interceptors, the
+corresponding client interceptors will be added to the grpc.ClientConn.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ManagerTesting.GrpcPingClient">func (ManagerTesting) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerTester.go?s=2671:2768#L77">GrpcPingClient</a>
+					<a class="permalink" href="godoc.7.html#ManagerTesting.GrpcPingClient">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (tester <a href="godoc.7.html#ManagerTesting">ManagerTesting</a>) GrpcPingClient(
+    cleanup <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#DialOption">DialOption</a>,
+) <a href="godoc.7.html#PingClient">PingClient</a></pre>
+				<p>
+GrpcPingClient returns a PingClient connected to the PingServer running on the gRPC
+server. If ManagerOpts.WithGrpcPingService was set to false, an error will be logged
+to the test and t.FailNow() will be called,
+</p>
+<p>
+If cleanup is set to true then a cleanup function will be registered that closes
+the underlying clientConn on test completion.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ManagerTesting.PingGrpcServer">func (ManagerTesting) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerTester.go?s=3470:3534#L101">PingGrpcServer</a>
+					<a class="permalink" href="godoc.7.html#ManagerTesting.PingGrpcServer">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (tester <a href="godoc.7.html#ManagerTesting">ManagerTesting</a>) PingGrpcServer(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>)</pre>
+				<p>
+PingGrpcServer will continually ping the gRPC server&#39;s PingServer.Ping method until
+a connection is established or the passed context times out. All errors will be
+ignored and ping will be tried again on failure.
+</p>
+<p>
+If this method returns, the server is up an running and ready to take requests.
+</p>
+<p>
+If ctx expires, the ctx.Error() will be logged and FailNow() called on the test.
+</p>
+<p>
+If ctx is nil, a default 3-second context will be used.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ManagerTesting.SendSignal">func (ManagerTesting) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerTester.go?s=4086:4145#L121">SendSignal</a>
+					<a class="permalink" href="godoc.7.html#ManagerTesting.SendSignal">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (tester <a href="godoc.7.html#ManagerTesting">ManagerTesting</a>) SendSignal(osSignal <a href="http://localhost:6161/pkg/os/">os</a>.<a href="http://localhost:6161/pkg/os/#Signal">Signal</a>)</pre>
+				<p>
+SendSignal sends an os.Signal to the Manager to test shutdown via host signal.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ManagerTesting.Services">func (ManagerTesting) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/managerTester.go?s=553:602#L12">Services</a>
+					<a class="permalink" href="godoc.7.html#ManagerTesting.Services">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (tester <a href="godoc.7.html#ManagerTesting">ManagerTesting</a>) Services() []<a href="godoc.7.html#Service">Service</a></pre>
+				<p>
+Services returns the list of registered services. This method is for testing purposes
+only and returned values should not be modified unless you know what you are doing!
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="PanicError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=166:200#L2">PanicError</a>
+				<a class="permalink" href="godoc.7.html#PanicError">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+PanicError is a type alias for pkerr.PanicError.
+</p>
+
+			<pre>type PanicError = <a href="godoc.3.html">pkerr</a>.<a href="godoc.3.html#PanicError">PanicError</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PingClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/pingService.go?s=345:382#L6">PingClient</a>
+				<a class="permalink" href="godoc.7.html#PingClient">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+PingClient is a type alias to protogen.PingClient
+</p>
+
+			<pre>type PingClient = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#PingClient">PingClient</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="PingServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/pingService.go?s=253:290#L3">PingServer</a>
+				<a class="permalink" href="godoc.7.html#PingServer">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+PingServer is a type alias to protogen.PingServer
+</p>
+
+			<pre>type PingServer = <a href="godoc.8.html">protogen</a>.<a href="godoc.8.html#PingServer">PingServer</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Service">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/service.go?s=184:1057#L1">Service</a>
+				<a class="permalink" href="godoc.7.html#Service">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+Service is an interface that a service must implement to be run by the Manager
+</p>
+
+			<pre>type Service interface {
+    <span class="comment">// Id should return a unique, but human readable id for the service. This id is</span>
+    <span class="comment">// used for both logging and ServiceError context. If two services share the same</span>
+    <span class="comment">// id, the manger will return an error.</span>
+    Id() <a href="http://localhost:6161/pkg/builtin/#string">string</a>
+
+    <span class="comment">// Setup is called before Run to set up any resources the service requires.</span>
+    <span class="comment">//</span>
+    <span class="comment">// resourcesCtx will be cancelled AFTER Run returns to signal that all the main</span>
+    <span class="comment">// process has finished, and it is safe to release resources.</span>
+    <span class="comment">//</span>
+    <span class="comment">// resourcesReleased should be incremented and decremented by individual resources,</span>
+    <span class="comment">// and the Manager will block on it until the context passed to Shutdown cancels.</span>
+    <span class="comment">//</span>
+    <span class="comment">// logger is a zerolog.Logger with a</span>
+    <span class="comment">// zerolog.Logger.WithString(&#34;SERVICE&#34;, [Service.Id()]) entry already on it.</span>
+    Setup(
+        resourcesCtx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
+        resourcesReleased *<a href="http://localhost:6161/pkg/sync/">sync</a>.<a href="http://localhost:6161/pkg/sync/#WaitGroup">WaitGroup</a>,
+        logger <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Logger">Logger</a>,
+    ) <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ServiceError">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=260:414#L5">ServiceError</a>
+				<a class="permalink" href="godoc.7.html#ServiceError">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+ServiceError reports an error from a specific service.
+</p>
+
+			<pre>type ServiceError struct {
+<span id="ServiceError.ServiceId"></span>    <span class="comment">// ServiceId is the return of the service&#39;s Service.Id method.</span>
+    ServiceId <a href="http://localhost:6161/pkg/builtin/#string">string</a>
+    <span class="comment">// The error the service threw.</span>
+<span id="ServiceError.Err"></span>    Err <a href="http://localhost:6161/pkg/builtin/#error">error</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ServiceError.Error">func (ServiceError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=452:490#L13">Error</a>
+					<a class="permalink" href="godoc.7.html#ServiceError.Error">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="godoc.7.html#ServiceError">ServiceError</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				<p>
+Error implements builtins.error.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ServiceError.Unwrap">func (ServiceError) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=631:669#L18">Unwrap</a>
+					<a class="permalink" href="godoc.7.html#ServiceError.Unwrap">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="godoc.7.html#ServiceError">ServiceError</a>) Unwrap() <a href="http://localhost:6161/pkg/builtin/#error">error</a></pre>
+				<p>
+Unwrap implements xerrors.Wrapper and returns the underlying error.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ServicesErrors">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=765:809#L23">ServicesErrors</a>
+				<a class="permalink" href="godoc.7.html#ServicesErrors">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+ServicesErrors stores errors from multiple services as a single error.
+</p>
+
+			<pre>type ServicesErrors struct {
+<span id="ServicesErrors.Errs"></span>    Errs []<a href="http://localhost:6161/pkg/builtin/#error">error</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ServicesErrors.Error">func (ServicesErrors) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/errs.go?s=882:922#L28">Error</a>
+					<a class="permalink" href="godoc.7.html#ServicesErrors.Error">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="godoc.7.html#ServicesErrors">ServicesErrors</a>) Error() <a href="http://localhost:6161/pkg/builtin/#string">string</a></pre>
+				<p>
+Error implements builtins.errors, and reports the number of errors.
 </p>
 
 				
@@ -428,6 +1242,38 @@ Wait waits until the WaitGroup closes OR the ctx expires.
 
 
 
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="gRPEAKEC-go.html">..</a></td>
+			</tr>
+			
+
+			
+				<tr>
+				
+					<td class="pkg-name" style="padding-left: 0px;">
+						<a href="godoc.8.html">protogen</a>
+					</td>
+				
+					<td class="pkg-synopsis">
+						For internal use.
+					</td>
+				</tr>
+			
+		</table>
+	</div>
 
 
 

@@ -17,5 +17,7 @@ func ExampleNewErrGenerator() {
 		"PingServer", // appName
 		hostname,     // appHost
 		true,         // addStackTrace
+		true,         // sendContext
+		true,         // sendSource
 	)
 }

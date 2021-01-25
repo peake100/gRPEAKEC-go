@@ -20,7 +20,7 @@ var ErrTest = &pkerr.SentinelError{
 
 func TestAPIError_Is(t *testing.T) {
 	apiErr := pkerr.APIError{
-		Err: &pkerr.Error{
+		Proto: &pkerr.Error{
 			Id:       cerealMessages.MustUUIDRandom(),
 			Issuer:   pkerr.ErrUnknown.Issuer,
 			Code:     pkerr.ErrUnknown.Code,
@@ -39,7 +39,7 @@ func TestAPIError_Is(t *testing.T) {
 	}{
 		{
 			Other: pkerr.APIError{
-				Err: &pkerr.Error{
+				Proto: &pkerr.Error{
 					Id:       cerealMessages.MustUUIDRandom(),
 					Issuer:   pkerr.ErrUnknown.Issuer,
 					Code:     pkerr.ErrUnknown.Code,
@@ -54,7 +54,7 @@ func TestAPIError_Is(t *testing.T) {
 		},
 		{
 			Other: pkerr.APIError{
-				Err: &pkerr.Error{
+				Proto: &pkerr.Error{
 					Id:       cerealMessages.MustUUIDRandom(),
 					Issuer:   ErrTest.Issuer,
 					Code:     ErrTest.Code,
@@ -142,14 +142,14 @@ func TestErrorDef_As(t *testing.T) {
 		t.FailNow()
 	}
 
-	assert.Equal(ErrCustom.Code, apiErr.Err.Code, "code")
-	assert.Equal(ErrCustom.Name, apiErr.Err.Name, "name")
-	assert.Equal(ErrCustom.Issuer, apiErr.Err.Issuer, "issuer")
+	assert.Equal(ErrCustom.Code, apiErr.Proto.Code, "code")
+	assert.Equal(ErrCustom.Name, apiErr.Proto.Name, "name")
+	assert.Equal(ErrCustom.Issuer, apiErr.Proto.Issuer, "issuer")
 	assert.Equal(
-		int32(ErrCustom.GrpcCode), apiErr.Err.GrpcCode, "grpc code",
+		int32(ErrCustom.GrpcCode), apiErr.Proto.GrpcCode, "grpc code",
 	)
 	assert.Contains(
-		apiErr.Err.Message, ErrCustom.DefaultMessage, "default message",
+		apiErr.Proto.Message, ErrCustom.DefaultMessage, "default message",
 	)
-	assert.Len(apiErr.Err.Trace, 1, "trace length")
+	assert.Len(apiErr.Proto.Trace, 1, "trace length")
 }

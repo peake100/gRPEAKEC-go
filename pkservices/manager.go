@@ -215,12 +215,11 @@ func (manager *Manager) runGrpcServices() error {
 	if err != nil {
 		return fmt.Errorf("error getting tcp listener: %w", err)
 	}
+	defer listener.Close()
 
 	// Launch a monitor routine that shuts down the server on the service context
 	// cancelling.
 	go func() {
-		// Close the listener on exit.
-		defer listener.Close()
 		// Gracefully stop the server on exit.
 		defer server.GracefulStop()
 
