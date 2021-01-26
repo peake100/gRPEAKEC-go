@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>gRPEAKEC-go &mdash; grpcErr 0.0.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pkservices" href="pkservices.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> grpcErr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pkservices.html">pkservices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pkerr.html">pkerrs</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">grpcErr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>gRPEAKEC-go</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="grpeakec-go">
+<h1>gRPEAKEC-go<a class="headerlink" href="#grpeakec-go" title="Permalink to this headline">¶</a></h1>
+<p>gRPEAKEC is a collection of service utilities for handling all the boilerplate of
+running gRPC and other services. This documentation will be broken into one section for
+each package of the module.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pkservices.html">pkservices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pkservices.html#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkservices.html#service-interfaces">Service Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkservices.html#testing-methods">Testing Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pkerr.html">pkerrs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#defining-sentinel-errors">Defining Sentinel Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#generating-specific-errors">Generating Specific Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#error-interceptors">Error Interceptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#error-checking">Error Checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#error-details">Error Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#traceinfo">TraceInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#adding-context">Adding Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#panics">Panics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#sentinel-returns">Sentinel Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#errunknown">ErrUnknown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#reissuing-sentinels">Reissuing Sentinels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pkerr.html#sentinelissuer-env-vars">SentinelIssuer Env Vars</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="quickstart">
+<h1>QuickStart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>An example of running a service manager with error handling interceptors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s2">&quot;context&quot;</span>
+    <span class="s2">&quot;crypto/rand&quot;</span>
+    <span class="s2">&quot;errors&quot;</span>
+    <span class="s2">&quot;fmt&quot;</span>
+    <span class="s2">&quot;github.com/peake100/gRPEAKEC-go/pkclients&quot;</span>
+    <span class="s2">&quot;github.com/peake100/gRPEAKEC-go/pkerr&quot;</span>
+    <span class="s2">&quot;github.com/peake100/gRPEAKEC-go/pkservices&quot;</span>
+    <span class="s2">&quot;github.com/peake100/gRPEAKEC-go/zdocs/examples/protogen&quot;</span>
+    <span class="s2">&quot;github.com/rs/zerolog&quot;</span>
+    <span class="s2">&quot;google.golang.org/grpc&quot;</span>
+    <span class="s2">&quot;google.golang.org/grpc/codes&quot;</span>
+    <span class="s2">&quot;google.golang.org/protobuf/proto&quot;</span>
+    <span class="s2">&quot;math/big&quot;</span>
+    <span class="s2">&quot;os&quot;</span>
+    <span class="s2">&quot;sync&quot;</span>
+<span class="p">)</span>
+
+<span class="n">var</span> <span class="n">sentinels</span> <span class="o">=</span> <span class="n">pkerr</span><span class="o">.</span><span class="n">NewSentinelIssuer</span><span class="p">(</span>
+    <span class="s2">&quot;Hogwarts&quot;</span><span class="p">,</span> <span class="o">//</span> <span class="n">issuer</span>
+    <span class="n">true</span><span class="p">,</span> <span class="o">//</span> <span class="n">applyEnvSettings</span>
+<span class="p">)</span>
+
+<span class="o">//</span> <span class="n">ErrRosterUpdate</span> <span class="ow">is</span> <span class="n">returned</span> <span class="n">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">error</span> <span class="n">updating</span> <span class="n">the</span> <span class="n">Roster</span>
+<span class="n">var</span> <span class="n">ErrRosterUpdate</span> <span class="o">=</span> <span class="n">sentinels</span><span class="o">.</span><span class="n">NewSentinel</span><span class="p">(</span>
+    <span class="s2">&quot;RosterUpdate&quot;</span><span class="p">,</span> <span class="o">//</span> <span class="n">name</span>
+    <span class="mi">2000</span><span class="p">,</span> <span class="o">//</span> <span class="n">codde</span>
+    <span class="n">codes</span><span class="o">.</span><span class="n">Internal</span><span class="p">,</span> <span class="o">//</span> <span class="n">grpcCode</span>
+    <span class="s2">&quot;roster could not be updated with student&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="o">//</span> <span class="n">SortingHat</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">gRPC</span> <span class="n">service</span> <span class="n">that</span> <span class="n">sorts</span> <span class="n">incoming</span> <span class="n">pupils</span> <span class="n">into</span> <span class="n">houses</span><span class="o">.</span>
+<span class="nb">type</span> <span class="n">SortingHat</span> <span class="n">struct</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="n">errGen</span> <span class="n">generates</span> <span class="n">our</span> <span class="n">api</span> <span class="n">errors</span>
+    <span class="n">errGen</span> <span class="o">*</span><span class="n">pkerr</span><span class="o">.</span><span class="n">ErrorGenerator</span>
+
+    <span class="o">//</span> <span class="n">db</span> <span class="n">holds</span> <span class="n">our</span> <span class="n">database</span> <span class="n">connector</span><span class="o">.</span>
+    <span class="n">db</span> <span class="o">*</span><span class="n">DBConnection</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">Id</span> <span class="n">implements</span> <span class="n">pkservices</span><span class="o">.</span><span class="n">Service</span> <span class="ow">and</span> <span class="n">returns</span>  <span class="s2">&quot;SortingHat&quot;</span><span class="o">.</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">hat</span> <span class="n">SortingHat</span><span class="p">)</span> <span class="n">Id</span><span class="p">()</span> <span class="n">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;SortingHat&quot;</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">Setup</span> <span class="n">implements</span> <span class="n">pkservices</span><span class="o">.</span><span class="n">Service</span> <span class="ow">and</span> <span class="n">spins</span> <span class="n">up</span> <span class="n">resources</span><span class="o">.</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">hat</span> <span class="n">SortingHat</span><span class="p">)</span> <span class="n">Setup</span><span class="p">(</span>
+    <span class="n">resourcesCtx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span>
+    <span class="n">resourcesReleased</span> <span class="o">*</span><span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span><span class="p">,</span>
+    <span class="n">logger</span> <span class="n">zerolog</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
+<span class="p">)</span> <span class="n">error</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="n">Get</span> <span class="n">our</span> <span class="n">DB</span> <span class="n">connection</span><span class="o">.</span>
+    <span class="n">var</span> <span class="n">err</span> <span class="n">error</span>
+    <span class="n">hat</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">NewDBConnection</span><span class="p">(</span><span class="n">resourcesCtx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s2">&quot;could not connect to db: %w&quot;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">Start</span> <span class="n">a</span> <span class="n">routine</span> <span class="n">to</span> <span class="n">close</span> <span class="n">the</span> <span class="n">connection</span> <span class="n">when</span> <span class="n">the</span> <span class="n">resourceCtx</span> <span class="ow">is</span> <span class="n">cancelled</span><span class="o">.</span>
+    <span class="n">resourcesReleased</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">go</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="o">//</span> <span class="n">Close</span> <span class="n">the</span> <span class="n">resourcesReleased</span> <span class="n">WaitGroup</span><span class="p">,</span> <span class="n">this</span> <span class="n">will</span> <span class="n">signal</span> <span class="n">to</span> <span class="n">the</span> <span class="n">Manager</span> <span class="n">that</span>
+        <span class="o">//</span> <span class="nb">all</span> <span class="n">resources</span> <span class="n">have</span> <span class="n">been</span> <span class="n">released</span><span class="o">.</span>
+        <span class="n">defer</span> <span class="n">resourcesReleased</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+        <span class="n">defer</span> <span class="n">hat</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+        <span class="o">&lt;-</span><span class="n">resourcesCtx</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+    <span class="p">}()</span>
+
+    <span class="k">return</span> <span class="n">nil</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">RegisterOnServer</span> <span class="n">implements</span> <span class="n">pkservices</span><span class="o">.</span><span class="n">GrpcService</span> <span class="ow">and</span> <span class="n">registers</span> <span class="n">the</span> <span class="n">service</span> <span class="n">on</span> <span class="n">a</span>
+<span class="o">//</span> <span class="n">gRPC</span> <span class="n">server</span><span class="o">.</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">hat</span> <span class="n">SortingHat</span><span class="p">)</span> <span class="n">RegisterOnServer</span><span class="p">(</span><span class="n">server</span> <span class="o">*</span><span class="n">grpc</span><span class="o">.</span><span class="n">Server</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">protogen</span><span class="o">.</span><span class="n">RegisterSortingHatServer</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">hat</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="o">//</span> <span class="n">Sort</span> <span class="n">implements</span> <span class="n">protogen</span><span class="o">.</span><span class="n">SortingHatServer</span> <span class="ow">and</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">hat</span> <span class="n">SortingHat</span><span class="p">)</span> <span class="n">Sort</span><span class="p">(</span>
+    <span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">pupil</span> <span class="o">*</span><span class="n">protogen</span><span class="o">.</span><span class="n">Pupil</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">protogen</span><span class="o">.</span><span class="n">Sorted</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">houseInt</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">Reader</span><span class="p">,</span> <span class="n">big</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">nil</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+
+    <span class="n">house</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">protogen</span><span class="o">.</span><span class="n">House</span><span class="p">{</span>
+        <span class="n">protogen</span><span class="o">.</span><span class="n">House_Gryffindor</span><span class="p">,</span>
+        <span class="n">protogen</span><span class="o">.</span><span class="n">House_Hufflepuff</span><span class="p">,</span>
+        <span class="n">protogen</span><span class="o">.</span><span class="n">House_Ravenclaw</span><span class="p">,</span>
+        <span class="n">protogen</span><span class="o">.</span><span class="n">House_Slytherin</span><span class="p">,</span>
+    <span class="p">}[</span><span class="n">houseInt</span><span class="o">.</span><span class="n">Int64</span><span class="p">()]</span>
+
+    <span class="o">//</span> <span class="n">Try</span> <span class="n">to</span> <span class="n">store</span> <span class="n">our</span> <span class="n">pupil</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">house</span><span class="o">.</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">hat</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">StoreStudent</span><span class="p">(</span><span class="n">pupil</span><span class="p">,</span> <span class="n">house</span><span class="p">)</span>
+
+    <span class="o">//</span> <span class="n">Return</span> <span class="n">an</span> <span class="n">APIError</span> <span class="n">on</span> <span class="n">error</span><span class="o">.</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">nil</span><span class="p">,</span> <span class="n">hat</span><span class="o">.</span><span class="n">errGen</span><span class="o">.</span><span class="n">NewErr</span><span class="p">(</span>
+            <span class="n">ErrRosterUpdate</span><span class="p">,</span> <span class="o">//</span><span class="n">sentinel</span>
+            <span class="s2">&quot;sorted student could not be stored&quot;</span><span class="p">,</span> <span class="o">//</span> <span class="n">message</span>
+            <span class="p">[]</span><span class="n">proto</span><span class="o">.</span><span class="n">Message</span><span class="p">{</span><span class="n">pupil</span><span class="p">},</span> <span class="o">//</span> <span class="n">details</span>
+            <span class="n">err</span><span class="p">,</span> <span class="o">//</span> <span class="n">source</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">Return</span> <span class="n">the</span> <span class="n">house</span> <span class="n">on</span> <span class="n">a</span> <span class="n">success</span><span class="o">.</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">protogen</span><span class="o">.</span><span class="n">Sorted</span><span class="p">{</span><span class="n">House</span><span class="p">:</span> <span class="n">house</span><span class="p">},</span> <span class="n">nil</span>
+<span class="p">}</span>
+
+<span class="n">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="n">Get</span> <span class="n">our</span> <span class="n">hostname</span>
+    <span class="n">host</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Hostname</span><span class="p">()</span>
+
+    <span class="o">//</span> <span class="n">Set</span> <span class="n">up</span> <span class="n">our</span> <span class="n">logger</span>
+    <span class="n">zerolog</span><span class="o">.</span><span class="n">TimeFieldFormat</span> <span class="o">=</span> <span class="n">zerolog</span><span class="o">.</span><span class="n">TimeFormatUnix</span>
+    <span class="n">logger</span> <span class="o">:=</span> <span class="n">zerolog</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">zerolog</span><span class="o">.</span><span class="n">ConsoleWriter</span><span class="p">{</span><span class="n">Out</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">})</span><span class="o">.</span>
+        <span class="n">Level</span><span class="p">(</span><span class="n">zerolog</span><span class="o">.</span><span class="n">DebugLevel</span><span class="p">)</span><span class="o">.</span>
+        <span class="n">With</span><span class="p">()</span><span class="o">.</span>
+        <span class="n">Timestamp</span><span class="p">()</span><span class="o">.</span>
+        <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;HOST&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span><span class="o">.</span>
+        <span class="n">Logger</span><span class="p">()</span>
+
+    <span class="o">//</span> <span class="n">errGen</span> <span class="n">will</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">make</span> <span class="n">rich</span> <span class="n">errors</span> <span class="k">for</span> <span class="n">our</span> <span class="n">service</span>
+    <span class="n">errGen</span> <span class="o">:=</span> <span class="n">pkerr</span><span class="o">.</span><span class="n">NewErrGenerator</span><span class="p">(</span>
+        <span class="s2">&quot;SortingHat&quot;</span><span class="p">,</span> <span class="o">//</span> <span class="n">appName</span>
+        <span class="n">host</span><span class="p">,</span> <span class="o">//</span> <span class="n">hostName</span>
+        <span class="n">true</span><span class="p">,</span> <span class="o">//</span> <span class="n">addStackTrace</span>
+        <span class="n">true</span><span class="p">,</span> <span class="o">//</span> <span class="n">sendContext</span>
+        <span class="n">true</span><span class="p">,</span> <span class="o">//</span> <span class="n">sendSource</span>
+    <span class="p">)</span>
+
+    <span class="o">//</span> <span class="n">Create</span> <span class="n">our</span> <span class="n">manager</span> <span class="n">options</span>
+    <span class="n">opts</span> <span class="o">:=</span> <span class="n">pkservices</span><span class="o">.</span><span class="n">NewManagerOpts</span><span class="p">()</span><span class="o">.</span>
+        <span class="o">//</span> <span class="n">Add</span> <span class="n">our</span> <span class="n">logger</span><span class="o">.</span>
+        <span class="n">WithLogger</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span><span class="o">.</span>
+        <span class="o">//</span> <span class="n">Pass</span> <span class="n">our</span> <span class="n">error</span> <span class="n">generator</span> <span class="n">to</span> <span class="n">create</span> <span class="n">error</span> <span class="n">interceptors</span><span class="o">.</span>
+        <span class="n">WithErrInterceptors</span><span class="p">(</span><span class="n">errGen</span><span class="p">)</span><span class="o">.</span>
+        <span class="o">//</span> <span class="n">Set</span> <span class="n">our</span> <span class="n">gRPC</span> <span class="n">server</span> <span class="n">address</span><span class="o">.</span>
+        <span class="n">WithGrpcServerAddress</span><span class="p">(</span><span class="s2">&quot;:50051&quot;</span><span class="p">)</span>
+
+    <span class="o">//</span> <span class="n">Create</span> <span class="n">our</span> <span class="n">service</span>
+    <span class="n">sortingHat</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">SortingHat</span><span class="p">{</span>
+        <span class="n">errGen</span><span class="p">:</span> <span class="n">errGen</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">Create</span> <span class="n">a</span> <span class="n">new</span> <span class="n">service</span> <span class="n">manager</span><span class="o">.</span>
+    <span class="n">manager</span> <span class="o">:=</span> <span class="n">pkservices</span><span class="o">.</span><span class="n">NewManager</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">sortingHat</span><span class="p">)</span>
+    <span class="n">defer</span> <span class="n">manager</span><span class="o">.</span><span class="n">StartShutdown</span><span class="p">()</span>
+
+    <span class="o">//</span> <span class="n">Run</span> <span class="n">our</span> <span class="n">manager</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">routine</span><span class="o">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="nb">all</span> <span class="n">we</span> <span class="n">have</span> <span class="n">to</span> <span class="n">do</span><span class="p">,</span> <span class="n">our</span> <span class="n">service</span> <span class="ow">and</span> <span class="n">resource</span>
+    <span class="o">//</span> <span class="n">lifetime</span> <span class="n">management</span> <span class="ow">is</span> <span class="n">handled</span> <span class="k">for</span> <span class="n">us</span><span class="o">.</span> <span class="n">The</span> <span class="n">manager</span> <span class="n">will</span> <span class="n">also</span> <span class="n">listen</span> <span class="k">for</span> <span class="n">os</span>
+    <span class="o">//</span> <span class="n">signals</span> <span class="ow">and</span> <span class="n">trigger</span> <span class="n">a</span> <span class="n">shutdown</span> <span class="k">if</span> <span class="n">they</span> <span class="n">occur</span><span class="o">.</span>
+    <span class="n">managerResult</span> <span class="o">:=</span> <span class="n">make</span><span class="p">(</span><span class="n">chan</span> <span class="n">error</span><span class="p">)</span>
+    <span class="n">go</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">defer</span> <span class="n">close</span><span class="p">(</span><span class="n">managerResult</span><span class="p">)</span>
+        <span class="n">managerResult</span> <span class="o">&lt;-</span> <span class="n">manager</span><span class="o">.</span><span class="n">Run</span><span class="p">()</span>
+    <span class="p">}()</span>
+
+    <span class="o">//</span> <span class="n">Create</span> <span class="n">a</span> <span class="n">new</span> <span class="n">gRPC</span> <span class="n">client</span> <span class="n">connection</span><span class="o">.</span>
+    <span class="n">clientConn</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">Dial</span><span class="p">(</span>
+        <span class="s2">&quot;:50051&quot;</span><span class="p">,</span>
+        <span class="n">grpc</span><span class="o">.</span><span class="n">WithInsecure</span><span class="p">(),</span>
+        <span class="n">grpc</span><span class="o">.</span><span class="n">WithUnaryInterceptor</span><span class="p">(</span><span class="n">errGen</span><span class="o">.</span><span class="n">NewUnaryClientInterceptor</span><span class="p">()),</span>
+        <span class="n">grpc</span><span class="o">.</span><span class="n">WithStreamInterceptor</span><span class="p">(</span><span class="n">errGen</span><span class="o">.</span><span class="n">NewStreamClientInterceptor</span><span class="p">()),</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+        <span class="n">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">We</span> <span class="n">can</span> <span class="n">wait</span> <span class="n">until</span> <span class="n">the</span> <span class="n">gRPC</span> <span class="n">server</span> <span class="ow">is</span> <span class="n">giving</span> <span class="n">good</span> <span class="n">responses</span><span class="o">.</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">pkclients</span><span class="o">.</span><span class="n">WaitForGrpcServer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="n">clientConn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+        <span class="n">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">Make</span> <span class="n">our</span> <span class="n">service</span> <span class="n">client</span><span class="o">.</span>
+    <span class="n">hatClient</span> <span class="o">:=</span> <span class="n">protogen</span><span class="o">.</span><span class="n">NewSortingHatClient</span><span class="p">(</span><span class="n">clientConn</span><span class="p">)</span>
+
+    <span class="n">pupils</span> <span class="o">:=</span> <span class="p">[]</span><span class="o">*</span><span class="n">protogen</span><span class="o">.</span><span class="n">Pupil</span> <span class="p">{</span>
+        <span class="p">{</span>
+            <span class="n">Name</span><span class="p">:</span> <span class="s2">&quot;Harry Potter&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="n">Name</span><span class="p">:</span> <span class="s2">&quot;Draco Malfoy&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">Sort</span> <span class="n">our</span> <span class="n">pupils</span><span class="o">.</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">thisPupil</span> <span class="o">:=</span> <span class="nb">range</span> <span class="n">pupils</span> <span class="p">{</span>
+        <span class="o">//</span> <span class="n">Call</span> <span class="n">the</span> <span class="n">service</span><span class="o">.</span>
+        <span class="nb">sorted</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">hatClient</span><span class="o">.</span><span class="n">Sort</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Background</span><span class="p">(),</span> <span class="n">thisPupil</span><span class="p">)</span>
+
+        <span class="o">//</span> <span class="n">Print</span> <span class="n">this</span> <span class="n">error</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">ErrRosterUpdate</span><span class="o">.</span> <span class="n">We</span> <span class="n">can</span> <span class="n">use</span> <span class="n">native</span> <span class="n">error</span> <span class="n">handling</span>
+        <span class="o">//</span> <span class="n">here</span> <span class="n">thanks</span> <span class="n">to</span> <span class="n">our</span> <span class="n">interceptors</span><span class="o">.</span>
+        <span class="k">if</span> <span class="n">errors</span><span class="o">.</span><span class="n">Is</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">ErrRosterUpdate</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s2">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+            <span class="o">//</span> <span class="n">Panic</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="nb">any</span> <span class="n">other</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">error</span>
+            <span class="n">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="o">//</span> <span class="n">Print</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">sorted</span> <span class="n">pupil</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s2">&quot;%v sorted into %v</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">thisPupil</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="nb">sorted</span><span class="o">.</span><span class="n">House</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">Start</span> <span class="n">shutdown</span> <span class="n">of</span> <span class="n">the</span> <span class="n">manager</span> <span class="ow">and</span> <span class="n">wait</span> <span class="k">for</span> <span class="n">it</span> <span class="n">to</span> <span class="n">finish</span><span class="o">.</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">StartShutdown</span><span class="p">()</span>
+
+    <span class="o">//</span> <span class="n">Wait</span> <span class="k">for</span> <span class="n">our</span> <span class="n">manager</span> <span class="n">run</span> <span class="n">result</span><span class="o">.</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="n">managerResult</span> <span class="p">;</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+        <span class="n">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">Outputs</span><span class="p">:</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">running</span> <span class="n">service</span> <span class="n">manager</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span> <span class="n">SETTING_ADD_PING_SERVICE</span><span class="o">=</span><span class="n">true</span> <span class="n">SETTING_MAX_SHUTDOWN</span><span class="o">=</span><span class="mi">30000</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">running</span> <span class="n">setup</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span> <span class="n">SERVICE</span><span class="o">=</span><span class="s2">&quot;gPEAKERC Ping&quot;</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">running</span> <span class="n">setup</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span> <span class="n">SERVICE</span><span class="o">=</span><span class="n">SortingHat</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">setup</span> <span class="n">complete</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span> <span class="n">SERVICE</span><span class="o">=</span><span class="s2">&quot;gPEAKERC Ping&quot;</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">setup</span> <span class="n">complete</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span> <span class="n">SERVICE</span><span class="o">=</span><span class="n">SortingHat</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">serving</span> <span class="n">gRPC</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span> <span class="n">SERVER_ADDRESS</span><span class="o">=</span><span class="p">:</span><span class="mi">50051</span>
+<span class="o">//</span> <span class="n">Harry</span> <span class="n">Potter</span> <span class="nb">sorted</span> <span class="n">into</span> <span class="n">Gryffindor</span>
+<span class="o">//</span> <span class="n">ERROR</span><span class="p">:</span> <span class="p">(</span><span class="n">RosterUpdate</span> <span class="o">|</span> <span class="n">MyBackend</span> <span class="o">|</span> <span class="mi">3000</span><span class="p">)</span> <span class="n">roster</span> <span class="n">could</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">updated</span> <span class="k">with</span> <span class="n">student</span><span class="p">:</span> <span class="nb">sorted</span> <span class="n">student</span> <span class="n">could</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">stored</span> <span class="o">|</span> <span class="n">from</span><span class="p">:</span> <span class="n">grpc</span> <span class="n">error</span> <span class="s1">&#39;Internal&#39;</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">shutdown</span> <span class="n">order</span> <span class="n">triggered</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">gRPC</span> <span class="n">server</span> <span class="n">shutdown</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">shutdown</span> <span class="n">order</span> <span class="n">triggered</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">shutdown</span> <span class="n">order</span> <span class="n">triggered</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">shutdown</span> <span class="n">order</span> <span class="n">triggered</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span>
+<span class="o">//</span> <span class="mi">12</span><span class="p">:</span><span class="mi">52</span><span class="n">AM</span> <span class="n">INF</span> <span class="n">shutdown</span> <span class="n">order</span> <span class="n">triggered</span> <span class="n">HOST</span><span class="o">=</span><span class="n">Williams</span><span class="o">-</span><span class="n">MacBook</span><span class="o">-</span><span class="n">Pro</span><span class="o">-</span><span class="mf">2.</span><span class="n">local</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api-docs">
+<h1>API Docs<a class="headerlink" href="#api-docs" title="Permalink to this headline">¶</a></h1>
+<p>Full Golang API docs can be found on
+<a class="reference external" href="https://pkg.go.dev/github.com/peake100/gRPEAKEC-go">pkg.go.dev</a></p>
+</div>
+<div class="section" id="protobuf-api">
+<h1>Protobuf API<a class="headerlink" href="#protobuf-api" title="Permalink to this headline">¶</a></h1>
+<p>This module contains some useful protobuf types and gRPC service definitions. API Docs
+for these types and services can be <a class="reference external" href="_static/proto.html">found here</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pkservices.html" class="btn btn-neutral float-right" title="pkservices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright &#39;2021, Billy Peake&#39;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
