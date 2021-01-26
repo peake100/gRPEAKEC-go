@@ -27,6 +27,7 @@ func (ping ExampleService) Id() string {
 func (ping ExampleService) Setup(
 	resourcesCtx context.Context,
 	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
 	logger zerolog.Logger,
 ) error {
 	// Add 1 to the resourcesReleased waitGroup

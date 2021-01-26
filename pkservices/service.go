@@ -22,11 +22,15 @@ type Service interface {
 	// resourcesReleased should be incremented and decremented by individual resources,
 	// and the Manager will block on it until the context passed to Shutdown cancels.
 	//
+	// shutdownCtx is cancelled when the graceful shutdown limit has been reached and
+	// resources should be released immediately for a forced shutdown.
+	//
 	// logger is a zerolog.Logger with a
 	// zerolog.Logger.WithString("SERVICE", [Service.Id()]) entry already on it.
 	Setup(
 		resourcesCtx context.Context,
 		resourcesReleased *sync.WaitGroup,
+		shutdownCtx context.Context,
 		logger zerolog.Logger,
 	) error
 }

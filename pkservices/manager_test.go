@@ -29,6 +29,7 @@ func (service *MockService) Id() string {
 func (service *MockService) Setup(
 	resourcesCtx context.Context,
 	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
 	logger zerolog.Logger,
 ) error {
 	resourcesReleased.Add(1)
@@ -155,6 +156,7 @@ func (mock *MockGenericService) Id() string {
 func (mock *MockGenericService) Setup(
 	resourcesCtx context.Context,
 	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
 	logger zerolog.Logger,
 ) error {
 	resourcesReleased.Add(1)
@@ -300,6 +302,7 @@ func (s GenericErrService) Id() string {
 func (s GenericErrService) Setup(
 	resourcesCtx context.Context,
 	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
 	logger zerolog.Logger,
 ) error {
 	if s.ErrOnSetup {

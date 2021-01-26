@@ -28,14 +28,20 @@ func (ping pingService) Id() string {
 	return "gPEAKERC Ping"
 }
 
+// revive:disable:context-as-argument
+// Revive doesnt like the second context not being the first argument here.
+
 // Setup implements Service.
 func (ping pingService) Setup(
 	resourcesCtx context.Context,
 	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
 	logger zerolog.Logger,
 ) error {
 	return nil
 }
+
+// revive:enable:context-as-argument
 
 // RegisterOnServer implements GrpcService.
 func (ping pingService) RegisterOnServer(server *grpc.Server) {

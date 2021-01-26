@@ -169,7 +169,10 @@ func (manager *Manager) setupServices() error {
 	return manager.mapServices(func(info serviceInfo) error {
 		info.Logger.Info().Msg("running setup")
 		err := info.Setup(
-			manager.sync.resourcesCtx, manager.sync.resourcesReleased, info.Logger,
+			manager.sync.resourcesCtx,
+			manager.sync.resourcesReleased,
+			manager.sync.shutdownCtx,
+			info.Logger,
 		)
 		info.Logger.Info().Msg("setup complete")
 

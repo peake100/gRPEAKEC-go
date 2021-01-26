@@ -29,6 +29,7 @@ to know what to do with our service.
   func (ping pingService) Setup(
     resourcesCtx context.Context,
     resourcesReleased *sync.WaitGroup,
+    shutdownCtx context.Context
     logger zerolog.Logger,
   ) error {
     return nil

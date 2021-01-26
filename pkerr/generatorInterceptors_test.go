@@ -62,6 +62,7 @@ func (mock *MockService) Id() string {
 func (mock *MockService) Setup(
 	resourcesCtx context.Context,
 	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
 	logger zerolog.Logger,
 ) error {
 	return nil

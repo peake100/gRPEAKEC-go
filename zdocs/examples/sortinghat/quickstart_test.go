@@ -67,6 +67,7 @@ func (hat SortingHat) Id() string {
 func (hat SortingHat) Setup(
 	resourcesCtx context.Context,
 	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
 	logger zerolog.Logger,
 ) error {
 	// Get our DB connection.
