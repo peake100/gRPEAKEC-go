@@ -420,3 +420,82 @@ func TestNewManager_ServiceErrs(t *testing.T) {
 		})
 	}
 }
+
+type ErrNotFoundService struct{}
+
+func (service ErrNotFoundService) Ping(
+	ctx context.Context, e2 *empty.Empty,
+) (*empty.Empty, error) {
+	return nil, nil
+}
+
+func (service ErrNotFoundService) Id() string {
+	return "ErrNotFoundService"
+}
+
+func (service ErrNotFoundService) Setup(
+	resourcesCtx context.Context,
+	resourcesReleased *sync.WaitGroup,
+	shutdownCtx context.Context,
+	logger zerolog.Logger,
+) error {
+	return nil
+}
+
+func (service ErrNotFoundService) RegisterOnServer(server *grpc.Server) {
+	pkservices.RegisterPingServer(server, service)
+}
+
+//func TestManagerOpts_WithErrNotFoundInterceptor(t *testing.T) {
+//	assert := assert.New(t)
+//
+//	errGen := pkerr.NewErrGenerator(
+//		"TestApp",
+//		"",
+//		false,
+//		false,
+//		false,
+//	)
+//
+//	opts := pkservices.NewManagerOpts().
+//		WithErrorGenerator(errGen).
+//		WithErrNotFoundInterceptor().
+//		WithGrpcPingService(false)
+//
+//	manager := pkservices.NewManager(opts, ErrNotFoundService{})
+//	defer manager.StartShutdown()
+//
+//	managerComplete := make(chan struct{})
+//
+//	// Run our manager.
+//	go func() {
+//		defer close(managerComplete)
+//
+//		err := manager.Run()
+//		assert.NoError(err, "run manager")
+//	}()
+//
+//	t.Cleanup(func() {
+//		manager.StartShutdown()
+//		manager.WaitForShutdown()
+//	})
+//
+//	clientConn := manager.Test(t).GrpcClientConn(true, grpc.WithInsecure())
+//
+//	ctx, cancel := pktesting.New3SecondCtx()
+//	defer cancel()
+//
+//	err := pkclients.WaitForGrpcServer(ctx, clientConn)
+//	if !assert.NoError(err, "wait for service") {
+//		t.FailNow()
+//	}
+//
+//	pingClient := pkservices.NewPingClient(clientConn)
+//
+//	ctx, cancel = pktesting.New3SecondCtx()
+//	defer cancel()
+//	_, err = pingClient.Ping(ctx, new(emptypb.Empty))
+//
+//	assertErr := pktesting.NewAssertAPIErr(t, err)
+//	assertErr.Is(pkerr.ErrNotFound)
+//}

@@ -203,7 +203,15 @@ func (manager *Manager) runGrpcServices() error {
 	// Allow them all to register themselves on the server. We are going to run this
 	// in the mapServices function so that if a Registration method panics, we will
 	// get the error.
-	server := grpc.NewServer(manager.opts.grpcServerOpts...)
+	unaryInterceptor := manager.opts.createUnaryMiddlewareInterceptor()
+	streamInterceptor := manager.opts.createStreamMiddlewareInterceptor()
+
+	serverOpts := make([]grpc.ServerOption, len(manager.opts.grpcServerOpts))
+	copy(serverOpts, manager.opts.grpcServerOpts)
+	serverOpts = append(serverOpts, grpc.UnaryInterceptor(unaryInterceptor))
+	serverOpts = append(serverOpts, grpc.StreamInterceptor(streamInterceptor))
+
+	server := grpc.NewServer(serverOpts...)
 	err := manager.mapServices(func(info serviceInfo) error {
 		grpcService, ok := info.Service.(GrpcService)
 		if !ok {

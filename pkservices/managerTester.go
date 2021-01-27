@@ -3,6 +3,7 @@ package pkservices
 import (
 	"context"
 	"github.com/peake100/gRPEAKEC-go/pkclients"
+	"github.com/peake100/gRPEAKEC-go/pkmiddleware"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"os"
@@ -58,10 +59,18 @@ func (tester ManagerTesting) GrpcClientConn(
 	// Add client interceptors to opts if we are using them.
 	if tester.manager.opts.errGenerator != nil {
 		errGen := tester.manager.opts.errGenerator
+
+		unaryInterceptor := pkmiddleware.NewUnaryClientMiddlewareInterceptor(
+			errGen.UnaryClientMiddleware,
+		)
+		streamInterceptor := pkmiddleware.NewStreamClientMiddlewareInterceptor(
+			errGen.StreamClientMiddleware,
+		)
+
 		opts = append(
 			opts,
-			grpc.WithUnaryInterceptor(errGen.NewUnaryClientInterceptor()),
-			grpc.WithStreamInterceptor(errGen.NewStreamClientInterceptor()),
+			grpc.WithUnaryInterceptor(unaryInterceptor),
+			grpc.WithStreamInterceptor(streamInterceptor),
 		)
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/peake100/gRPEAKEC-go/pkmiddleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -76,55 +77,60 @@ func (gen *ErrorGenerator) extractClientErrorFromInvoker(err error) error {
 	return err
 }
 
-// NewUnaryClientInterceptor returns a new client interceptor for handing APIErrors.
+// UnaryClientMiddleware implements pkmiddleware.UnaryClientMiddleware and handles
+// decoding an *Error detail as an APIError.
+//
 // If an *Error detail message is found in the status of an error return, the message
 // will be extracted into an APIError, and a new *TraceInfo frame will be added.
 //
 // *Error values are generated using the settings of ErrorGenerator.
-func (gen *ErrorGenerator) NewUnaryClientInterceptor() grpc.UnaryClientInterceptor {
+func (gen *ErrorGenerator) UnaryClientMiddleware(
+	next pkmiddleware.UnaryClientHandler,
+) pkmiddleware.UnaryClientHandler {
 	return func(
 		ctx context.Context,
 		method string,
-		req, reply interface{},
+		req interface{},
 		cc *grpc.ClientConn,
-		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
-	) error {
-		// Get the error from the invoker.
-		err := invoker(ctx, method, req, reply, cc, opts...)
-
-		// Extract an APIError from the return if it exists.
-		return gen.extractClientErrorFromInvoker(err)
+	) (reply interface{}, err error) {
+		reply, err = next(ctx, method, req, cc, opts...)
+		if err != nil {
+			err = gen.extractClientErrorFromInvoker(err)
+		}
+		return reply, err
 	}
 }
 
+// clientStream wraps grpc.ClientStream and converts incoming errors to APIError.
 type clientStream struct {
 	grpc.ClientStream
 	gen *ErrorGenerator
 }
 
+// RecvMsg wraps errors originating from the embedded stream's RecvMsg method as
+// APIError.
 func (stream *clientStream) RecvMsg(m interface{}) (err error) {
 	err = stream.ClientStream.RecvMsg(m)
 	return stream.gen.extractClientErrorFromInvoker(err)
 }
 
-// NewStreamClientInterceptor returns a new grpc.StreamClientInterceptor that converts
-// incoming errors to an APIError if the error contains an *Error detail, and a new
-// *TraceInfo frame will be added.
+// StreamClientMiddleware implements pkmiddleware.StreamClientMiddleware and
+// converts incoming errors to an APIError if the error contains an *Error detail, and a
+// new *TraceInfo frame will be added.
 //
 // *Error values are generated using the settings of ErrorGenerator.
-func (gen *ErrorGenerator) NewStreamClientInterceptor() grpc.StreamClientInterceptor {
+func (gen *ErrorGenerator) StreamClientMiddleware(
+	next pkmiddleware.StreamClientHandler,
+) pkmiddleware.StreamClientHandler {
 	return func(
 		ctx context.Context,
 		desc *grpc.StreamDesc,
 		cc *grpc.ClientConn,
 		method string,
-		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
-		// Get and convert the error.
-
-		stream, err := streamer(ctx, desc, cc, method, opts...)
+		stream, err := next(ctx, desc, cc, method, opts...)
 		if err != nil {
 			return nil, err
 		}
@@ -204,15 +210,16 @@ func (gen *ErrorGenerator) errToStatus(source error) error {
 	return thisStatus.Err()
 }
 
-// NewUnaryServerInterceptor returns a grpc.UnaryServerInterceptor that can handle
-// wrapping all errors and panics in an APIError and transforming them into a
+// NewUnaryServerInterceptor implements pkmiddleware.UnaryServerMiddleware that can
+// handle wrapping all errors and panics in an APIError and transforming them into a
 // status.Status.
-func (gen *ErrorGenerator) NewUnaryServerInterceptor() grpc.UnaryServerInterceptor {
+func (gen *ErrorGenerator) UnaryServerMiddleware(
+	next pkmiddleware.UnaryServerHandler,
+) pkmiddleware.UnaryServerHandler {
 	return func(
 		ctx context.Context,
 		req interface{},
 		info *grpc.UnaryServerInfo,
-		handler grpc.UnaryHandler,
 	) (resp interface{}, err error) {
 		defer func() {
 			if err != nil {
@@ -220,11 +227,11 @@ func (gen *ErrorGenerator) NewUnaryServerInterceptor() grpc.UnaryServerIntercept
 			}
 		}()
 
-		//  Catch the panic if it occurs.
+		// Catch the panic if it occurs.
 		err = CatchPanic(func() error {
 			// Invoke the handler.
 			var handlerErr error
-			resp, handlerErr = handler(ctx, req)
+			resp, handlerErr = next(ctx, req, info)
 			return handlerErr
 		})
 
@@ -232,15 +239,14 @@ func (gen *ErrorGenerator) NewUnaryServerInterceptor() grpc.UnaryServerIntercept
 	}
 }
 
-// NewStreamServerInterceptor returns a grpc.StreamServerInterceptor that can handle
+// StreamServerMiddleware implements pkmiddleware.StreamServerMiddleware that can handle
 // wrapping all errors and panics in an APIError and transforming them into a
 // status.Status.
-func (gen *ErrorGenerator) NewStreamServerInterceptor() grpc.StreamServerInterceptor {
+func (gen *ErrorGenerator) StreamServerMiddleware(
+	next pkmiddleware.StreamServerHandler,
+) pkmiddleware.StreamServerHandler {
 	return func(
-		srv interface{},
-		ss grpc.ServerStream,
-		info *grpc.StreamServerInfo,
-		handler grpc.StreamHandler,
+		srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo,
 	) (err error) {
 		defer func() {
 			if err != nil {
@@ -250,7 +256,7 @@ func (gen *ErrorGenerator) NewStreamServerInterceptor() grpc.StreamServerInterce
 
 		// Catch the panic if it occurs.
 		err = CatchPanic(func() error {
-			return handler(srv, ss)
+			return next(srv, ss, info)
 		})
 
 		return err

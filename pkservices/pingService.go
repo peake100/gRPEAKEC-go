@@ -15,8 +15,11 @@ type PingServer = protogen.PingServer
 // PingClient is a type alias to protogen.PingClient
 type PingClient = protogen.PingClient
 
-// NewPingClient is a type alias to protogen.NewPingClient
+// NewPingClient is an alias to protogen.NewPingClient
 var NewPingClient = protogen.NewPingClient
+
+// RegisterPingServer is an alias to protogen.RegisterPingServer
+var RegisterPingServer = protogen.RegisterPingServer
 
 // pingService is a basic implementation of PingServer that the manager can use to test
 // connectivity to the server.

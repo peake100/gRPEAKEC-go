@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/peake100/gRPEAKEC-go/pkclients"
 	"github.com/peake100/gRPEAKEC-go/pkerr"
+	"github.com/peake100/gRPEAKEC-go/pkmiddleware"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
 	"github.com/peake100/gRPEAKEC-go/zdocs/examples/protogen"
 	"github.com/rs/zerolog"
@@ -156,7 +157,7 @@ func ExampleQuickStart() {
 		// Add our logger.
 		WithLogger(logger).
 		// Pass our error generator to create error interceptors.
-		WithErrInterceptors(errGen).
+		WithErrorGenerator(errGen).
 		// Set our gRPC server address.
 		WithGrpcServerAddress(":50051")
 
@@ -178,12 +179,22 @@ func ExampleQuickStart() {
 		managerResult <- manager.Run()
 	}()
 
+	// Only one unary and one stream interceptor can normally be registered on a client
+	// and server. pkmiddleware offers interceptors that take in an unlimited amount
+	// of middleware, enabling a higher degree of customization.
+	unaryInterceptor := pkmiddleware.NewUnaryClientMiddlewareInterceptor(
+		errorGen.UnaryClientMiddleware,
+	)
+	streamInterceptor := pkmiddleware.NewStreamClientMiddlewareInterceptor(
+		errorGen.StreamClientMiddleware,
+	)
+
 	// Create a new gRPC client connection.
 	clientConn, err := grpc.Dial(
 		":50051",
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(errGen.NewUnaryClientInterceptor()),
-		grpc.WithStreamInterceptor(errGen.NewStreamClientInterceptor()),
+		grpc.WithUnaryInterceptor(unaryInterceptor),
+		grpc.WithStreamInterceptor(streamInterceptor),
 	)
 	if err != nil {
 		panic(err)

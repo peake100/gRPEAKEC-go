@@ -2,6 +2,7 @@ package pkservices
 
 import (
 	"github.com/peake100/gRPEAKEC-go/pkerr"
+	"github.com/peake100/gRPEAKEC-go/pkmiddleware"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"time"
@@ -13,6 +14,10 @@ type ManagerOpts struct {
 	grpcServiceAddress string
 	// grpcServerOpts will be passed to grpc.NewServer when creating the grpc server.
 	grpcServerOpts []grpc.ServerOption
+	// grpcStreamMiddleware is a list of pkmiddleware.StreamServerMiddleware to use.
+	grpcStreamMiddleware []pkmiddleware.StreamServerMiddleware
+	// grpcUnaryMiddleware is a list of pkmiddleware.UnaryServerMiddleware to use.=
+	grpcUnaryMiddleware []pkmiddleware.UnaryServerMiddleware
 
 	// maxShutdownDuration is the maximum amount of time a shutdown can take before the
 	// manager force-exits.
@@ -69,20 +74,70 @@ func (opts *ManagerOpts) WithMaxShutdownDuration(max time.Duration) *ManagerOpts
 	return opts
 }
 
-// WithErrInterceptors adds error-handling interceptors from the passed generator to
-// the list of gRPC server options.
+// WithErrorGenerator adds error-handling middleware from the passed generator
+// to the list of gRPC server options.
 //
 // Test clients will have corresponding interceptors added to them as well.
 //
 // Default: nil
-func (opts *ManagerOpts) WithErrInterceptors(
-	generator *pkerr.ErrorGenerator,
+func (opts *ManagerOpts) WithErrorGenerator(
+	errGen *pkerr.ErrorGenerator,
 ) *ManagerOpts {
-	opts.errGenerator = generator
-	return opts.WithGrpcServerOpts(
-		grpc.UnaryInterceptor(generator.NewUnaryServerInterceptor()),
-		grpc.StreamInterceptor(generator.NewStreamServerInterceptor()),
+	opts.errGenerator = errGen
+	return opts
+}
+
+// WithGrpcUnaryServerMiddleware adds unary server middlewares for the gRPC server.
+func (opts *ManagerOpts) WithGrpcUnaryServerMiddleware(
+	middleware ...pkmiddleware.UnaryServerMiddleware,
+) *ManagerOpts {
+	opts.grpcUnaryMiddleware = append(opts.grpcUnaryMiddleware, middleware...)
+	return nil
+}
+
+// WithGrpcStreamServerMiddleware adds stream server middlewares for the gRPC server.
+func (opts *ManagerOpts) WithGrpcStreamServerMiddleware(
+	middleware ...pkmiddleware.StreamServerMiddleware,
+) {
+	opts.grpcStreamMiddleware = append(opts.grpcStreamMiddleware, middleware...)
+}
+
+// createUnaryMiddlewareInterceptor creates a grpc.UnaryServerInterceptor that invokes
+// all configured middleware on each rpc call.
+func (
+	opts *ManagerOpts,
+) createUnaryMiddlewareInterceptor() grpc.UnaryServerInterceptor {
+	middleware := make(
+		[]pkmiddleware.UnaryServerMiddleware, 0, len(opts.grpcUnaryMiddleware),
 	)
+	if opts.errGenerator != nil {
+		middleware = append(middleware, opts.errGenerator.UnaryServerMiddleware)
+	}
+
+	for _, thisMiddleware := range opts.grpcUnaryMiddleware {
+		middleware = append(middleware, thisMiddleware)
+	}
+
+	return pkmiddleware.NewUnaryServerMiddlewareInterceptor(middleware...)
+}
+
+// createStreamMiddlewareInterceptor creates a grpc.StreamServerInterceptor that invokes
+// all configured middleware on each rpc call.
+func (
+	opts *ManagerOpts,
+) createStreamMiddlewareInterceptor() grpc.StreamServerInterceptor {
+	middleware := make(
+		[]pkmiddleware.StreamServerMiddleware, 0, len(opts.grpcUnaryMiddleware),
+	)
+	if opts.errGenerator != nil {
+		middleware = append(middleware, opts.errGenerator.StreamServerMiddleware)
+	}
+
+	for _, thisMiddleware := range opts.grpcStreamMiddleware {
+		middleware = append(middleware, thisMiddleware)
+	}
+
+	return pkmiddleware.NewStreamServerMiddlewareInterceptor(middleware...)
 }
 
 // WithLogger sets a zerolog.Logger to use for the manger.

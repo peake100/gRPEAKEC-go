@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/peake100/gRPEAKEC-go/pkerr"
+	"github.com/peake100/gRPEAKEC-go/pkmiddleware"
 	"github.com/peake100/gRPEAKEC-go/zdocs/examples/protogen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -141,7 +142,7 @@ var sortHandler = func(
 type SortingHat2 struct{}
 
 // Sort sorts pupils into a house.
-func (s SortingHat2) Sort(
+func (hat SortingHat2) Sort(
 	ctx context.Context, pupil *protogen.Pupil,
 ) (*protogen.Sorted, error) {
 	return sortHandler(ctx, pupil)
@@ -211,9 +212,19 @@ func runService(
 	if err != nil {
 		panic(err)
 	}
+
+	// We can use the pkmiddleware package to create our error middleware.
+	unaryServerInterceptor := pkmiddleware.NewUnaryServerMiddlewareInterceptor(
+		errorGen.UnaryServerMiddleware,
+	)
+
+	streamServerInterceptor := pkmiddleware.NewStreamServerMiddlewareInterceptor(
+		errorGen.StreamServerMiddleware,
+	)
+
 	server := grpc.NewServer(
-		grpc.UnaryInterceptor(errorGen.NewUnaryServerInterceptor()),
-		grpc.StreamInterceptor(errorGen.NewStreamServerInterceptor()),
+		grpc.UnaryInterceptor(unaryServerInterceptor),
+		grpc.StreamInterceptor(streamServerInterceptor),
 	)
 
 	// Register our service
@@ -237,12 +248,21 @@ func runService(
 	// All other errors will be the same.
 	clientErrs := errorGen.WithAppName("ClientApp")
 
+	// We can use the pkmiddleware package to create our error middleware.
+	unaryClientInterceptor := pkmiddleware.NewUnaryClientMiddlewareInterceptor(
+		clientErrs.UnaryClientMiddleware,
+	)
+
+	streamClientInterceptor := pkmiddleware.NewStreamClientMiddlewareInterceptor(
+		clientErrs.StreamClientMiddleware,
+	)
+
 	// Use the client error generator to make client interceptors.
 	clientConn, err := grpc.Dial(
 		address,
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(clientErrs.NewUnaryClientInterceptor()),
-		grpc.WithStreamInterceptor(clientErrs.NewStreamClientInterceptor()),
+		grpc.WithUnaryInterceptor(unaryClientInterceptor),
+		grpc.WithStreamInterceptor(streamClientInterceptor),
 	)
 	if err != nil {
 		panic(err)

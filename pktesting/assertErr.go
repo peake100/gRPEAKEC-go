@@ -153,7 +153,8 @@ func (asserter *AssertErr) TraceIndex(index int) TraceInfoAssert {
 	}
 }
 
-func NewAssertErr(t *testing.T, err error) *AssertErr {
+// NewAssertAPIErr returns an assert value with methods for testing errors.
+func NewAssertAPIErr(t *testing.T, err error) *AssertErr {
 	assertions := assert.New(t)
 
 	apiErr := pkerr.APIError{}

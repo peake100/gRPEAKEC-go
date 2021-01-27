@@ -7,6 +7,7 @@ import (
 	"github.com/golang/protobuf/ptypes/any"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/peake100/gRPEAKEC-go/pkerr"
+	"github.com/peake100/gRPEAKEC-go/pkmiddleware"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
 	"github.com/peake100/gRPEAKEC-go/pktesting"
 	"github.com/rs/zerolog"
@@ -233,7 +234,7 @@ func (suite *InterceptorSuite) SetupSuite() {
 
 	managerOpts := pkservices.NewManagerOpts().
 		WithGrpcServerAddress(testAddress).
-		WithErrInterceptors(mockService.errors)
+		WithErrorGenerator(mockService.errors)
 
 	suite.Manager = pkservices.NewManager(managerOpts, mockService)
 	suite.ManagerSuite.SetupSuite()
@@ -245,10 +246,18 @@ func (suite *InterceptorSuite) SetupSuite() {
 
 	// Create a client to connect to the server with our interceptors.
 	var err error
+
+	unaryInterceptor := pkmiddleware.NewUnaryClientMiddlewareInterceptor(
+		clientErrs.UnaryClientMiddleware,
+	)
+	streamInterceptor := pkmiddleware.NewStreamClientMiddlewareInterceptor(
+		clientErrs.StreamClientMiddleware,
+	)
+
 	suite.clientConn, err = grpc.Dial(
 		testAddress,
-		grpc.WithUnaryInterceptor(clientErrs.NewUnaryClientInterceptor()),
-		grpc.WithStreamInterceptor(clientErrs.NewStreamClientInterceptor()),
+		grpc.WithUnaryInterceptor(unaryInterceptor),
+		grpc.WithStreamInterceptor(streamInterceptor),
 		grpc.WithInsecure(),
 	)
 	if !suite.NoError(err, "get client conn") {
@@ -472,7 +481,7 @@ func (suite *InterceptorSuite) TestErrorReturns() {
 				err = sendFunc(t, msg)
 
 				t.Log("ERROR RECEIVED:", err)
-				assert := pktesting.NewAssertErr(t, err)
+				assert := pktesting.NewAssertAPIErr(t, err)
 				assert.ErrorDef(thisCase.ExpectedDef, false)
 				assert.Message(thisCase.ExpectedMessage)
 
