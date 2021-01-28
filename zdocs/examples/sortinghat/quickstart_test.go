@@ -245,7 +245,7 @@ func ExampleQuickStart() {
 		panic(err)
 	}
 
-	// Outputs:
+	// Output:
 	// 12:52AM INF running service manager HOST=Williams-MacBook-Pro-2.local SETTING_ADD_PING_SERVICE=true SETTING_MAX_SHUTDOWN=30000
 	// 12:52AM INF running setup HOST=Williams-MacBook-Pro-2.local SERVICE="gPEAKERC Ping"
 	// 12:52AM INF running setup HOST=Williams-MacBook-Pro-2.local SERVICE=SortingHat
