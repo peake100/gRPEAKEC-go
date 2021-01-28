@@ -30,6 +30,9 @@ type ManagerOpts struct {
 	// addGrpcLoggingMiddleware: if true, gRPC logging middleware should be added to the
 	// gRPC server.
 	addGrpcLoggingMiddleware bool
+	// addErrNotFoundMiddleware: if true, pkerr.NewErrNotFoundMiddleware is added to the
+	// grpcUnaryMiddleware as the first middleware.
+	addErrNotFoundMiddleware bool
 	// grpcLoggingOpts are the options to use when creating logging middleware
 	grpcLoggingOpts grpcLoggingOpts
 
@@ -140,20 +143,6 @@ func (opts *ManagerOpts) WithoutGrpcLogging() *ManagerOpts {
 	return opts
 }
 
-// createLoggingMiddleware creates logging middleware from the manager settings.
-func (opts *ManagerOpts) createLoggingMiddleware() (
-	pkmiddleware.UnaryServerMiddleware, pkmiddleware.StreamServerMiddleware,
-) {
-	return pkmiddleware.NewLoggingMiddleware(
-		opts.logger,
-		opts.grpcLoggingOpts.logRPCLevel,
-		opts.grpcLoggingOpts.logReqLevel,
-		opts.grpcLoggingOpts.logRespLevel,
-		opts.grpcLoggingOpts.logErrors,
-		opts.grpcLoggingOpts.errorTrace,
-	)
-}
-
 // WithGrpcUnaryServerMiddleware adds unary server middlewares for the gRPC server.
 func (opts *ManagerOpts) WithGrpcUnaryServerMiddleware(
 	middleware ...pkmiddleware.UnaryServerMiddleware,
@@ -162,11 +151,23 @@ func (opts *ManagerOpts) WithGrpcUnaryServerMiddleware(
 	return nil
 }
 
-// WithGrpcStreamServerMiddleware adds stream server middlewares for the gRPC server.
+// WithGrpcStreamServerMiddleware adds stream server middlewares for the gRPC
+// server.
+//
+// Default: nil.
 func (opts *ManagerOpts) WithGrpcStreamServerMiddleware(
 	middleware ...pkmiddleware.StreamServerMiddleware,
 ) {
 	opts.grpcStreamMiddleware = append(opts.grpcStreamMiddleware, middleware...)
+}
+
+// WithErrNotFoundMiddleware adds pkerr.NewErrNotFoundMiddleware to the unary
+// middlewares.
+//
+// Default: false.
+func (opts *ManagerOpts) WithErrNotFoundMiddleware() *ManagerOpts {
+	opts.addErrNotFoundMiddleware = true
+	return opts
 }
 
 // createUnaryMiddlewareInterceptor creates a grpc.UnaryServerInterceptor that invokes
@@ -177,15 +178,28 @@ func (
 	middleware := make(
 		[]pkmiddleware.UnaryServerMiddleware, 0, len(opts.grpcUnaryMiddleware),
 	)
+
+	// We have to add NewErrNotFoundMiddleware before the error middleware so that the
+	// full error middleware can transform it into a full blown error.
+	if opts.addErrNotFoundMiddleware {
+		notFoundMiddleware := pkerr.NewErrNotFoundMiddleware(opts.errGenerator)
+		middleware = append(middleware, notFoundMiddleware)
+	}
+
+	// The error middleware should come now so any remaining middleware can inspect the
+	// converted errors.
 	if opts.errGenerator != nil {
 		middleware = append(middleware, opts.errGenerator.UnaryServerMiddleware)
 	}
 
+	// Next add the user-created middleware.
 	for _, thisMiddleware := range opts.grpcUnaryMiddleware {
 		middleware = append(middleware, thisMiddleware)
 	}
 
-	// Add logging middleware if needed. This should be the last middleware added.
+	// Add logging middleware if needed. This should be the last middleware added so it
+	// captures the raw request from the client and the final error returned from
+	// previous middleware.
 	if opts.addGrpcLoggingMiddleware {
 		loggingMiddleware := pkmiddleware.NewUnaryLoggingMiddleware(
 			opts.logger,
@@ -198,6 +212,7 @@ func (
 		middleware = append(middleware, loggingMiddleware)
 	}
 
+	// Wrap our middleware in an interceptor.
 	return pkmiddleware.NewUnaryServerMiddlewareInterceptor(middleware...)
 }
 
@@ -209,15 +224,21 @@ func (
 	middleware := make(
 		[]pkmiddleware.StreamServerMiddleware, 0, len(opts.grpcUnaryMiddleware),
 	)
+
+	// The error middleware should come now so any remaining middleware can inspect the
+	// converted errors.
 	if opts.errGenerator != nil {
 		middleware = append(middleware, opts.errGenerator.StreamServerMiddleware)
 	}
 
+	// Next add the user-created middleware.
 	for _, thisMiddleware := range opts.grpcStreamMiddleware {
 		middleware = append(middleware, thisMiddleware)
 	}
 
-	// Add logging middleware if needed. This should be the last middleware added.
+	// Add logging middleware if needed. This should be the last middleware added so it
+	// captures the raw request from the client and the final error returned from
+	// previous middleware.
 	if opts.addGrpcLoggingMiddleware {
 		loggingMiddleware := pkmiddleware.NewStreamLoggingMiddleware(
 			opts.logger,
@@ -249,10 +270,15 @@ func NewManagerOpts() *ManagerOpts {
 		WithGrpcPingService(true).
 		WithLogger(zerolog.Logger{}).
 		WithGrpcLogging(
+			// RPC method calls will only be logged for a Debug-level logger.
 			zerolog.DebugLevel,
+			// Requests message values will never be logged.
 			zerolog.Disabled+1,
+			// Response message values will never be logged.
 			zerolog.Disabled+1,
+			// Errors will be logged.
 			true,
+			// Trace() will be called on errors.
 			true,
 		)
 }

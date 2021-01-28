@@ -160,11 +160,11 @@ func ExampleQuickStart() {
 		// and if the logger level is set to debug or less, add in the req and resp
 		// objects as fields.
 		WithGrpcLogging(
-			zerolog.InfoLevel, // logRPCLevel
+			zerolog.InfoLevel,  // logRPCLevel
 			zerolog.DebugLevel, // logReqLevel
 			zerolog.DebugLevel, // logRespLevel
-			true, // logErrors
-			true, // errorTrace
+			true,               // logErrors
+			true,               // errorTrace
 		).
 		// Pass our error generator to create error middleware.
 		WithErrorGenerator(errGen).
@@ -244,7 +244,7 @@ func ExampleQuickStart() {
 		// Otherwise log a success
 		logger.Info().
 			Str("PUPIL", thisPupil.Name).
-			Stringer("HOUSE",sorted.House).
+			Stringer("HOUSE", sorted.House).
 			Msg("client sorted into house")
 	}
 

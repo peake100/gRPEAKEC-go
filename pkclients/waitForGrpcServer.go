@@ -3,6 +3,7 @@ package pkclients
 import (
 	"context"
 	"errors"
+	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"github.com/peake100/gRPEAKEC-go/pktesting/protogen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -10,7 +11,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-var retryCodes = [2]codes.Code{codes.Unavailable, codes.NotFound}
+var retryCodes = [2]codes.Code{codes.NotFound, codes.Unavailable}
 
 func retryPing(
 	ctx context.Context, client protogen.MockUnaryServiceClient,
@@ -30,11 +31,20 @@ func retryPing(
 		return err, false
 	}
 
+	// If we get an APIError back, we are good to go.
+	if errors.As(err, &pkerr.APIError{}) {
+		return nil, false
+	}
+
 	// Check if we got a status message back. If we did not, then the error was on the
 	// connection level, and we need to try again.
 	responseStatus, ok := status.FromError(err)
 	if !ok {
 		return err, true
+	}
+
+	if responseStatus.Code() == codes.DeadlineExceeded {
+		return err, false
 	}
 
 	// Check if the status code is one of our retry codes.

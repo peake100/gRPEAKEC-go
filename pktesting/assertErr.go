@@ -106,7 +106,7 @@ func (asserter *AssertErr) MessageContains(contains string) bool {
 	)
 }
 
-func (asserter *AssertErr) ErrorDef(
+func (asserter *AssertErr) Sentinel(
 	expected *pkerr.SentinelError, fullMessage bool,
 ) (result bool) {
 	result = true
@@ -156,6 +156,10 @@ func (asserter *AssertErr) TraceIndex(index int) TraceInfoAssert {
 // NewAssertAPIErr returns an assert value with methods for testing errors.
 func NewAssertAPIErr(t *testing.T, err error) *AssertErr {
 	assertions := assert.New(t)
+
+	if !assertions.IsType(pkerr.APIError{}, err, "error is APIError") {
+		t.FailNow()
+	}
 
 	apiErr := pkerr.APIError{}
 	if !assertions.Error(err, "error is not nil") {

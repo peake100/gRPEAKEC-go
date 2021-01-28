@@ -56,6 +56,16 @@ type managerSync struct {
 	// This signal is also available to the end caller through.
 	// Manager.WaitForShutdown().
 	shutdownComplete chan struct{}
+
+	// testing holds sync objects for testing signals.
+	testing testingSync
+}
+
+type testingSync struct {
+	// grpcListenCtx canceled after a successful (or failed) listen is established
+	grpcListenCtx context.Context
+	// grpcListenCancel cancels grpcListenCancel.
+	grpcListenCancel context.CancelFunc
 }
 
 // serviceInfo holds each service and any additional relevant data.
@@ -180,12 +190,42 @@ func (manager *Manager) setupServices() error {
 	})
 }
 
+// getGrpcListener retries listening on the configured gRPC address until a successful
+// listen occurs or ctx is cancelled. Listen commands can often be blocked temporarily
+// while the OS cleans up from a previous service (like a short-lived test) listening on
+// that port.
+func (manager *Manager) getGrpcListener(ctx context.Context) (net.Listener, error) {
+	// signal out listener get has exited.
+	defer manager.sync.testing.grpcListenCancel()
+
+	for {
+		// If our context has expired, exit.
+		if ctx.Err() != nil {
+			return nil, ctx.Err()
+		}
+
+		// Try to get a listener.
+		listener, err := net.Listen("tcp", manager.opts.grpcServiceAddress)
+		// Return the listener if there is no error.
+		if err == nil {
+			return listener, nil
+		}
+
+		// If this is a bind error, continue
+		var opErr *net.OpError
+		if errors.As(err, &opErr) && opErr.Op == "bind" {
+			continue
+		}
+
+		return nil, err
+	}
+}
+
 // runGrpcServices runs all gRPC services.
 func (manager *Manager) runGrpcServices() error {
-	defer manager.StartShutdown()
-
 	// Iterate over the services and see if there are any grpc ones
 	var hasGrpc bool
+
 	// We know this will not result in an error.
 	_ = manager.mapServices(func(info serviceInfo) error {
 		_, ok := info.Service.(GrpcService)
@@ -221,10 +261,14 @@ func (manager *Manager) runGrpcServices() error {
 		return nil
 	})
 
-	// get a listener
-	listener, err := net.Listen("tcp", manager.opts.grpcServiceAddress)
+	// Get a listener. We'll give it 30 seconds to succeed. Anything that takes longer
+	// than that is not just a port in the process of being released by a previous test.
+	ctx, cancel := context.WithTimeout(manager.sync.servicesCtx, 30*time.Second)
+	defer cancel()
+	listener, err := manager.getGrpcListener(ctx)
 	if err != nil {
-		return fmt.Errorf("error getting tcp listener: %w", err)
+		err = fmt.Errorf("error getting tcp listener: %w", err)
+		return err
 	}
 	defer listener.Close()
 
@@ -247,15 +291,16 @@ func (manager *Manager) runGrpcServices() error {
 
 	manager.opts.logger.Info().Msg("gRPC server shutdown")
 	if err != nil {
-		return fmt.Errorf("error serving gRPC: %w", err)
+		err = fmt.Errorf("error serving gRPC: %w", err)
+		return err
 	}
 
 	return nil
 }
 
 // genericServicesRun runs all generic services.
-func (manager *Manager) genericServicesRun() error {
-	return manager.mapServices(func(info serviceInfo) error {
+func (manager *Manager) genericServicesRun() (err error) {
+	err = manager.mapServices(func(info serviceInfo) error {
 		serviceGeneric, ok := info.Service.(GenericService)
 		if !ok {
 			return nil
@@ -265,6 +310,7 @@ func (manager *Manager) genericServicesRun() error {
 		info.Logger.Info().Msg("run complete")
 		return err
 	})
+	return err
 }
 
 // runAllServices runs all services.
@@ -280,7 +326,11 @@ func (manager *Manager) runAllServices() error {
 
 	go func() {
 		defer runsComplete.Done()
-		runErrors[0] = manager.genericServicesRun()
+		err := manager.genericServicesRun()
+		if err != nil {
+			manager.StartShutdown()
+		}
+		runErrors[0] = err
 	}()
 
 	// Run our gRPC services in another.
@@ -410,6 +460,8 @@ func (manager *Manager) Reset() {
 	listenersCtx, listenersCancel := context.WithCancel(context.Background())
 	shutdownCtx, shutdownCancel := context.WithCancel(context.Background())
 
+	grpcListenCtx, grpcListenCancel := context.WithCancel(context.Background())
+
 	manager.sync = managerSync{
 		resourcesCtx:      resourcesCtx,
 		resourcesCancel:   resourcesCancel,
@@ -422,6 +474,10 @@ func (manager *Manager) Reset() {
 		shutdownCtx:       shutdownCtx,
 		shutdownCancel:    shutdownCancel,
 		shutdownComplete:  make(chan struct{}),
+		testing: testingSync{
+			grpcListenCtx:    grpcListenCtx,
+			grpcListenCancel: grpcListenCancel,
+		},
 	}
 }
 

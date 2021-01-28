@@ -22,8 +22,6 @@ import (
 	"testing"
 )
 
-const testAddress = ":7090"
-
 var sentinelIssuer = pkerr.NewSentinelIssuer(
 	"Mock",
 	false,
@@ -233,7 +231,7 @@ func (suite *InterceptorSuite) SetupSuite() {
 	mockService := NewMockService()
 
 	managerOpts := pkservices.NewManagerOpts().
-		WithGrpcServerAddress(testAddress).
+		WithGrpcServerAddress(grpcTestAddress).
 		WithErrorGenerator(mockService.errors)
 
 	suite.Manager = pkservices.NewManager(managerOpts, mockService)
@@ -255,7 +253,7 @@ func (suite *InterceptorSuite) SetupSuite() {
 	)
 
 	suite.clientConn, err = grpc.Dial(
-		testAddress,
+		grpcTestAddress,
 		grpc.WithUnaryInterceptor(unaryInterceptor),
 		grpc.WithStreamInterceptor(streamInterceptor),
 		grpc.WithInsecure(),
@@ -347,7 +345,7 @@ func (suite *InterceptorSuite) TestErrorReturns() {
 			ExpectedContext: "panic recovered: panic context: [error]",
 		},
 		{
-			Name:            "ErrorDef",
+			Name:            "Sentinel",
 			CaseType:        caseDef,
 			ExpectedDef:     ErrCustom,
 			ExpectedMessage: "data loss occurred",
@@ -478,7 +476,7 @@ func (suite *InterceptorSuite) TestErrorReturns() {
 
 				t.Log("ERROR RECEIVED:", err)
 				assert := pktesting.NewAssertAPIErr(t, err)
-				assert.ErrorDef(thisCase.ExpectedDef, false)
+				assert.Sentinel(thisCase.ExpectedDef, false)
 				assert.Message(thisCase.ExpectedMessage)
 
 				assert.TraceLength(2)

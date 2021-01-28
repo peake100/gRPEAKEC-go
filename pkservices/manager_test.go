@@ -2,6 +2,7 @@ package pkservices_test
 
 import (
 	"context"
+	"fmt"
 	"github.com/golang/protobuf/ptypes/any"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
@@ -188,19 +189,19 @@ func (mock *MockGenericService) Setup(
 func (mock *MockGenericService) Run(
 	runCtx context.Context, shutdownCtx context.Context,
 ) error {
-	defer close(mock.RunCalled)
+	fmt.Println("RUN CALLED")
+	// Close run called
+	close(mock.RunCalled)
 
-	go func() {
-		// Wait for run to be released
-		<-runCtx.Done()
+	// Wait for run to be released
+	<-runCtx.Done()
 
-		// Signal that the services have been released
-		close(mock.ServicesReleased)
+	// Signal that the services have been released
+	close(mock.ServicesReleased)
 
-		// Block again until the tester allows us to continue. This lets us test that
-		// resources are not released until run returns.
-		<-mock.UnblockRun
-	}()
+	// Block again until the tester allows us to continue. This lets us test that
+	// resources are not released until run returns.
+	<-mock.UnblockRun
 
 	return nil
 }
@@ -223,7 +224,8 @@ func TestManager_genericLifetime(t *testing.T) {
 		UnblockResources:  make(chan struct{}),
 	}
 
-	manager := pkservices.NewManager(nil, service)
+	opts := pkservices.NewManagerOpts().WithGrpcPingService(false)
+	manager := pkservices.NewManager(opts, service)
 	defer manager.StartShutdown()
 
 	managerComplete := make(chan struct{})
@@ -335,7 +337,8 @@ func checkManagerErr(
 ) {
 	assert := assert.New(t)
 
-	manager := pkservices.NewManager(nil, service)
+	opts := pkservices.NewManagerOpts().WithGrpcPingService(false)
+	manager := pkservices.NewManager(opts, service)
 	t.Cleanup(func() {
 		manager.StartShutdown()
 		manager.WaitForShutdown()

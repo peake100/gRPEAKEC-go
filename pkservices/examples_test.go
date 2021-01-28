@@ -7,6 +7,7 @@ import (
 	"github.com/peake100/gRPEAKEC-go/pkclients"
 	"github.com/peake100/gRPEAKEC-go/pkservices"
 	"github.com/peake100/gRPEAKEC-go/pkservices/protogen"
+	"github.com/peake100/gRPEAKEC-go/pktesting"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -101,15 +102,19 @@ func ExampleManager_basic() {
 	pingClient := pkservices.NewPingClient(clientConn)
 
 	// Wait for the server to be serving requests.
-	err = pkclients.WaitForGrpcServer(context.Background(), clientConn)
+	ctx, cancel := pktesting.New3SecondCtx()
+	defer cancel()
+	err = pkclients.WaitForGrpcServer(ctx, clientConn)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("server did not respond: %w", err))
 	}
 
 	// Send a ping
-	_, err = pingClient.Ping(context.Background(), new(emptypb.Empty))
+	ctx, cancel = pktesting.New3SecondCtx()
+	defer cancel()
+	_, err = pingClient.Ping(ctx, new(emptypb.Empty))
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("error on ping: %w", err))
 	}
 
 	// Start shutdown.
@@ -118,7 +123,7 @@ func ExampleManager_basic() {
 	// Grab our error from the error channel (blocks until the manager is shutdown)
 	err = <-errChan
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("error from manager: %w", err))
 	}
 
 	// Exit.

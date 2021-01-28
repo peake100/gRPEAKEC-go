@@ -120,6 +120,21 @@ func (tester ManagerTesting) GrpcPingClient(
 func (tester ManagerTesting) PingGrpcServer(ctx context.Context) {
 	tester.checkForGrpcService()
 
+	timer := time.NewTimer(3 * time.Second)
+	defer timer.Stop()
+
+	select {
+	case <-tester.manager.sync.testing.grpcListenCtx.Done():
+	case <-tester.manager.sync.servicesCtx.Done():
+		assert.NoError(
+			tester.t, tester.manager.sync.servicesCtx.Err(),
+			"manager exiting",
+		)
+	case <-timer.C:
+		tester.t.Error("timout on gRPC listen")
+		tester.t.FailNow()
+	}
+
 	if ctx == nil {
 		defaultCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()

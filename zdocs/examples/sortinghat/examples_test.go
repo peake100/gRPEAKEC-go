@@ -21,6 +21,8 @@ import (
 	"time"
 )
 
+const grpcTestAddress = ":50053"
+
 // ErrSoulCloudy is returned when SortingHat cannot peer deep enough into a pupil's soul
 // to sort them.
 var ErrSoulCloudy = sentinels.NewSentinel(
@@ -150,7 +152,7 @@ func (hat SortingHat2) Sort(
 
 func ExampleNormalError() {
 	// Set up the gRPC server
-	listener, err := net.Listen("tcp", ":50052")
+	listener, err := net.Listen("tcp", ":50054")
 	if err != nil {
 		panic(err)
 	}
@@ -169,7 +171,7 @@ func ExampleNormalError() {
 	}()
 
 	// Get a client connection
-	clientConn, err := grpc.Dial(":50052", grpc.WithInsecure())
+	clientConn, err := grpc.Dial(":50054", grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
@@ -201,14 +203,12 @@ func ExampleNormalError() {
 
 // runService sets up the gRPC service and returns a client as well as a shutdown
 // function that will release all resources and block until complete when called.
-func runService(
-	address string,
-) (client protogen.SortingHatClient, shutdown func()) {
+func runService() (client protogen.SortingHatClient, shutdown func()) {
 	ctx, cancel := context.WithCancel(context.Background())
 	complete := new(sync.WaitGroup)
 
 	// Set up the gRPC server
-	listener, err := net.Listen("tcp", address)
+	listener, err := net.Listen("tcp", grpcTestAddress)
 	if err != nil {
 		panic(err)
 	}
@@ -259,7 +259,7 @@ func runService(
 
 	// Use the client error generator to make client interceptors.
 	clientConn, err := grpc.Dial(
-		address,
+		grpcTestAddress,
 		grpc.WithInsecure(),
 		grpc.WithUnaryInterceptor(unaryClientInterceptor),
 		grpc.WithStreamInterceptor(streamClientInterceptor),
@@ -290,7 +290,7 @@ func runService(
 }
 
 func ExampleInterceptedError() {
-	hatClient, shutdown := runService(":50053")
+	hatClient, shutdown := runService()
 	defer shutdown()
 
 	// Try and sort the pupil
@@ -394,7 +394,7 @@ func ExampleWrappedAPIError() {
 		return &protogen.Sorted{House: protogen.House_Gryffindor}, nil
 	}
 
-	hatClient, shutdown := runService(":50054")
+	hatClient, shutdown := runService()
 	defer shutdown()
 
 	// Try and sort the pupil
@@ -433,7 +433,7 @@ func ExamplePanic() {
 		return &protogen.Sorted{House: protogen.House_Gryffindor}, nil
 	}
 
-	hatClient, shutdown := runService(":50055")
+	hatClient, shutdown := runService()
 	defer shutdown()
 
 	// Try and sort the pupil
@@ -467,7 +467,7 @@ func ExampleReturnSentinel() {
 		return &protogen.Sorted{House: protogen.House_Gryffindor}, nil
 	}
 
-	hatClient, shutdown := runService(":50056")
+	hatClient, shutdown := runService()
 	defer shutdown()
 
 	// Try and sort the pupil
@@ -502,7 +502,7 @@ func ExampleUnknownError() {
 		return &protogen.Sorted{House: protogen.House_Gryffindor}, nil
 	}
 
-	hatClient, shutdown := runService(":50057")
+	hatClient, shutdown := runService()
 	defer shutdown()
 
 	// Try and sort the pupil
@@ -531,7 +531,7 @@ func ExampleUnknownPanic() {
 		return &protogen.Sorted{House: protogen.House_Gryffindor}, nil
 	}
 
-	hatClient, shutdown := runService(":50058")
+	hatClient, shutdown := runService()
 	defer shutdown()
 
 	// Try and sort the pupil
