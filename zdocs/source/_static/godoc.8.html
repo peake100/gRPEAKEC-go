@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#375EAB">
 
-  <title>protogen - Go Documentation Server</title>
+  <title>pkmiddleware - Go Documentation Server</title>
 
 <link type="text/css" rel="stylesheet" href="style.css">
 
@@ -43,7 +43,7 @@
 
 
   <h1>
-    Package protogen
+    Package pkmiddleware
     <span class="text-muted"></span>
   </h1>
 
@@ -77,7 +77,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "github.com/peake100/gRPEAKEC-go/pkservices/protogen"</code></dd>
+			<dd><code>import "github.com/peake100/gRPEAKEC-go/pkmiddleware"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="godoc.8.html#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -93,10 +93,7 @@
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				<p>
-For internal use. Aliases to generated code are available in pkservices.
-</p>
-
+				
 				
 			</div>
 		</div>
@@ -113,32 +110,70 @@ For internal use. Aliases to generated code are available in pkservices.
 			<dl>
 			
 			
-				<dd><a href="godoc.8.html#pkg-variables">Variables</a></dd>
+			
+				
+				<dd><a href="godoc.8.html#LoggerFromCtx">func LoggerFromCtx(ctx context.Context) zerolog.Logger</a></dd>
+			
+				
+				<dd><a href="godoc.8.html#NewLoggingMiddleware">func NewLoggingMiddleware(logger zerolog.Logger, logRPCLevel zerolog.Level, logReqLevel zerolog.Level, logRespLevel zerolog.Level, logErrors bool, errorTrace bool) (unary UnaryServerMiddleware, stream StreamServerMiddleware)</a></dd>
+			
+				
+				<dd><a href="godoc.8.html#NewStreamClientMiddlewareInterceptor">func NewStreamClientMiddlewareInterceptor(middleware ...StreamClientMiddleware) grpc.StreamClientInterceptor</a></dd>
+			
+				
+				<dd><a href="godoc.8.html#NewStreamServerMiddlewareInterceptor">func NewStreamServerMiddlewareInterceptor(middleware ...StreamServerMiddleware) grpc.StreamServerInterceptor</a></dd>
+			
+				
+				<dd><a href="godoc.8.html#NewUnaryClientMiddlewareInterceptor">func NewUnaryClientMiddlewareInterceptor(middleware ...UnaryClientMiddleware) grpc.UnaryClientInterceptor</a></dd>
+			
+				
+				<dd><a href="godoc.8.html#NewUnaryServerMiddlewareInterceptor">func NewUnaryServerMiddlewareInterceptor(middleware ...UnaryServerMiddleware) grpc.UnaryServerInterceptor</a></dd>
 			
 			
 				
-				<dd><a href="godoc.8.html#RegisterPingServer">func RegisterPingServer(s *grpc.Server, srv PingServer)</a></dd>
-			
+				<dd><a href="godoc.8.html#StreamClientHandler">type StreamClientHandler</a></dd>
+				
+				
 			
 				
-				<dd><a href="godoc.8.html#PingClient">type PingClient</a></dd>
+				<dd><a href="godoc.8.html#StreamClientMiddleware">type StreamClientMiddleware</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.8.html#StreamServerHandler">type StreamServerHandler</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.8.html#StreamServerMiddleware">type StreamServerMiddleware</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.8.html#NewPingClient">func NewPingClient(cc grpc.ClientConnInterface) PingClient</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.8.html#NewStreamLoggingMiddleware">func NewStreamLoggingMiddleware(logger zerolog.Logger, logRPCLevel zerolog.Level, logReqLevel zerolog.Level, logRespLevel zerolog.Level, logErrors bool, errorTrace bool) StreamServerMiddleware</a></dd>
 				
 				
 			
 				
-				<dd><a href="godoc.8.html#PingServer">type PingServer</a></dd>
+				<dd><a href="godoc.8.html#UnaryClientHandler">type UnaryClientHandler</a></dd>
 				
 				
 			
 				
-				<dd><a href="godoc.8.html#UnimplementedPingServer">type UnimplementedPingServer</a></dd>
+				<dd><a href="godoc.8.html#UnaryClientMiddleware">type UnaryClientMiddleware</a></dd>
 				
+				
+			
+				
+				<dd><a href="godoc.8.html#UnaryServerHandler">type UnaryServerHandler</a></dd>
+				
+				
+			
+				
+				<dd><a href="godoc.8.html#UnaryServerMiddleware">type UnaryServerMiddleware</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.8.html#UnimplementedPingServer.Ping">func (*UnimplementedPingServer) Ping(context.Context, *empty.Empty) (*empty.Empty, error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.8.html#NewUnaryLoggingMiddleware">func NewUnaryLoggingMiddleware(logger zerolog.Logger, logRPCLevel zerolog.Level, logReqLevel zerolog.Level, logRespLevel zerolog.Level, logErrors bool, errorTrace bool) UnaryServerMiddleware</a></dd>
+				
 				
 			
 			
@@ -152,9 +187,11 @@ For internal use. Aliases to generated code are available in pkservices.
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/doc.go">doc.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/clientInterceptors.go">clientInterceptors.go</a>
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go">ping_service.pb.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/logging.go">logging.go</a>
+			
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/serverInterceptors.go">serverInterceptors.go</a>
 			
 			</span>
 			</p>
@@ -166,45 +203,241 @@ For internal use. Aliases to generated code are available in pkservices.
 
 		
 		
-			<h2 id="pkg-variables">Variables</h2>
-			
-				
-				<pre>var <span id="File_grpeakec_proto_pkping_ping_service_proto">File_grpeakec_proto_pkping_ping_service_proto</span> <a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/">protoreflect</a>.<a href="http://localhost:6161/pkg/google.golang.org/protobuf/reflect/protoreflect/#FileDescriptor">FileDescriptor</a></pre>
-			
-		
 		
 			
 			
-			<h2 id="RegisterPingServer">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=5449:5504#L124">RegisterPingServer</a>
-				<a class="permalink" href="godoc.8.html#RegisterPingServer">&#xb6;</a>
+			<h2 id="LoggerFromCtx">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/logging.go?s=8446:8500#L312">LoggerFromCtx</a>
+				<a class="permalink" href="godoc.8.html#LoggerFromCtx">&#xb6;</a>
 				
 				
 			</h2>
-			<pre>func RegisterPingServer(s *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#Server">Server</a>, srv <a href="godoc.8.html#PingServer">PingServer</a>)</pre>
-			
-			
-			
-
-		
-		
-			
-			
-			<h2 id="PingClient">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=4354:4537#L88">PingClient</a>
-				<a class="permalink" href="godoc.8.html#PingClient">&#xb6;</a>
-				
-				
-			</h2>
+			<pre>func LoggerFromCtx(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>) <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Logger">Logger</a></pre>
 			<p>
-PingClient is the client API for Ping service.
+LoggerFromCtx returns a method or stream-specific logger with context fields already
+set by the logging middleware.
 </p>
 <p>
-For semantics around ctx use and closing/ending streaming RPCs, please refer to <a href="https://godoc.org/google.golang.org/grpc#ClientConn.NewStream">https://godoc.org/google.golang.org/grpc#ClientConn.NewStream</a>.
+If logging middleware is not in use, this method panic
 </p>
 
-			<pre>type PingClient interface {
-    <span class="comment">// Ping is a simple endpoint to test if a service is running.</span>
-    Ping(ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, in *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-}</pre>
+			
+			
+
+		
+			
+			
+			<h2 id="NewLoggingMiddleware">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/logging.go?s=951:1184#L29">NewLoggingMiddleware</a>
+				<a class="permalink" href="godoc.8.html#NewLoggingMiddleware">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func NewLoggingMiddleware(
+    logger <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Logger">Logger</a>,
+    logRPCLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logReqLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logRespLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logErrors <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+    errorTrace <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+) (unary <a href="godoc.8.html#UnaryServerMiddleware">UnaryServerMiddleware</a>, stream <a href="godoc.8.html#StreamServerMiddleware">StreamServerMiddleware</a>)</pre>
+			<p>
+NewLoggingMiddleware creates unary and streaming middleware for logging requests.
+</p>
+<p>
+logger is the zerolog.Logger to use.
+</p>
+<p>
+logRpcLevel is what level to log rpcCalls at. The method name, duration and id of the
+request will be logged.
+</p>
+<p>
+logReqLevel will log the req value on the rpc log if the logger is equal to or under
+the level cutoff.
+</p>
+<p>
+logRespLevel will log the resp value in the rpc log if the logger is equal to ot
+under the level cutoff.
+</p>
+<p>
+logErrors: when tue, errors will be logged at an error level if they occur.
+</p>
+<p>
+errorTrace: when true, a Trace() will be added to error logs.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NewStreamClientMiddlewareInterceptor">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/clientInterceptors.go?s=2492:2604#L78">NewStreamClientMiddlewareInterceptor</a>
+				<a class="permalink" href="godoc.8.html#NewStreamClientMiddlewareInterceptor">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func NewStreamClientMiddlewareInterceptor(
+    middleware ...<a href="godoc.8.html#StreamClientMiddleware">StreamClientMiddleware</a>,
+) <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#StreamClientInterceptor">StreamClientInterceptor</a></pre>
+			<p>
+NewStreamClientMiddlewareInterceptor returns a grpc.StreamClientInterceptor that
+invokes all middleware on each client streaming rpc method.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NewStreamServerMiddlewareInterceptor">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/serverInterceptors.go?s=2022:2134#L61">NewStreamServerMiddlewareInterceptor</a>
+				<a class="permalink" href="godoc.8.html#NewStreamServerMiddlewareInterceptor">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func NewStreamServerMiddlewareInterceptor(
+    middleware ...<a href="godoc.8.html#StreamServerMiddleware">StreamServerMiddleware</a>,
+) <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#StreamServerInterceptor">StreamServerInterceptor</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="NewUnaryClientMiddlewareInterceptor">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/clientInterceptors.go?s=1046:1155#L29">NewUnaryClientMiddlewareInterceptor</a>
+				<a class="permalink" href="godoc.8.html#NewUnaryClientMiddlewareInterceptor">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func NewUnaryClientMiddlewareInterceptor(
+    middleware ...<a href="godoc.8.html#UnaryClientMiddleware">UnaryClientMiddleware</a>,
+) <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#UnaryClientInterceptor">UnaryClientInterceptor</a></pre>
+			<p>
+NewUnaryClientMiddlewareInterceptor creates a new grpc.UnaryClientInterceptor which
+invokes the passed middleware on each unary rpc.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NewUnaryServerMiddlewareInterceptor">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/serverInterceptors.go?s=847:956#L19">NewUnaryServerMiddlewareInterceptor</a>
+				<a class="permalink" href="godoc.8.html#NewUnaryServerMiddlewareInterceptor">&#xb6;</a>
+				
+				
+			</h2>
+			<pre>func NewUnaryServerMiddlewareInterceptor(
+    middleware ...<a href="godoc.8.html#UnaryServerMiddleware">UnaryServerMiddleware</a>,
+) <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#UnaryServerInterceptor">UnaryServerInterceptor</a></pre>
+			<p>
+NewUnaryServeMiddlewareInterceptor creates an interceptor that calls invokes
+multiple middlewares on each request.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="StreamClientHandler">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/clientInterceptors.go?s=1622:1793#L51">StreamClientHandler</a>
+				<a class="permalink" href="godoc.8.html#StreamClientHandler">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+StreamClientHandler is the handler signature for a stream client rpc.
+</p>
+
+			<pre>type StreamClientHandler = func(
+    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
+    desc *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#StreamDesc">StreamDesc</a>,
+    cc *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConn">ClientConn</a>,
+    method <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
+    opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>,
+) (<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientStream">ClientStream</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamClientMiddleware">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/clientInterceptors.go?s=1873:1953#L60">StreamClientMiddleware</a>
+				<a class="permalink" href="godoc.8.html#StreamClientMiddleware">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+StreamClientHandler is the handler signature for stream client middleware.
+</p>
+
+			<pre>type StreamClientMiddleware = func(next <a href="godoc.8.html#StreamClientHandler">StreamClientHandler</a>) <a href="godoc.8.html#StreamClientHandler">StreamClientHandler</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamServerHandler">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/serverInterceptors.go?s=1456:1573#L41">StreamServerHandler</a>
+				<a class="permalink" href="godoc.8.html#StreamServerHandler">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+StreamServerHandler is the handler signature for stream server calls.
+</p>
+
+			<pre>type StreamServerHandler = func(
+    srv interface{},
+    ss <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ServerStream">ServerStream</a>,
+    info *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#StreamServerInfo">StreamServerInfo</a>,
+) (err <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="StreamServerMiddleware">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/serverInterceptors.go?s=1654:1734#L48">StreamServerMiddleware</a>
+				<a class="permalink" href="godoc.8.html#StreamServerMiddleware">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+StreamServerMiddleware is the middleware signature for stream server calls.
+</p>
+
+			<pre>type StreamServerMiddleware = func(next <a href="godoc.8.html#StreamServerHandler">StreamServerHandler</a>) <a href="godoc.8.html#StreamServerHandler">StreamServerHandler</a></pre>
 
 			
 
@@ -216,13 +449,24 @@ For semantics around ctx use and closing/ending streaming RPCs, please refer to 
 
 			
 				
-				<h3 id="NewPingClient">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=4596:4654#L97">NewPingClient</a>
-					<a class="permalink" href="godoc.8.html#NewPingClient">&#xb6;</a>
+				<h3 id="NewStreamLoggingMiddleware">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/logging.go?s=2006:2207#L67">NewStreamLoggingMiddleware</a>
+					<a class="permalink" href="godoc.8.html#NewStreamLoggingMiddleware">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func NewPingClient(cc <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConnInterface">ClientConnInterface</a>) <a href="godoc.8.html#PingClient">PingClient</a></pre>
-				
+				<pre>func NewStreamLoggingMiddleware(
+    logger <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Logger">Logger</a>,
+    logRPCLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logReqLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logRespLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logErrors <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+    errorTrace <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+) <a href="godoc.8.html#StreamServerMiddleware">StreamServerMiddleware</a></pre>
+				<p>
+NewStreamLoggingMiddleware creates a new StreamServerMiddleware for logging gRPC
+server streams.
+</p>
+
 				
 				
 			
@@ -231,19 +475,22 @@ For semantics around ctx use and closing/ending streaming RPCs, please refer to 
 		
 			
 			
-			<h2 id="PingServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=4994:5145#L111">PingServer</a>
-				<a class="permalink" href="godoc.8.html#PingServer">&#xb6;</a>
+			<h2 id="UnaryClientHandler">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/clientInterceptors.go?s=142:310#L1">UnaryClientHandler</a>
+				<a class="permalink" href="godoc.8.html#UnaryClientHandler">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-PingServer is the server API for Ping service.
+UnaryClientHandler is the handler signature for a unary client rpc.
 </p>
 
-			<pre>type PingServer interface {
-    <span class="comment">// Ping is a simple endpoint to test if a service is running.</span>
-    Ping(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)
-}</pre>
+			<pre>type UnaryClientHandler = func(
+    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
+    method <a href="http://localhost:6161/pkg/builtin/#string">string</a>,
+    req interface{},
+    cc *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#ClientConn">ClientConn</a>,
+    opts ...<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#CallOption">CallOption</a>,
+) (reply interface{}, err <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
 
 			
 
@@ -259,18 +506,16 @@ PingServer is the server API for Ping service.
 		
 			
 			
-			<h2 id="UnimplementedPingServer">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=5234:5273#L117">UnimplementedPingServer</a>
-				<a class="permalink" href="godoc.8.html#UnimplementedPingServer">&#xb6;</a>
+			<h2 id="UnaryClientMiddleware">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/clientInterceptors.go?s=388:465#L8">UnaryClientMiddleware</a>
+				<a class="permalink" href="godoc.8.html#UnaryClientMiddleware">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-UnimplementedPingServer can be embedded to have forward compatible implementations.
+UnaryClientHandler is the handler signature for unary client middleware.
 </p>
 
-			<pre>type UnimplementedPingServer struct {
-}
-</pre>
+			<pre>type UnaryClientMiddleware = func(next <a href="godoc.8.html#UnaryClientHandler">UnaryClientHandler</a>) <a href="godoc.8.html#UnaryClientHandler">UnaryClientHandler</a></pre>
 
 			
 
@@ -280,20 +525,84 @@ UnimplementedPingServer can be embedded to have forward compatible implementatio
 			
 			
 
+			
+
+			
+		
+			
+			
+			<h2 id="UnaryServerHandler">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/serverInterceptors.go?s=142:274#L1">UnaryServerHandler</a>
+				<a class="permalink" href="godoc.8.html#UnaryServerHandler">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+UnaryServerHandler is the handler signature for unary server calls.
+</p>
+
+			<pre>type UnaryServerHandler = func(
+    ctx <a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>,
+    req interface{},
+    info *<a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#UnaryServerInfo">UnaryServerInfo</a>,
+) (resp interface{}, err <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="UnaryServerMiddleware">type <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/serverInterceptors.go?s=353:430#L6">UnaryServerMiddleware</a>
+				<a class="permalink" href="godoc.8.html#UnaryServerMiddleware">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+UnaryServerMiddleware is the middleware signature for unary server calls.
+</p>
+
+			<pre>type UnaryServerMiddleware = func(next <a href="godoc.8.html#UnaryServerHandler">UnaryServerHandler</a>) <a href="godoc.8.html#UnaryServerHandler">UnaryServerHandler</a></pre>
+
+			
+
+			
+
+			
+			
 			
 
 			
 				
-				<h3 id="UnimplementedPingServer.Ping">func (*UnimplementedPingServer) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkservices/protogen/ping_service.pb.go?s=5275:5364#L120">Ping</a>
-					<a class="permalink" href="godoc.8.html#UnimplementedPingServer.Ping">&#xb6;</a>
+				<h3 id="NewUnaryLoggingMiddleware">func <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkmiddleware/logging.go?s=1553:1752#L50">NewUnaryLoggingMiddleware</a>
+					<a class="permalink" href="godoc.8.html#NewUnaryLoggingMiddleware">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (*<a href="godoc.8.html#UnimplementedPingServer">UnimplementedPingServer</a>) Ping(<a href="http://localhost:6161/pkg/context/">context</a>.<a href="http://localhost:6161/pkg/context/#Context">Context</a>, *<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>) (*<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/">empty</a>.<a href="http://localhost:6161/pkg/github.com/golang/protobuf/ptypes/empty/#Empty">Empty</a>, <a href="http://localhost:6161/pkg/builtin/#error">error</a>)</pre>
+				<pre>func NewUnaryLoggingMiddleware(
+    logger <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Logger">Logger</a>,
+    logRPCLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logReqLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logRespLevel <a href="http://localhost:6161/pkg/github.com/rs/zerolog/">zerolog</a>.<a href="http://localhost:6161/pkg/github.com/rs/zerolog/#Level">Level</a>,
+    logErrors <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+    errorTrace <a href="http://localhost:6161/pkg/builtin/#bool">bool</a>,
+) <a href="godoc.8.html#UnaryServerMiddleware">UnaryServerMiddleware</a></pre>
+				<p>
+NewUnaryLoggingMiddleware creates a new UnaryServerMiddleware for logging gRPC
+server unary requests.
+</p>
+
 				
 				
-				
-				
+			
+
 			
 		
 	

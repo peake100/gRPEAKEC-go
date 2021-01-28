@@ -159,16 +159,16 @@ Easy-to-use rich errors between services and clients.
 					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewErr">func (gen *ErrorGenerator) NewErr(sentinel *SentinelError, message string, details []proto.Message, source error) (apiErr error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewStreamClientInterceptor">func (gen *ErrorGenerator) NewStreamClientInterceptor() grpc.StreamClientInterceptor</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.StreamClientMiddleware">func (gen *ErrorGenerator) StreamClientMiddleware(next pkmiddleware.StreamClientHandler) pkmiddleware.StreamClientHandler</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewStreamServerInterceptor">func (gen *ErrorGenerator) NewStreamServerInterceptor() grpc.StreamServerInterceptor</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.StreamServerMiddleware">func (gen *ErrorGenerator) StreamServerMiddleware(next pkmiddleware.StreamServerHandler) pkmiddleware.StreamServerHandler</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewUnaryClientInterceptor">func (gen *ErrorGenerator) NewUnaryClientInterceptor() grpc.UnaryClientInterceptor</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.UnaryClientMiddleware">func (gen *ErrorGenerator) UnaryClientMiddleware(next pkmiddleware.UnaryClientHandler) pkmiddleware.UnaryClientHandler</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.NewUnaryServerInterceptor">func (gen *ErrorGenerator) NewUnaryServerInterceptor() grpc.UnaryServerInterceptor</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.UnaryServerMiddleware">func (gen *ErrorGenerator) UnaryServerMiddleware(next pkmiddleware.UnaryServerHandler) pkmiddleware.UnaryServerHandler</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="godoc.3.html#ErrorGenerator.WithAppHost">func (gen ErrorGenerator) WithAppHost(appHost string) *ErrorGenerator</a></dd>
@@ -253,7 +253,7 @@ Easy-to-use rich errors between services and clients.
 			
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generator.go">generator.go</a>
 			
-				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go">generatorInterceptors.go</a>
+				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorMiddleware.go">generatorMiddleware.go</a>
 			
 				<a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/handlePanic.go">handlePanic.go</a>
 			
@@ -454,7 +454,7 @@ Unwrap implements xerrors.Wrapper
 Error is an type alias of protogen.Error.
 </p>
 
-			<pre>type Error = <a href="godoc.6.html">protogen</a>.<a href="godoc.6.html#Error">Error</a></pre>
+			<pre>type Error = <a href="godoc.7.html">protogen</a>.<a href="godoc.7.html#Error">Error</a></pre>
 
 			
 
@@ -576,16 +576,18 @@ sentinel.
 				
 			
 				
-				<h3 id="ErrorGenerator.NewStreamClientInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=3376:3460#L106">NewStreamClientInterceptor</a>
-					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewStreamClientInterceptor">&#xb6;</a>
+				<h3 id="ErrorGenerator.StreamClientMiddleware">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorMiddleware.go?s=3619:3744#L113">StreamClientMiddleware</a>
+					<a class="permalink" href="godoc.3.html#ErrorGenerator.StreamClientMiddleware">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) NewStreamClientInterceptor() <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#StreamClientInterceptor">StreamClientInterceptor</a></pre>
+				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) StreamClientMiddleware(
+    next <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#StreamClientHandler">StreamClientHandler</a>,
+) <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#StreamClientHandler">StreamClientHandler</a></pre>
 				<p>
-NewStreamClientInterceptor returns a new grpc.StreamClientInterceptor that converts
-incoming errors to an APIError if the error contains an *Error detail, and a new
-*TraceInfo frame will be added.
+StreamClientMiddleware implements pkmiddleware.StreamClientMiddleware and
+converts incoming errors to an APIError if the error contains an *Error detail, and a
+new *TraceInfo frame will be added.
 </p>
 <p>
 *Error values are generated using the settings of ErrorGenerator.
@@ -596,14 +598,16 @@ incoming errors to an APIError if the error contains an *Error detail, and a new
 				
 			
 				
-				<h3 id="ErrorGenerator.NewStreamServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6874:6958#L228">NewStreamServerInterceptor</a>
-					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewStreamServerInterceptor">&#xb6;</a>
+				<h3 id="ErrorGenerator.StreamServerMiddleware">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorMiddleware.go?s=7120:7245#L235">StreamServerMiddleware</a>
+					<a class="permalink" href="godoc.3.html#ErrorGenerator.StreamServerMiddleware">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) NewStreamServerInterceptor() <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#StreamServerInterceptor">StreamServerInterceptor</a></pre>
+				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) StreamServerMiddleware(
+    next <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#StreamServerHandler">StreamServerHandler</a>,
+) <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#StreamServerHandler">StreamServerHandler</a></pre>
 				<p>
-NewStreamServerInterceptor returns a grpc.StreamServerInterceptor that can handle
+StreamServerMiddleware implements pkmiddleware.StreamServerMiddleware that can handle
 wrapping all errors and panics in an APIError and transforming them into a
 status.Status.
 </p>
@@ -613,14 +617,19 @@ status.Status.
 				
 			
 				
-				<h3 id="ErrorGenerator.NewUnaryClientInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=2411:2493#L74">NewUnaryClientInterceptor</a>
-					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewUnaryClientInterceptor">&#xb6;</a>
+				<h3 id="ErrorGenerator.UnaryClientMiddleware">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorMiddleware.go?s=2505:2627#L77">UnaryClientMiddleware</a>
+					<a class="permalink" href="godoc.3.html#ErrorGenerator.UnaryClientMiddleware">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) NewUnaryClientInterceptor() <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#UnaryClientInterceptor">UnaryClientInterceptor</a></pre>
+				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) UnaryClientMiddleware(
+    next <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#UnaryClientHandler">UnaryClientHandler</a>,
+) <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#UnaryClientHandler">UnaryClientHandler</a></pre>
 				<p>
-NewUnaryClientInterceptor returns a new client interceptor for handing APIErrors.
+UnaryClientMiddleware implements pkmiddleware.UnaryClientMiddleware and handles
+decoding an *Error detail as an APIError.
+</p>
+<p>
 If an *Error detail message is found in the status of an error return, the message
 will be extracted into an APIError, and a new *TraceInfo frame will be added.
 </p>
@@ -633,15 +642,17 @@ will be extracted into an APIError, and a new *TraceInfo frame will be added.
 				
 			
 				
-				<h3 id="ErrorGenerator.NewUnaryServerInterceptor">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorInterceptors.go?s=6167:6249#L200">NewUnaryServerInterceptor</a>
-					<a class="permalink" href="godoc.3.html#ErrorGenerator.NewUnaryServerInterceptor">&#xb6;</a>
+				<h3 id="ErrorGenerator.UnaryServerMiddleware">func (*ErrorGenerator) <a href="http://localhost:6161/src/github.com/peake100/gRPEAKEC-go/pkerr/generatorMiddleware.go?s=6396:6518#L206">UnaryServerMiddleware</a>
+					<a class="permalink" href="godoc.3.html#ErrorGenerator.UnaryServerMiddleware">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) NewUnaryServerInterceptor() <a href="http://localhost:6161/pkg/google.golang.org/grpc/">grpc</a>.<a href="http://localhost:6161/pkg/google.golang.org/grpc/#UnaryServerInterceptor">UnaryServerInterceptor</a></pre>
+				<pre>func (gen *<a href="godoc.3.html#ErrorGenerator">ErrorGenerator</a>) UnaryServerMiddleware(
+    next <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#UnaryServerHandler">UnaryServerHandler</a>,
+) <a href="godoc.8.html">pkmiddleware</a>.<a href="godoc.8.html#UnaryServerHandler">UnaryServerHandler</a></pre>
 				<p>
-NewUnaryServerInterceptor returns a grpc.UnaryServerInterceptor that can handle
-wrapping all errors and panics in an APIError and transforming them into a
+NewUnaryServerInterceptor implements pkmiddleware.UnaryServerMiddleware that can
+handle wrapping all errors and panics in an APIError and transforming them into a
 status.Status.
 </p>
 
@@ -976,7 +987,7 @@ offset later.
 TraceInfo is an type alias of protogen.TraceInfo.
 </p>
 
-			<pre>type TraceInfo = <a href="godoc.6.html">protogen</a>.<a href="godoc.6.html#TraceInfo">TraceInfo</a></pre>
+			<pre>type TraceInfo = <a href="godoc.7.html">protogen</a>.<a href="godoc.7.html#TraceInfo">TraceInfo</a></pre>
 
 			
 
@@ -1019,7 +1030,7 @@ TraceInfo is an type alias of protogen.TraceInfo.
 				<tr>
 				
 					<td class="pkg-name" style="padding-left: 0px;">
-						<a href="godoc.6.html">protogen</a>
+						<a href="godoc.7.html">protogen</a>
 					</td>
 				
 					<td class="pkg-synopsis">
