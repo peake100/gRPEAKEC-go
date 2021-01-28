@@ -2,6 +2,7 @@ package pkerr
 
 import (
 	"google.golang.org/protobuf/proto"
+	"os"
 )
 
 // ErrorGenerator generates errors with app-specific settings.
@@ -25,12 +26,6 @@ type ErrorGenerator struct {
 // WithAppName returns a copy of the ErrorGenerator with the appName setting replaced.
 func (gen ErrorGenerator) WithAppName(appName string) *ErrorGenerator {
 	gen.appName = appName
-	return &gen
-}
-
-// WithAppHost returns a copy of the ErrorGenerator with the appHost setting replaced.
-func (gen ErrorGenerator) WithAppHost(appHost string) *ErrorGenerator {
-	gen.appHost = appHost
 	return &gen
 }
 
@@ -83,14 +78,22 @@ func (gen *ErrorGenerator) NewErr(
 // is created by this generator.
 func NewErrGenerator(
 	appName string,
-	appHost string,
+	addHost bool,
 	addStackTrace bool,
 	sendContext bool,
 	sendSource bool,
 ) *ErrorGenerator {
+	host := ""
+	if addHost {
+		host, _ = os.Hostname()
+		if host == "" {
+			host = "[UNKNOWN]"
+		}
+	}
+
 	gen := &ErrorGenerator{
 		appName:       appName,
-		appHost:       appHost,
+		appHost:       host,
 		addStackTrace: addStackTrace,
 		sendContext:   sendContext,
 		sendSource:    sendSource,

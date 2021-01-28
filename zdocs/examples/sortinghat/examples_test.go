@@ -87,7 +87,7 @@ var host, _ = os.Hostname()
 
 var errorGen = pkerr.NewErrGenerator(
 	"SortingHat", // appName
-	host,         // appHost
+	true,         // addHost
 	true,         // addStackTrace
 	true,         // sendContext
 	true,         // sendSource

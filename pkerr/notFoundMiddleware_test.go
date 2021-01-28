@@ -63,7 +63,7 @@ type ErrNotFoundSuite struct {
 func (suite *ErrNotFoundSuite) SetupSuite() {
 	errGen := pkerr.NewErrGenerator(
 		"ErrNotFoundSuite",
-		"",
+		true,
 		true,
 		true,
 		true,

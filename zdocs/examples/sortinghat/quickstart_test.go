@@ -146,7 +146,7 @@ func ExampleQuickStart() {
 	// errGen will be used to make rich errors for our service
 	errGen := pkerr.NewErrGenerator(
 		"SortingHat", // appName
-		host,         // hostName
+		true,         // addHost
 		true,         // addStackTrace
 		true,         // sendContext
 		true,         // sendSource

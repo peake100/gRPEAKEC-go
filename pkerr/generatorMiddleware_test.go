@@ -18,6 +18,7 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"io"
+	"os"
 	"sync"
 	"testing"
 )
@@ -204,7 +205,7 @@ func (mock *MockService) DummyStreamUnary(server pktesting.MockStreamUnaryServic
 func NewMockService() *MockService {
 	errorGen := pkerr.NewErrGenerator(
 		"MockService",
-		"server hostname",
+		true,
 		true,
 		true,
 		true,
@@ -239,8 +240,7 @@ func (suite *InterceptorSuite) SetupSuite() {
 
 	// Create a new error generator for the client.
 	clientErrs := mockService.errors.
-		WithAppName("Client").
-		WithAppHost("client hostname")
+		WithAppName("Client")
 
 	// Create a client to connect to the server with our interceptors.
 	var err error
@@ -394,6 +394,8 @@ func (suite *InterceptorSuite) TestErrorReturns() {
 		},
 	}
 
+	hostname, _ := os.Hostname()
+
 	// Define transport methods for each type of transport test we are going to do.
 	sendUnaryUnary := func(t *testing.T, msg *anypb.Any) error {
 		ctx, cancel := pktesting.New3SecondCtx()
@@ -483,13 +485,13 @@ func (suite *InterceptorSuite) TestErrorReturns() {
 
 				assertTrace := assert.TraceIndex(0)
 				assertTrace.AppName("MockService")
-				assertTrace.AppHost("server hostname")
+				assertTrace.AppHost(hostname)
 				assertTrace.HasStackTrace(true)
 				assertTrace.AdditionalContext(thisCase.ExpectedContext)
 
 				assertTrace = assert.TraceIndex(1)
 				assertTrace.AppName("Client")
-				assertTrace.AppHost("client hostname")
+				assertTrace.AppHost(hostname)
 				assertTrace.HasStackTrace(true)
 				assertTrace.AdditionalContext("")
 			})
