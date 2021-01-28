@@ -8,6 +8,15 @@ import (
 	"time"
 )
 
+// grpcLoggingOpts holds options for logging middleware.
+type grpcLoggingOpts struct {
+	logRPCLevel  zerolog.Level
+	logReqLevel  zerolog.Level
+	logRespLevel zerolog.Level
+	logErrors    bool
+	errorTrace   bool
+}
+
 // ManagerOpts are the options for running a manager
 type ManagerOpts struct {
 	// grpcServiceAddress is the address our gRPC server will be listening on.
@@ -18,6 +27,11 @@ type ManagerOpts struct {
 	grpcStreamMiddleware []pkmiddleware.StreamServerMiddleware
 	// grpcUnaryMiddleware is a list of pkmiddleware.UnaryServerMiddleware to use.=
 	grpcUnaryMiddleware []pkmiddleware.UnaryServerMiddleware
+	// addGrpcLoggingMiddleware: if true, gRPC logging middleware should be added to the
+	// gRPC server.
+	addGrpcLoggingMiddleware bool
+	// grpcLoggingOpts are the options to use when creating logging middleware
+	grpcLoggingOpts grpcLoggingOpts
 
 	// maxShutdownDuration is the maximum amount of time a shutdown can take before the
 	// manager force-exits.
@@ -87,6 +101,59 @@ func (opts *ManagerOpts) WithErrorGenerator(
 	return opts
 }
 
+// WithGrpcLogging will add logging middleware to the grpc server using
+// pkmiddleware.NewLoggingMiddleware.
+//
+// Default:
+//
+// logRPCLevel: zerolog.DebugLevel
+//
+// logReqLevel: zerolog.Disabled + 1 (won't be logged)
+//
+// logRespLevel: zerolog.Disabled + 1 (won't be logged)
+//
+// logErrors: true
+//
+// errorTrace: true
+func (opts *ManagerOpts) WithGrpcLogging(
+	logRPCLevel zerolog.Level,
+	logReqLevel zerolog.Level,
+	logRespLevel zerolog.Level,
+	logErrors bool,
+	errorTrace bool,
+) *ManagerOpts {
+	opts.addGrpcLoggingMiddleware = true
+	opts.grpcLoggingOpts = grpcLoggingOpts{
+		logRPCLevel:  logRPCLevel,
+		logReqLevel:  logReqLevel,
+		logRespLevel: logRespLevel,
+		logErrors:    logErrors,
+		errorTrace:   errorTrace,
+	}
+
+	return opts
+}
+
+// WithoutGrpcLogging keeps the logging middleware from being added to the gRPC server.
+func (opts *ManagerOpts) WithoutGrpcLogging() *ManagerOpts {
+	opts.addGrpcLoggingMiddleware = false
+	return opts
+}
+
+// createLoggingMiddleware creates logging middleware from the manager settings.
+func (opts *ManagerOpts) createLoggingMiddleware() (
+	pkmiddleware.UnaryServerMiddleware, pkmiddleware.StreamServerMiddleware,
+) {
+	return pkmiddleware.NewLoggingMiddleware(
+		opts.logger,
+		opts.grpcLoggingOpts.logRPCLevel,
+		opts.grpcLoggingOpts.logReqLevel,
+		opts.grpcLoggingOpts.logRespLevel,
+		opts.grpcLoggingOpts.logErrors,
+		opts.grpcLoggingOpts.errorTrace,
+	)
+}
+
 // WithGrpcUnaryServerMiddleware adds unary server middlewares for the gRPC server.
 func (opts *ManagerOpts) WithGrpcUnaryServerMiddleware(
 	middleware ...pkmiddleware.UnaryServerMiddleware,
@@ -118,6 +185,19 @@ func (
 		middleware = append(middleware, thisMiddleware)
 	}
 
+	// Add logging middleware if needed. This should be the last middleware added.
+	if opts.addGrpcLoggingMiddleware {
+		loggingMiddleware := pkmiddleware.NewUnaryLoggingMiddleware(
+			opts.logger,
+			opts.grpcLoggingOpts.logRPCLevel,
+			opts.grpcLoggingOpts.logReqLevel,
+			opts.grpcLoggingOpts.logRespLevel,
+			opts.grpcLoggingOpts.logErrors,
+			opts.grpcLoggingOpts.errorTrace,
+		)
+		middleware = append(middleware, loggingMiddleware)
+	}
+
 	return pkmiddleware.NewUnaryServerMiddlewareInterceptor(middleware...)
 }
 
@@ -137,6 +217,19 @@ func (
 		middleware = append(middleware, thisMiddleware)
 	}
 
+	// Add logging middleware if needed. This should be the last middleware added.
+	if opts.addGrpcLoggingMiddleware {
+		loggingMiddleware := pkmiddleware.NewStreamLoggingMiddleware(
+			opts.logger,
+			opts.grpcLoggingOpts.logRPCLevel,
+			opts.grpcLoggingOpts.logReqLevel,
+			opts.grpcLoggingOpts.logRespLevel,
+			opts.grpcLoggingOpts.logErrors,
+			opts.grpcLoggingOpts.errorTrace,
+		)
+		middleware = append(middleware, loggingMiddleware)
+	}
+
 	return pkmiddleware.NewStreamServerMiddlewareInterceptor(middleware...)
 }
 
@@ -152,7 +245,14 @@ func (opts *ManagerOpts) WithLogger(logger zerolog.Logger) *ManagerOpts {
 func NewManagerOpts() *ManagerOpts {
 	return new(ManagerOpts).
 		WithGrpcServerAddress(DefaultGrpcAddress).
-		WithMaxShutdownDuration(30 * time.Second).
+		WithMaxShutdownDuration(30*time.Second).
 		WithGrpcPingService(true).
-		WithLogger(zerolog.Logger{})
+		WithLogger(zerolog.Logger{}).
+		WithGrpcLogging(
+			zerolog.DebugLevel,
+			zerolog.Disabled+1,
+			zerolog.Disabled+1,
+			true,
+			true,
+		)
 }

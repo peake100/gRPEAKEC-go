@@ -53,5 +53,4 @@ func (m *ManagerSuite) TearDownSuite() {
 		// Block until shutdown complete.
 		m.Manager.WaitForShutdown()
 	}
-
 }

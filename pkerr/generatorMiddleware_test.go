@@ -277,10 +277,6 @@ func (suite *InterceptorSuite) SetupSuite() {
 }
 
 func (suite *InterceptorSuite) TearDownSuite() {
-	if suite.Manager != nil {
-		defer suite.Manager.StartShutdown()
-	}
-
 	closer, ok := suite.clientConn.(io.Closer)
 	if ok {
 		defer closer.Close()
