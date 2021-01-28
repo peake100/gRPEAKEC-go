@@ -351,39 +351,74 @@ the status message and code:
 .. code-block:: go
 
     // Set up the gRPC server
-    listener, err := net.Listen("tcp", ":50051")
+    listener, err := net.Listen("tcp", address)
     if err != nil {
         panic(err)
     }
+
+    // We can use the pkmiddleware package to create our error middleware.
+    unaryServerInterceptor := pkmiddleware.NewUnaryServerMiddlewareInterceptor(
+        errorGen.UnaryServerMiddleware,
+    )
+
+    streamServerInterceptor := pkmiddleware.NewStreamServerMiddlewareInterceptor(
+        errorGen.StreamServerMiddleware,
+    )
+
     server := grpc.NewServer(
-        grpc.UnaryInterceptor(errorGen.NewUnaryServerInterceptor()),
-        grpc.StreamInterceptor(errorGen.NewStreamServerInterceptor()),
+        grpc.UnaryInterceptor(unaryServerInterceptor),
+        grpc.StreamInterceptor(streamServerInterceptor),
     )
 
     // Register our service
-    protogen.RegisterSortingHatServer(server, SortingHat{})
+    protogen.RegisterSortingHatServer(server, SortingHat2{})
 
     // Serve gRPC
     serveErr := make(chan error)
     go func() {
         defer close(serveErr)
+        defer listener.Close()
         serveErr <- server.Serve(listener)
+    }()
+
+    complete.Add(1)
+    go func() {
+        defer complete.Done()
+        defer server.GracefulStop()
+        <-ctx.Done()
     }()
 
     // We are going to make a new errorGen for our client with the client app name.
     // All other errors will be the same.
     clientErrs := errorGen.WithAppName("ClientApp")
 
+    // We can use the pkmiddleware package to create our error middleware.
+    unaryClientInterceptor := pkmiddleware.NewUnaryClientMiddlewareInterceptor(
+        clientErrs.UnaryClientMiddleware,
+    )
+
+    streamClientInterceptor := pkmiddleware.NewStreamClientMiddlewareInterceptor(
+        clientErrs.StreamClientMiddleware,
+    )
+
     // Use the client error generator to make client interceptors.
     clientConn, err := grpc.Dial(
-        ":50051",
+        address,
         grpc.WithInsecure(),
-        grpc.WithUnaryInterceptor(clientErrs.NewUnaryClientInterceptor()),
-        grpc.WithStreamInterceptor(clientErrs.NewStreamClientInterceptor()),
+        grpc.WithUnaryInterceptor(unaryClientInterceptor),
+        grpc.WithStreamInterceptor(streamClientInterceptor),
     )
     if err != nil {
         panic(err)
     }
+    defer clientConn.Close()
+
+    complete.Add(1)
+    go func() {
+        defer complete.Done()
+        defer clientConn.Close()
+        <-ctx.Done()
+    }()
 
     hatClient := protogen.NewSortingHatClient(clientConn)
 

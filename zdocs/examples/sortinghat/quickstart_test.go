@@ -156,7 +156,17 @@ func ExampleQuickStart() {
 	opts := pkservices.NewManagerOpts().
 		// Add our logger.
 		WithLogger(logger).
-		// Pass our error generator to create error interceptors.
+		// Set up logging middleware. These setting will log each rpc at an Info level
+		// and if the logger level is set to debug or less, add in the req and resp
+		// objects as fields.
+		WithGrpcLogging(
+			zerolog.InfoLevel, // logRPCLevel
+			zerolog.DebugLevel, // logReqLevel
+			zerolog.DebugLevel, // logRespLevel
+			true, // logErrors
+			true, // errorTrace
+		).
+		// Pass our error generator to create error middleware.
 		WithErrorGenerator(errGen).
 		// Set our gRPC server address.
 		WithGrpcServerAddress(":50051")
@@ -223,18 +233,19 @@ func ExampleQuickStart() {
 		// Call the service.
 		sorted, err := hatClient.Sort(context.Background(), thisPupil)
 
-		// Print this error if it is a ErrRosterUpdate. We can use native error handling
+		// log this error if it is a ErrRosterUpdate. We can use native error handling
 		// here thanks to our interceptors.
 		if errors.Is(err, ErrRosterUpdate) {
-			fmt.Println("ERROR:", err)
+			// log the error
+			logger.Err(err).Msg("client got error")
 			continue
-		} else if err != nil {
-			// Panic if it is any other type of error
-			panic(err)
 		}
 
-		// Print the name of the sorted pupil
-		fmt.Printf("%v sorted into %v\n", thisPupil.Name, sorted.House)
+		// Otherwise log a success
+		logger.Info().
+			Str("PUPIL", thisPupil.Name).
+			Stringer("HOUSE",sorted.House).
+			Msg("client sorted into house")
 	}
 
 	// Start shutdown of the manager and wait for it to finish.
@@ -245,19 +256,21 @@ func ExampleQuickStart() {
 		panic(err)
 	}
 
-	// Output:
-	// 12:52AM INF running service manager HOST=Williams-MacBook-Pro-2.local SETTING_ADD_PING_SERVICE=true SETTING_MAX_SHUTDOWN=30000
-	// 12:52AM INF running setup HOST=Williams-MacBook-Pro-2.local SERVICE="gPEAKERC Ping"
-	// 12:52AM INF running setup HOST=Williams-MacBook-Pro-2.local SERVICE=SortingHat
-	// 12:52AM INF setup complete HOST=Williams-MacBook-Pro-2.local SERVICE="gPEAKERC Ping"
-	// 12:52AM INF setup complete HOST=Williams-MacBook-Pro-2.local SERVICE=SortingHat
-	// 12:52AM INF serving gRPC HOST=Williams-MacBook-Pro-2.local SERVER_ADDRESS=:50051
-	// Harry Potter sorted into Gryffindor
-	// ERROR: (RosterUpdate | MyBackend | 3000) roster could not be updated with student: sorted student could not be stored | from: grpc error 'Internal'
-	// 12:52AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
-	// 12:52AM INF gRPC server shutdown HOST=Williams-MacBook-Pro-2.local
-	// 12:52AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
-	// 12:52AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
-	// 12:52AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
-	// 12:52AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
+	// Outputs:
+	// 1:59AM INF running service manager HOST=Williams-MacBook-Pro-2.local SETTING_ADD_PING_SERVICE=true SETTING_MAX_SHUTDOWN=30000
+	// 1:59AM INF running setup HOST=Williams-MacBook-Pro-2.local SERVICE="gPEAKERC Ping"
+	// 1:59AM INF setup complete HOST=Williams-MacBook-Pro-2.local SERVICE="gPEAKERC Ping"
+	// 1:59AM INF running setup HOST=Williams-MacBook-Pro-2.local SERVICE=SortingHat
+	// 1:59AM INF setup complete HOST=Williams-MacBook-Pro-2.local SERVICE=SortingHat
+	// 1:59AM INF serving gRPC HOST=Williams-MacBook-Pro-2.local SERVER_ADDRESS=:50051
+	// 1:59AM INF rpc completed DURATION=0.031 GRPC_METHOD=/sortinghat.SortingHat/Sort HOST=Williams-MacBook-Pro-2.local METHOD_KIND=unary REQ={"name":"Harry Potter"} RESP={} RPC_ID=5577006791947779410
+	// 1:59AM INF client sorted into house HOST=Williams-MacBook-Pro-2.local HOUSE=Gryffindor PUPIL="Harry Potter"
+	// 1:59AM ERR  error="rpc error: code = Internal desc = (RosterUpdate | Hogwarts | 2000) roster could not be updated with student: sorted student could not be stored | from: roster is full" DURATION=0.26 GRPC_METHOD=/sortinghat.SortingHat/Sort HOST=Williams-MacBook-Pro-2.local METHOD_KIND=unary REQ={"name":"Draco Malfoy"} RESP=null RPC_ID=8674665223082153551
+	// 1:59AM ERR client got error error="(RosterUpdate | Hogwarts | 2000) roster could not be updated with student: sorted student could not be stored | from: grpc error 'Internal'" HOST=Williams-MacBook-Pro-2.local
+	// 1:59AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
+	// 1:59AM INF gRPC server shutdown HOST=Williams-MacBook-Pro-2.local
+	// 1:59AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
+	// 1:59AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
+	// 1:59AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
+	// 1:59AM INF shutdown order triggered HOST=Williams-MacBook-Pro-2.local
 }

@@ -285,11 +285,11 @@ func logRPCMessage(
 
 // buildErrEvent builds the logger event for an error.
 func buildErrEvent(err error, opts loggingOpts, logger zerolog.Logger) *zerolog.Event {
-	event := logger.Err(err)
+	event := logger.Error()
 	if opts.errorTrace {
 		event = event.Stack()
 	}
-	return event
+	return event.Err(err)
 }
 
 // createMethodLogger creates a new logger with the rpc method context and returns a
