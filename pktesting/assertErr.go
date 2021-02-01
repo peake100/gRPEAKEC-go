@@ -157,6 +157,9 @@ func (asserter *AssertErr) TraceIndex(index int) TraceInfoAssert {
 func NewAssertAPIErr(t *testing.T, err error) *AssertErr {
 	assertions := assert.New(t)
 
+	if !assertions.Error(err, "is error") {
+		t.FailNow()
+	}
 	if !assertions.IsType(pkerr.APIError{}, err, "error is APIError") {
 		t.FailNow()
 	}
