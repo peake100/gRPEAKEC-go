@@ -1,0 +1,954 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pkerrs &mdash; grpcErr 0.0.7 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="pkservices" href="pkservices.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> grpcErr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pkservices.html">pkservices</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pkerrs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#defining-sentinel-errors">Defining Sentinel Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-specific-errors">Generating Specific Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-interceptors">Error Interceptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-checking">Error Checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-details">Error Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#traceinfo">TraceInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-context">Adding Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#panics">Panics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sentinel-returns">Sentinel Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#errunknown">ErrUnknown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reissuing-sentinels">Reissuing Sentinels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sentinelissuer-env-vars">SentinelIssuer Env Vars</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">grpcErr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>pkerrs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pkerr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pkerrs">
+<h1>pkerrs<a class="headerlink" href="#pkerrs" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">pkerrs</span></code> package offers a system for defining, returning, and handling rich
+errors between gRPC services and clients.</p>
+<div class="section" id="defining-sentinel-errors">
+<h2>Defining Sentinel Errors<a class="headerlink" href="#defining-sentinel-errors" title="Permalink to this headline">¶</a></h2>
+<p>Sentinel errors in Go are errors like <code class="docutils literal notranslate"><span class="pre">io.EOF</span></code>: predefined errors that can be wrapped
+in additional context. Once wrapped, <code class="docutils literal notranslate"><span class="pre">errors.Is()</span></code> can be used to see if an error is
+a wrapped sentinel error, like so:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// %w wraps an error</span>
+<span class="nx">someErr</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;could not fetch additional data: %w&quot;</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">)</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;OUR ERROR:&quot;</span><span class="p">,</span> <span class="nx">someErr</span><span class="p">)</span>
+
+<span class="c1">// Even though our error is wrapped, we can check if it contains io.EOF anywhere in</span>
+<span class="c1">// it&#39;s chain.</span>
+<span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">Is</span><span class="p">(</span><span class="nx">someErr</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;error is io.EOF!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Output</span>
+<span class="c1">// could not fetch additional data: EOF</span>
+<span class="c1">// error is io.EOF!</span>
+</pre></div>
+</div>
+<p>pkerr defines the <code class="docutils literal notranslate"><span class="pre">SentinelError</span></code> type for creating custom sentinel errors geared
+towards server-style errors:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;NAME     :&quot;</span><span class="p">,</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">ErrUnknown</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;CODE     :&quot;</span><span class="p">,</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">ErrUnknown</span><span class="p">.</span><span class="nx">Code</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ISSUER   :&quot;</span><span class="p">,</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">ErrUnknown</span><span class="p">.</span><span class="nx">Issuer</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;gRPC CODE:&quot;</span><span class="p">,</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">ErrUnknown</span><span class="p">.</span><span class="nx">GrpcCode</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;MESSAGE  :&quot;</span><span class="p">,</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">ErrUnknown</span><span class="p">.</span><span class="nx">DefaultMessage</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// NAME     : Unknown</span>
+<span class="c1">// CODE     : 1000</span>
+<span class="c1">// ISSUER   : GRPEAKEC</span>
+<span class="c1">// gRPC CODE: Unknown</span>
+<span class="c1">// MESSAGE  : an unknown error occurred</span>
+</pre></div>
+</div>
+<p>An error class is defined by it’s ISSUER and CODE, rather than just it’s code alone.
+This allows two identical codes from different backends / services to be considered
+distinct.</p>
+<p>We can make new sentinel errors using a <code class="docutils literal notranslate"><span class="pre">SentinelIssuer</span></code>:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;github.com/peake100/gRPEAKEC-go/pkerr&quot;</span>
+    <span class="s">&quot;google.golang.org/grpc/codes&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// sentinels is a Sentinel Issuer for the Hogwarts backend</span>
+<span class="kd">var</span> <span class="nx">sentinels</span> <span class="p">=</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">NewSentinelIssuer</span><span class="p">(</span>
+    <span class="s">&quot;Hogwarts&quot;</span><span class="p">,</span>
+    <span class="kc">true</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1">// ErrSoulCloudy is returned when SortingHat cannot peer deep enough into a pupil&#39;s soul</span>
+<span class="c1">// to sort them.</span>
+<span class="kd">var</span> <span class="nx">ErrSoulCloudy</span> <span class="p">=</span> <span class="nx">sentinels</span><span class="p">.</span><span class="nx">NewSentinel</span><span class="p">(</span>
+    <span class="s">&quot;SoulCloudy&quot;</span><span class="p">,</span>
+    <span class="mi">2000</span><span class="p">,</span>
+    <span class="nx">codes</span><span class="p">.</span><span class="nx">FailedPrecondition</span><span class="p">,</span>
+    <span class="s">&quot;The pupil&#39;s soul is to opaque to be sorted&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;NAME     :&quot;</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;CODE     :&quot;</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">.</span><span class="nx">Code</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ISSUER   :&quot;</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">.</span><span class="nx">Issuer</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;gRPC CODE:&quot;</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">.</span><span class="nx">GrpcCode</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;MESSAGE  :&quot;</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">.</span><span class="nx">DefaultMessage</span><span class="p">)</span>
+
+    <span class="c1">// Output:</span>
+    <span class="c1">// NAME     : SoulCloudy</span>
+    <span class="c1">// CODE     : 2000</span>
+    <span class="c1">// ISSUER   : Hogwarts</span>
+    <span class="c1">// gRPC CODE: FailedPrecondition</span>
+    <span class="c1">// MESSAGE  : The pupil&#39;s soul is to opaque to be sorted</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Two SentinelError values are considered the same if and only if both the issuer and
+the error code are the same.</p>
+<p>The name of a sentinel error is for human consumption only, and does not figure into
+sentinel equality. We can wrap and check sentinel errors with errors.Is():</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">err</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;could not sort student Harry Potter: %w&quot;</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">)</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+<span class="c1">// This is an ErrSoulCloudy</span>
+<span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;This error is a ErrSoulCloudy error&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Even though they are the same type, it is not an ErrUnknown:</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">ErrUnknown</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;This is not an unknown error&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ERROR: could not sort student Harry Potter: Hogwarts SoulCloudy (2000): The</span>
+<span class="c1">//    pupil&#39;s soul is to opaque to be sorted</span>
+<span class="c1">// This error is a ErrSoulCloudy error</span>
+<span class="c1">// This is not an unknown error</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generating-specific-errors">
+<h2>Generating Specific Errors<a class="headerlink" href="#generating-specific-errors" title="Permalink to this headline">¶</a></h2>
+<p>The core type of pkerrs is the <code class="docutils literal notranslate"><span class="pre">ErrorGenerator</span></code> type. We will use the generator to
+create new errors that can be used to send rich error details between servers and
+clients.</p>
+<p>We can set up a new generator as follows:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">host</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Hostname</span><span class="p">()</span>
+
+<span class="kd">var</span> <span class="nx">errorGen</span> <span class="p">=</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">NewErrGenerator</span><span class="p">(</span>
+    <span class="s">&quot;SortingHat&quot;</span><span class="p">,</span> <span class="c1">// appName</span>
+    <span class="nx">host</span><span class="p">,</span> <span class="c1">// appHost</span>
+    <span class="kc">true</span><span class="p">,</span> <span class="c1">// addStackTrace</span>
+    <span class="kc">true</span><span class="p">,</span> <span class="c1">// sendContext</span>
+    <span class="kc">true</span><span class="p">,</span> <span class="c1">// sendSource</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">appName</span></code> and <code class="docutils literal notranslate"><span class="pre">appHost</span></code> are added to the trace frame of any errors created or
+processed by this generator and interceptors created from it.</p>
+<p><code class="docutils literal notranslate"><span class="pre">addStackTrace</span></code> adds the return of <code class="docutils literal notranslate"><span class="pre">debug.StackTrace()</span></code> to the error if true.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendContext</span></code> will include any additional context the error is wrapped in as it gets
+passed up the chain to the error data returned by a server interceptor.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sendSource</span></code> will include the Error() string of a source error this error is being
+created from in the error data returned by a server interceptor.</p>
+<p>Let’s make an error with it:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Returns an error</span>
+<span class="nx">err</span> <span class="o">:=</span> <span class="nx">errorGen</span><span class="p">.</span><span class="nx">NewErr</span><span class="p">(</span>
+    <span class="nx">ErrSoulCloudy</span><span class="p">,</span> <span class="c1">// Sentinel</span>
+    <span class="s">&quot;could not sort student Harry Potter&quot;</span><span class="p">,</span> <span class="c1">// message</span>
+    <span class="p">[]</span><span class="nx">proto</span><span class="p">.</span><span class="nx">Message</span><span class="p">{</span>
+        <span class="nx">wrapperspb</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;Harry Potter&quot;</span><span class="p">),</span> <span class="c1">// details</span>
+    <span class="p">},</span>
+    <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+<span class="c1">// This error is an APIError</span>
+<span class="nx">apiErr</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">pkerr</span><span class="p">.</span><span class="nx">APIError</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;SENTINEL:&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Sentinel</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;SOURCE:&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Source</span><span class="p">)</span>
+
+<span class="c1">// The error contains a protobuf message that describes it.</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;PROTO ERR:&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">)</span>
+
+<span class="nx">protoErr</span> <span class="o">:=</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;DETAILS:&quot;</span><span class="p">,</span> <span class="nx">protoErr</span><span class="p">.</span><span class="nx">Details</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ERROR: (SoulCloudy | Hogwarts | 2000) The pupil&#39;s soul is to opaque to be sorted: could not sort student Harry Potter | from: EOF</span>
+<span class="c1">// SENTINEL: Hogwarts SoulCloudy (2000): The pupil&#39;s soul is to opaque to be sorted</span>
+<span class="c1">// SOURCE: EOF</span>
+<span class="c1">// PROTO ERR: (SoulCloudy | Hogwarts | 2000) The pupil&#39;s soul is to opaque to be sorted: could not sort student Harry Potter</span>
+<span class="c1">// DETAILS: [[type.googleapis.com/google.protobuf.StringValue]:{value:&quot;Harry Potter&quot;}]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">*Error</span></code> protobuf type is defined as follows:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">syntax</span> <span class="p">=</span> <span class="s">&quot;proto3&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nx">pkerr</span><span class="p">;</span>
+<span class="nx">option</span> <span class="nx">go_package</span> <span class="p">=</span> <span class="s">&quot;github.com/peake100/gRPEAKEC-go/pkerr/protogen&quot;</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="s">&quot;cereal_proto/uuid.proto&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="s">&quot;google/protobuf/any.proto&quot;</span><span class="p">;</span>
+<span class="kn">import</span> <span class="s">&quot;google/protobuf/timestamp.proto&quot;</span><span class="p">;</span>
+
+<span class="c1">// Error holds information about an error.</span>
+<span class="nx">message</span> <span class="nx">Error</span> <span class="p">{</span>
+  <span class="c1">// id is a uuid that uniquely identifies this error.</span>
+  <span class="nx">cereal</span><span class="p">.</span><span class="nx">UUID</span> <span class="nx">id</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="c1">// issuer is the issuer of a code. If multiple services use this library, they</span>
+  <span class="c1">// can differentiate their error codes by having unique issuers. If a number of</span>
+  <span class="c1">// services working together in the same backend coordinate to ensure their error</span>
+  <span class="c1">// definitions do not overlap, they can share an Issuer value.</span>
+  <span class="kt">string</span> <span class="nx">issuer</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="c1">// code is the API Error code.</span>
+  <span class="kt">uint32</span> <span class="nx">code</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
+
+  <span class="c1">// grpc_code is the grpc status code associated with this error.</span>
+  <span class="kt">int32</span> <span class="nx">grpc_code</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span>
+
+  <span class="c1">// name is the human-readable API Error name tied to code.</span>
+  <span class="kt">string</span> <span class="nx">name</span> <span class="p">=</span> <span class="mi">5</span><span class="p">;</span>
+
+  <span class="c1">// message is the error message.</span>
+  <span class="kt">string</span> <span class="nx">message</span>  <span class="p">=</span> <span class="mi">6</span><span class="p">;</span>
+
+  <span class="c1">// source_err is a string representation of the original native error that lead to</span>
+  <span class="c1">// this gRPEAKEC Error. Can be blank.</span>
+  <span class="kt">string</span> <span class="nx">source_error</span> <span class="p">=</span> <span class="mi">7</span><span class="p">;</span>
+
+  <span class="c1">// source_type is the type of source_err. Can be blank.</span>
+  <span class="kt">string</span> <span class="nx">source_type</span> <span class="p">=</span> <span class="mi">8</span><span class="p">;</span>
+
+  <span class="c1">// time is the time that the error occurred</span>
+  <span class="nx">google</span><span class="p">.</span><span class="nx">protobuf</span><span class="p">.</span><span class="nx">Timestamp</span> <span class="nx">time</span> <span class="p">=</span> <span class="mi">9</span><span class="p">;</span>
+
+  <span class="c1">// details are arbitrary information about the error.</span>
+  <span class="nx">repeated</span> <span class="nx">google</span><span class="p">.</span><span class="nx">protobuf</span><span class="p">.</span><span class="nx">Any</span> <span class="nx">details</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span>
+
+  <span class="c1">// Trace holds a stack of TraceInfo objects. Each time an app encounters an error,</span>
+  <span class="c1">// it can add it&#39;s TraceInfo object to the end of the trace.</span>
+  <span class="nx">repeated</span> <span class="nx">TraceInfo</span> <span class="nx">trace</span> <span class="p">=</span> <span class="mi">11</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Trace info holds information about where an error occurred.</span>
+<span class="nx">message</span> <span class="nx">TraceInfo</span> <span class="p">{</span>
+  <span class="c1">// app name is the name of the service or process that generated the error.</span>
+  <span class="kt">string</span> <span class="nx">app_name</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="c1">// Identifier for the host the app is running on.</span>
+  <span class="kt">string</span> <span class="nx">app_host</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="c1">// stack_trace of the error (can be &quot;&quot;). No enforced format. This is meant for human</span>
+  <span class="c1">// reference).</span>
+  <span class="kt">string</span> <span class="nx">stack_trace</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
+
+  <span class="c1">// Some languages let an error continue to gather context, with wrapping errors in go.</span>
+  <span class="c1">// This field can be used to store additional context added to the error after it</span>
+  <span class="c1">// was created.</span>
+  <span class="kt">string</span> <span class="nx">additional_context</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This message offers a ton of rich context for errors. But how do we transmit this error
+between client and server?</p>
+</div>
+<div class="section" id="error-interceptors">
+<h2>Error Interceptors<a class="headerlink" href="#error-interceptors" title="Permalink to this headline">¶</a></h2>
+<p>Lets start by implementing a simple gRPC service.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Sorting hat implements protogen.SortingHat.</span>
+<span class="kd">type</span> <span class="nx">SortingHat</span> <span class="kd">struct</span> <span class="p">{}</span>
+
+<span class="c1">// Sort sorts pupils into a house.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">SortingHat</span><span class="p">)</span> <span class="nx">Sort</span><span class="p">(</span>
+    <span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">pupil</span> <span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">pupil</span><span class="p">.</span><span class="nx">Name</span> <span class="o">==</span> <span class="s">&quot;Harry Potter&quot;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errorGen</span><span class="p">.</span><span class="nx">NewErr</span><span class="p">(</span>
+            <span class="nx">ErrSoulCloudy</span><span class="p">,</span> <span class="c1">// Sentinel</span>
+            <span class="s">&quot;could not sort student Harry Potter&quot;</span><span class="p">,</span> <span class="c1">// message</span>
+            <span class="p">[]</span><span class="nx">proto</span><span class="p">.</span><span class="nx">Message</span><span class="p">{</span><span class="nx">pupil</span><span class="p">},</span> <span class="c1">// details</span>
+            <span class="kc">nil</span><span class="p">,</span> <span class="c1">// source</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">{</span><span class="nx">House</span><span class="p">:</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">House_Gryffindor</span><span class="p">},</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If the pupil is “Harry Potter” the rpc method will return an APIError made from our
+error generator.</p>
+<p>Let’s see how this error would normally be returned to the client.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Set up the gRPC server</span>
+<span class="nx">listener</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Listen</span><span class="p">(</span><span class="s">&quot;tcp&quot;</span><span class="p">,</span> <span class="s">&quot;:50051&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">defer</span> <span class="nx">listener</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="nx">server</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nx">NewServer</span><span class="p">()</span>
+
+<span class="c1">// Register our service</span>
+<span class="nx">protogen</span><span class="p">.</span><span class="nx">RegisterSortingHatServer</span><span class="p">(</span><span class="nx">server</span><span class="p">,</span> <span class="nx">SortingHat</span><span class="p">{})</span>
+
+<span class="c1">// Serve gRPC</span>
+<span class="nx">serveErr</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">)</span>
+<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="nb">close</span><span class="p">(</span><span class="nx">serveErr</span><span class="p">)</span>
+    <span class="nx">serveErr</span> <span class="o">&lt;-</span> <span class="nx">server</span><span class="p">.</span><span class="nx">Serve</span><span class="p">(</span><span class="nx">listener</span><span class="p">)</span>
+<span class="p">}()</span>
+
+<span class="nx">clientConn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nx">Dial</span><span class="p">(</span><span class="s">&quot;:50051&quot;</span><span class="p">,</span> <span class="nx">grpc</span><span class="p">.</span><span class="nx">WithInsecure</span><span class="p">())</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">defer</span> <span class="nx">clientConn</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="nx">hatClient</span> <span class="o">:=</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">NewSortingHatClient</span><span class="p">(</span><span class="nx">clientConn</span><span class="p">)</span>
+
+<span class="c1">// Try and sort the client</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">hatClient</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;Harry Potter&quot;</span><span class="p">})</span>
+
+<span class="c1">// Print the error</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR TYPE:&quot;</span><span class="p">,</span> <span class="nx">reflect</span><span class="p">.</span><span class="nx">TypeOf</span><span class="p">(</span><span class="nx">err</span><span class="p">))</span>
+
+<span class="c1">// Get a status from the error</span>
+<span class="nx">respStatus</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">status</span><span class="p">.</span><span class="nx">FromError</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;error was not status&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Code</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;STATUS CODE:&quot;</span><span class="p">,</span> <span class="nx">respStatus</span><span class="p">.</span><span class="nx">Code</span><span class="p">())</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ERROR: rpc error: code = Unknown desc = (SoulCloudy | Hogwarts | 2000) The pupil&#39;s soul is to opaque to be sorted: could not sort student Harry Potter | from: EOF</span>
+<span class="c1">// ERROR TYPE: *status.statusError</span>
+<span class="c1">// STATUS CODE: Unknown</span>
+</pre></div>
+</div>
+<p>This default method leaves a lot to be desired. We have to do a lot of error examination
+after each call to even get at the status, and it returning a status error is likewise
+cumbersome, with a lot of boilerplate required to set the right code, add any details,
+extract those details on the other side, etc.</p>
+<p>Luckily, our ErrorGenerator can create interceptors for both servers and clients that
+will handle packing and unpacking our error into the details fields, as well as setting
+the status message and code:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Set up the gRPC server</span>
+<span class="nx">listener</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Listen</span><span class="p">(</span><span class="s">&quot;tcp&quot;</span><span class="p">,</span> <span class="nx">address</span><span class="p">)</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// We can use the pkmiddleware package to create our error middleware.</span>
+<span class="nx">unaryServerInterceptor</span> <span class="o">:=</span> <span class="nx">pkmiddleware</span><span class="p">.</span><span class="nx">NewUnaryServerMiddlewareInterceptor</span><span class="p">(</span>
+    <span class="nx">errorGen</span><span class="p">.</span><span class="nx">UnaryServerMiddleware</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nx">streamServerInterceptor</span> <span class="o">:=</span> <span class="nx">pkmiddleware</span><span class="p">.</span><span class="nx">NewStreamServerMiddlewareInterceptor</span><span class="p">(</span>
+    <span class="nx">errorGen</span><span class="p">.</span><span class="nx">StreamServerMiddleware</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nx">server</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nx">NewServer</span><span class="p">(</span>
+    <span class="nx">grpc</span><span class="p">.</span><span class="nx">UnaryInterceptor</span><span class="p">(</span><span class="nx">unaryServerInterceptor</span><span class="p">),</span>
+    <span class="nx">grpc</span><span class="p">.</span><span class="nx">StreamInterceptor</span><span class="p">(</span><span class="nx">streamServerInterceptor</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1">// Register our service</span>
+<span class="nx">protogen</span><span class="p">.</span><span class="nx">RegisterSortingHatServer</span><span class="p">(</span><span class="nx">server</span><span class="p">,</span> <span class="nx">SortingHat2</span><span class="p">{})</span>
+
+<span class="c1">// Serve gRPC</span>
+<span class="nx">serveErr</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">)</span>
+<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="nb">close</span><span class="p">(</span><span class="nx">serveErr</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">listener</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+    <span class="nx">serveErr</span> <span class="o">&lt;-</span> <span class="nx">server</span><span class="p">.</span><span class="nx">Serve</span><span class="p">(</span><span class="nx">listener</span><span class="p">)</span>
+<span class="p">}()</span>
+
+<span class="nx">complete</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="nx">complete</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+    <span class="k">defer</span> <span class="nx">server</span><span class="p">.</span><span class="nx">GracefulStop</span><span class="p">()</span>
+    <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+<span class="p">}()</span>
+
+<span class="c1">// We are going to make a new errorGen for our client with the client app name.</span>
+<span class="c1">// All other errors will be the same.</span>
+<span class="nx">clientErrs</span> <span class="o">:=</span> <span class="nx">errorGen</span><span class="p">.</span><span class="nx">WithAppName</span><span class="p">(</span><span class="s">&quot;ClientApp&quot;</span><span class="p">)</span>
+
+<span class="c1">// We can use the pkmiddleware package to create our error middleware.</span>
+<span class="nx">unaryClientInterceptor</span> <span class="o">:=</span> <span class="nx">pkmiddleware</span><span class="p">.</span><span class="nx">NewUnaryClientMiddlewareInterceptor</span><span class="p">(</span>
+    <span class="nx">clientErrs</span><span class="p">.</span><span class="nx">UnaryClientMiddleware</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nx">streamClientInterceptor</span> <span class="o">:=</span> <span class="nx">pkmiddleware</span><span class="p">.</span><span class="nx">NewStreamClientMiddlewareInterceptor</span><span class="p">(</span>
+    <span class="nx">clientErrs</span><span class="p">.</span><span class="nx">StreamClientMiddleware</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1">// Use the client error generator to make client interceptors.</span>
+<span class="nx">clientConn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nx">Dial</span><span class="p">(</span>
+    <span class="nx">address</span><span class="p">,</span>
+    <span class="nx">grpc</span><span class="p">.</span><span class="nx">WithInsecure</span><span class="p">(),</span>
+    <span class="nx">grpc</span><span class="p">.</span><span class="nx">WithUnaryInterceptor</span><span class="p">(</span><span class="nx">unaryClientInterceptor</span><span class="p">),</span>
+    <span class="nx">grpc</span><span class="p">.</span><span class="nx">WithStreamInterceptor</span><span class="p">(</span><span class="nx">streamClientInterceptor</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">defer</span> <span class="nx">clientConn</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="nx">complete</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="nx">complete</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+    <span class="k">defer</span> <span class="nx">clientConn</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+    <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+<span class="p">}()</span>
+
+<span class="nx">hatClient</span> <span class="o">:=</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">NewSortingHatClient</span><span class="p">(</span><span class="nx">clientConn</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now lets see how that effects our error returns:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Try and sort the client</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">hatClient</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;Harry Potter&quot;</span><span class="p">})</span>
+
+<span class="c1">// Print the error</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR TYPE:&quot;</span><span class="p">,</span> <span class="nx">reflect</span><span class="p">.</span><span class="nx">TypeOf</span><span class="p">(</span><span class="nx">err</span><span class="p">))</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ERROR: (SoulCloudy | Hogwarts | 2000) The pupil&#39;s soul is to opaque to be sorted: could not sort student Harry Potter | from: grpc error &#39;FailedPrecondition&#39;</span>
+<span class="c1">// ERROR TYPE: pkerr.APIError</span>
+</pre></div>
+</div>
+<p>That’s way more useful, we are now getting native errors!</p>
+</div>
+<div class="section" id="error-checking">
+<h2>Error Checking<a class="headerlink" href="#error-checking" title="Permalink to this headline">¶</a></h2>
+<p>Native errors mean we can use errors.Is() and errors.As() directly.</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Extract the error</span>
+<span class="kd">var</span> <span class="nx">apiErr</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">APIError</span>
+<span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">As</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">apiErr</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;API ERROR FOUND&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// API ERROR FOUND</span>
+</pre></div>
+</div>
+<p>Notice that our APIError can be compared directly against the SentinelError error type
+using errors.Is().</p>
+<p>APIError also supports comparison against gRPC status codes by wrapping them in a
+GrpcCodeErr if we want to check for what status code was returned:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">GrpcCodeErr</span><span class="p">(</span><span class="nx">codes</span><span class="p">.</span><span class="nx">FailedPrecondition</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;APIError gRPC code is codes.FailedPrecondition&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// APIError gRPC code is codes.FailedPrecondition</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These comparisons against non-APIError types are only implemented for errors.Is(),
+not errors.As()</p>
+</div>
+</div>
+<div class="section" id="error-details">
+<h2>Error Details<a class="headerlink" href="#error-details" title="Permalink to this headline">¶</a></h2>
+<p>Lets take a quick look at all the details we get back from our APIError:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;NAME       :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;CODE       :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Code</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ISSUER     :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Issuer</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;MESSAGE    :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Message</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;gRPC CODE  :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">GrpcCode</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;TIME       :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Time</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;DETAILS    :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Details</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;SOURCE ERR :&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">SourceError</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;SOURCE TYPE:&quot;</span><span class="p">,</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">SourceType</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// NAME       : SoulCloudy</span>
+<span class="c1">// CODE       : 2000</span>
+<span class="c1">// ISSUER     : Hogwarts</span>
+<span class="c1">// MESSAGE    : The pupil&#39;s soul is to opaque to be sorted: could not sort student Harry Potter</span>
+<span class="c1">// gRPC CODE  : 9</span>
+<span class="c1">// TIME       : seconds:1609462861 nanos:1</span>
+<span class="c1">// DETAILS    : [[type.googleapis.com/sortinghat.Pupil]:{name:&quot;Harry Potter&quot;}]</span>
+<span class="c1">// SOURCE ERR : EOF</span>
+<span class="c1">// SOURCE TYPE: *errors.errorString</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="traceinfo">
+<h2>TraceInfo<a class="headerlink" href="#traceinfo" title="Permalink to this headline">¶</a></h2>
+<p>Returned errors also contain a slice of <code class="docutils literal notranslate"><span class="pre">*TraceInfo</span></code> proto messages. Each time an
+error generator encounters a new message, it will add it’s own <code class="docutils literal notranslate"><span class="pre">TraceInfo</span></code> value
+si we can trace the error through apps:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;TRACE COUNT:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Trace</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">thisTrace</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Trace</span> <span class="p">{</span>
+    <span class="c1">// remove this code from example</span>
+    <span class="nx">thisTrace</span><span class="p">.</span><span class="nx">AppHost</span> <span class="p">=</span> <span class="s">&quot;Williams-MacBook-Pro-2.local&quot;</span>
+    <span class="nx">thisTrace</span><span class="p">.</span><span class="nx">StackTrace</span> <span class="p">=</span> <span class="s">&quot;[debug.Stack() output]&quot;</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;TRACE INDEX  :&quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;APP NAME     :&quot;</span><span class="p">,</span> <span class="nx">thisTrace</span><span class="p">.</span><span class="nx">AppName</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;APP HOST     :&quot;</span><span class="p">,</span> <span class="nx">thisTrace</span><span class="p">.</span><span class="nx">AppHost</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;CONTEXT      :%v\n&quot;</span><span class="p">,</span> <span class="nx">thisTrace</span><span class="p">.</span><span class="nx">AdditionalContext</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;TRACEBACK    :&quot;</span><span class="p">,</span> <span class="nx">thisTrace</span><span class="p">.</span><span class="nx">StackTrace</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// TRACE COUNT: 2</span>
+<span class="c1">//</span>
+<span class="c1">// TRACE INDEX  : 0</span>
+<span class="c1">// APP NAME     : SortingHat</span>
+<span class="c1">// APP HOST     : Williams-MacBook-Pro-2.local</span>
+<span class="c1">// CONTEXT      :</span>
+<span class="c1">// TRACEBACK    : [debug.Stack() output]</span>
+<span class="c1">//</span>
+<span class="c1">// TRACE INDEX  : 1</span>
+<span class="c1">// APP NAME     : ClientApp</span>
+<span class="c1">// APP HOST     : Williams-MacBook-Pro-2.local</span>
+<span class="c1">// CONTEXT      :</span>
+<span class="c1">// TRACEBACK    : [debug.Stack() output]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-context">
+<h2>Adding Context<a class="headerlink" href="#adding-context" title="Permalink to this headline">¶</a></h2>
+<p>Adding context as an error is passed up a chain can be incredibly useful in Go,
+especially since errors do no contain traces.</p>
+<p>Out interceptors support unwrapping an APIError from any error type that implements
+xerrors.Wrapper. This means you can add as much context as you want!</p>
+<p>Let’s alter our handler code:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Sort sorts pupils into a house.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">SortingHat</span><span class="p">)</span> <span class="nx">Sort</span><span class="p">(</span>
+    <span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">pupil</span> <span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">pupil</span><span class="p">.</span><span class="nx">Name</span> <span class="o">==</span> <span class="s">&quot;Harry Potter&quot;</span> <span class="p">{</span>
+        <span class="nx">err</span> <span class="o">:=</span> <span class="nx">errorGen</span><span class="p">.</span><span class="nx">NewErr</span><span class="p">(</span>
+            <span class="nx">ErrSoulCloudy</span><span class="p">,</span> <span class="c1">// Sentinel</span>
+            <span class="s">&quot;could not sort student Harry Potter&quot;</span><span class="p">,</span> <span class="c1">// message</span>
+            <span class="p">[]</span><span class="nx">proto</span><span class="p">.</span><span class="nx">Message</span><span class="p">{</span><span class="nx">pupil</span><span class="p">},</span> <span class="c1">// details</span>
+            <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">,</span> <span class="c1">// source</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Add some additional context.</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;hmmm, that&#39;s interesting...: %w&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">{</span><span class="nx">House</span><span class="p">:</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">House_Gryffindor</span><span class="p">},</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This additional context will show up in the TraceInfo of the error:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Try and sort the pupil</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">hatClient</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;Harry Potter&quot;</span><span class="p">})</span>
+
+<span class="c1">// Extract our APIError</span>
+<span class="kd">var</span> <span class="nx">apiErr</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">APIError</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">As</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">apiErr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;error is not APIError&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Now we have some info in the context of the TraceInfo</span>
+<span class="nx">serverTrace</span> <span class="o">:=</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ADDITIONAL CONTEXT:&quot;</span><span class="p">,</span> <span class="nx">serverTrace</span><span class="p">.</span><span class="nx">AdditionalContext</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ADDITIONAL CONTEXT: hmmm, that&#39;s interesting...: [error]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="panics">
+<h2>Panics<a class="headerlink" href="#panics" title="Permalink to this headline">¶</a></h2>
+<p>The interceptors will also recover panics:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Sort sorts pupils into a house.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">SortingHat</span><span class="p">)</span> <span class="nx">Sort</span><span class="p">(</span>
+    <span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">pupil</span> <span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">pupil</span><span class="p">.</span><span class="nx">Name</span> <span class="o">==</span> <span class="s">&quot;Harry Potter&quot;</span> <span class="p">{</span>
+        <span class="nx">err</span> <span class="o">:=</span> <span class="nx">errorGen</span><span class="p">.</span><span class="nx">NewErr</span><span class="p">(</span>
+            <span class="nx">ErrSoulCloudy</span><span class="p">,</span> <span class="c1">// Sentinel</span>
+            <span class="s">&quot;could not sort student Harry Potter&quot;</span><span class="p">,</span> <span class="c1">// message</span>
+            <span class="p">[]</span><span class="nx">proto</span><span class="p">.</span><span class="nx">Message</span><span class="p">{</span><span class="nx">pupil</span><span class="p">},</span> <span class="c1">// details</span>
+            <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">,</span> <span class="c1">// source</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Panic with the error</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">{</span><span class="nx">House</span><span class="p">:</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">House_Gryffindor</span><span class="p">},</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Try and sort the pupil</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">hatClient</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;Harry Potter&quot;</span><span class="p">})</span>
+
+<span class="c1">// Extract our APIError</span>
+<span class="kd">var</span> <span class="nx">apiErr</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">APIError</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">As</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">apiErr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;error is not APIError&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Now we have some info in the context of the TraceInfo</span>
+<span class="nx">serverTrace</span> <span class="o">:=</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ADDITIONAL CONTEXT:&quot;</span><span class="p">,</span> <span class="nx">serverTrace</span><span class="p">.</span><span class="nx">AdditionalContext</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ADDITIONAL CONTEXT: panic recovered: [error]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sentinel-returns">
+<h2>Sentinel Returns<a class="headerlink" href="#sentinel-returns" title="Permalink to this headline">¶</a></h2>
+<p>Sentinel errors can be returned directly or wrapped, which is a little more convenient
+for method authors:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Sort sorts pupils into a house.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">SortingHat</span><span class="p">)</span> <span class="nx">Sort</span><span class="p">(</span>
+    <span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">pupil</span> <span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">pupil</span><span class="p">.</span><span class="nx">Name</span> <span class="o">==</span> <span class="s">&quot;Harry Potter&quot;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span>
+            <span class="s">&quot;could not sort student Harry Potter: %w&quot;</span><span class="p">,</span> <span class="nx">ErrSoulCloudy</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">{</span><span class="nx">House</span><span class="p">:</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">House_Gryffindor</span><span class="p">},</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Try and sort the pupil</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">hatClient</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;Harry Potter&quot;</span><span class="p">})</span>
+
+<span class="c1">// Extract our APIError</span>
+<span class="kd">var</span> <span class="nx">apiErr</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">APIError</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">As</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">apiErr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;error is not APIError&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+<span class="c1">// Now we have some info in the context of the TraceInfo</span>
+<span class="nx">serverTrace</span> <span class="o">:=</span> <span class="nx">apiErr</span><span class="p">.</span><span class="nx">Proto</span><span class="p">.</span><span class="nx">Trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ADDITIONAL CONTEXT:&quot;</span><span class="p">,</span> <span class="nx">serverTrace</span><span class="p">.</span><span class="nx">AdditionalContext</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ERROR: (SoulCloudy | Hogwarts | 2000) The pupil&#39;s soul is to opaque to be sorted | from: grpc error &#39;FailedPrecondition&#39;</span>
+<span class="c1">// ADDITIONAL CONTEXT: could not sort student Harry Potter: [error]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="errunknown">
+<h2>ErrUnknown<a class="headerlink" href="#errunknown" title="Permalink to this headline">¶</a></h2>
+<p>When an error is returned to the interceptors that is NOT an APIError or SentinelError,
+the error will be wrapped in a an APIError with pkerrs.ErrUnknown SentinelError
+code / name values:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Sort sorts pupils into a house.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">SortingHat</span><span class="p">)</span> <span class="nx">Sort</span><span class="p">(</span>
+    <span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">pupil</span> <span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">pupil</span><span class="p">.</span><span class="nx">Name</span> <span class="o">==</span> <span class="s">&quot;Harry Potter&quot;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">EOF</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">{</span><span class="nx">House</span><span class="p">:</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">House_Gryffindor</span><span class="p">},</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Try and sort the pupil</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">hatClient</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;Harry Potter&quot;</span><span class="p">})</span>
+
+<span class="c1">// Extract our APIError</span>
+<span class="kd">var</span> <span class="nx">apiErr</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">APIError</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">As</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">apiErr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;error is not APIError&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ERROR: (Unknown | GRPEAKEC | 1000) an unknown error occurred: EOF | from: grpc error &#39;Unknown&#39;</span>
+</pre></div>
+</div>
+<p>Unknown will be returned for panics that do not return an APIError or SentinelError, or
+any error value at all!</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Sort sorts pupils into a house.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">SortingHat</span><span class="p">)</span> <span class="nx">Sort</span><span class="p">(</span>
+    <span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">pupil</span> <span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">pupil</span><span class="p">.</span><span class="nx">Name</span> <span class="o">==</span> <span class="s">&quot;Harry Potter&quot;</span> <span class="p">{</span>
+                    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;Harry Potter&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Sorted</span><span class="p">{</span><span class="nx">House</span><span class="p">:</span> <span class="nx">protogen</span><span class="p">.</span><span class="nx">House_Gryffindor</span><span class="p">},</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Try and sort the pupil</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">hatClient</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="o">&amp;</span><span class="nx">protogen</span><span class="p">.</span><span class="nx">Pupil</span><span class="p">{</span><span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;Harry Potter&quot;</span><span class="p">})</span>
+
+<span class="c1">// Extract our APIError</span>
+<span class="kd">var</span> <span class="nx">apiErr</span> <span class="nx">pkerr</span><span class="p">.</span><span class="nx">APIError</span>
+<span class="k">if</span> <span class="p">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">As</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">apiErr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;error is not APIError&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ERROR:&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// ERROR: (Unknown | GRPEAKEC | 1000) an unknown error occurred: panic recovered: Harry Potter | from: grpc error &#39;Unknown&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reissuing-sentinels">
+<h2>Reissuing Sentinels<a class="headerlink" href="#reissuing-sentinels" title="Permalink to this headline">¶</a></h2>
+<p>You may be asking yourself: Why do we need to define our SentinelErrors via a
+SentinelIssuer? Why not just set their values directly?</p>
+<p>If a backend is using multiple services all issuing their own Sentinels, we may want
+them all to appear to the client as if they are coming from the same issuer, in order
+to feel more cohesive / branded.</p>
+<p>The SentinelIssuer keeps pointers to the original errors and can “reissue” these errors
+with a new Issuer value.</p>
+<p>Let’s try re-issuing our generic errors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sentinels</span><span class="o">.</span><span class="n">ApplyNewIssuer</span><span class="p">(</span>
+    <span class="s2">&quot;MyBackend&quot;</span><span class="p">,</span> <span class="o">//</span> <span class="n">issuer</span>
+        <span class="mi">1000</span><span class="p">,</span> <span class="o">//</span> <span class="n">offset</span>
+<span class="p">)</span>
+
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s2">&quot;ISSUER:&quot;</span><span class="p">,</span> <span class="n">ErrSoulCloudy</span><span class="o">.</span><span class="n">Issuer</span><span class="p">)</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s2">&quot;CODE:&quot;</span><span class="p">,</span> <span class="n">ErrSoulCloudy</span><span class="o">.</span><span class="n">Code</span><span class="p">)</span>
+
+<span class="o">//</span> <span class="n">Output</span><span class="p">:</span>
+<span class="o">//</span> <span class="n">ISSUER</span><span class="p">:</span> <span class="n">MyBackend</span>
+<span class="o">//</span> <span class="n">CODE</span><span class="p">:</span> <span class="mi">3000</span>
+</pre></div>
+</div>
+<p>Our sentinels now have a new issuer!</p>
+<p>We have also applied an offset to all of our error codes, this is useful if your backend
+already has an error code 2000 in it’s namespace. Our new error code is 3000.</p>
+</div>
+<div class="section" id="sentinelissuer-env-vars">
+<h2>SentinelIssuer Env Vars<a class="headerlink" href="#sentinelissuer-env-vars" title="Permalink to this headline">¶</a></h2>
+<p>Issuer and offset settings can also be set through Environmental Variables:</p>
+<ul class="simple">
+<li><p><strong>[ORIGINAL_ISSUER]_ERROR_ISSUER</strong> will be applied to the issuer</p></li>
+<li><p><strong>[ORIGINAL_ISSUER]_ERROR_CODE_OFFSET</strong> will apply an offset to any errors issued by
+a SentinelIssuer</p></li>
+</ul>
+<p>If applyEnvSettings is true when calling NewSentinelIssuer, these environmental
+variables will be checked and applied.</p>
+<p>End-users can now configure the error Issuer and Codes returned by your service.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pkservices.html" class="btn btn-neutral float-left" title="pkservices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright &#39;2021, Billy Peake&#39;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
