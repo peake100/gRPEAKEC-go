@@ -230,17 +230,18 @@ func newStreamLoggingMiddlewareFromOpts(opts loggingOpts) StreamServerMiddleware
 				opts, info.FullMethod, "stream",
 			)
 
-			if ss != nil {
-				// Wrap our server stream.
-				ss = loggingServerStream{
-					ServerStream: ss,
-					ctx:          addLoggerToContext(ss.Context(), rpcLogger),
-					logger:       rpcLogger,
-					opts:         opts,
-				}
+			// Wrap our server stream.
+			ss = loggingServerStream{
+				ServerStream: ss,
+				ctx:          addLoggerToContext(ss.Context(), rpcLogger),
+				logger:       rpcLogger,
+				opts:         opts,
 			}
 
 			// Call our next middleware, passing our server stream into it.
+			if opts.logRPC {
+				rpcLogger.WithLevel(opts.logLevel).Msg("opening stream")
+			}
 			err = next(srv, ss, info)
 
 			// Log the result of the overall rpc.
