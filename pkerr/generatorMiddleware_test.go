@@ -500,5 +500,7 @@ func (suite *InterceptorSuite) TestErrorReturns() {
 }
 
 func TestBasicErrorSuite(t *testing.T) {
-	suite.Run(t, new(InterceptorSuite))
+	suite.Run(t, &InterceptorSuite{
+		ManagerSuite: pktesting.NewManagerSuite(nil),
+	})
 }

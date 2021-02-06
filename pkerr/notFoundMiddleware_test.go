@@ -129,5 +129,7 @@ func (suite *ErrNotFoundSuite) TestNoError() {
 }
 
 func TestErrNotFoundSuite(t *testing.T) {
-	suite.Run(t, new(ErrNotFoundSuite))
+	suite.Run(t, &ErrNotFoundSuite{
+		ManagerSuite: pktesting.NewManagerSuite(nil),
+	})
 }

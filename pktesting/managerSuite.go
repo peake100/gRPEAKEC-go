@@ -5,9 +5,16 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+
+
+type InnerSuite interface {
+	Assertions
+	suite.TestingSuite
+}
+
 // ManagerSuite offers some
 type ManagerSuite struct {
-	suite.Suite
+	InnerSuite
 	Manager *pkservices.Manager
 }
 
@@ -43,6 +50,11 @@ func (m *ManagerSuite) SetupSuite() {
 	defer cancel()
 
 	tester.PingGrpcServer(ctx)
+
+	// If our inner suite is a setup suite, run it's setup.
+	if innerSetupSuite, ok := m.InnerSuite.(suite.SetupAllSuite) ; ok {
+		innerSetupSuite.SetupSuite()
+	}
 }
 
 // TearDownSuite implements suite.TearDownAllSuite and shuts down the manager.
@@ -52,5 +64,21 @@ func (m *ManagerSuite) TearDownSuite() {
 		m.Manager.StartShutdown()
 		// Block until shutdown complete.
 		m.Manager.WaitForShutdown()
+	}
+
+	// If our inner suite is a teardown suite, run it's setup.
+	if innerTearDownSuite, ok := m.InnerSuite.(suite.TearDownAllSuite) ; ok {
+		innerTearDownSuite.TearDownSuite()
+	}
+}
+
+// NewManagerSuite returns a new ManagerSuite with the given innerSuite. If a nil
+// innerSuite is passed, then a new *suite.Suite will be used.
+func NewManagerSuite(innerSuite InnerSuite) ManagerSuite {
+	if innerSuite == nil {
+		innerSuite = new(suite.Suite)
+	}
+	return ManagerSuite{
+		InnerSuite:	innerSuite,
 	}
 }
