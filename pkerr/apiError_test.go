@@ -2,7 +2,7 @@ package pkerr_test
 
 import (
 	"fmt"
-	"github.com/illuscio-dev/protoCereal-go/cerealMessages"
+	"github.com/illuscio-dev/protoCereal-go/cereal"
 	"github.com/peake100/gRPEAKEC-go/pkerr"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
@@ -21,7 +21,7 @@ var ErrTest = &pkerr.SentinelError{
 func TestAPIError_Is(t *testing.T) {
 	apiErr := pkerr.APIError{
 		Proto: &pkerr.Error{
-			Id:       cerealMessages.MustUUIDRandom(),
+			Id:       cereal.MustUUIDRandom(),
 			Issuer:   pkerr.ErrUnknown.Issuer,
 			Code:     pkerr.ErrUnknown.Code,
 			GrpcCode: int32(pkerr.ErrUnknown.GrpcCode),
@@ -40,7 +40,7 @@ func TestAPIError_Is(t *testing.T) {
 		{
 			Other: pkerr.APIError{
 				Proto: &pkerr.Error{
-					Id:       cerealMessages.MustUUIDRandom(),
+					Id:       cereal.MustUUIDRandom(),
 					Issuer:   pkerr.ErrUnknown.Issuer,
 					Code:     pkerr.ErrUnknown.Code,
 					GrpcCode: int32(pkerr.ErrUnknown.GrpcCode),
@@ -55,7 +55,7 @@ func TestAPIError_Is(t *testing.T) {
 		{
 			Other: pkerr.APIError{
 				Proto: &pkerr.Error{
-					Id:       cerealMessages.MustUUIDRandom(),
+					Id:       cereal.MustUUIDRandom(),
 					Issuer:   ErrTest.Issuer,
 					Code:     ErrTest.Code,
 					GrpcCode: int32(ErrTest.GrpcCode),
@@ -69,7 +69,7 @@ func TestAPIError_Is(t *testing.T) {
 		},
 		{
 			Other: &pkerr.Error{
-				Id:       cerealMessages.MustUUIDRandom(),
+				Id:       cereal.MustUUIDRandom(),
 				Issuer:   pkerr.ErrUnknown.Issuer,
 				Code:     pkerr.ErrUnknown.Code,
 				GrpcCode: int32(pkerr.ErrUnknown.GrpcCode),
@@ -81,7 +81,7 @@ func TestAPIError_Is(t *testing.T) {
 		},
 		{
 			Other: &pkerr.Error{
-				Id:       cerealMessages.MustUUIDRandom(),
+				Id:       cereal.MustUUIDRandom(),
 				Issuer:   ErrTest.Issuer,
 				Code:     ErrTest.Code,
 				GrpcCode: int32(ErrTest.GrpcCode),

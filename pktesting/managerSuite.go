@@ -5,8 +5,6 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-
-
 type InnerSuite interface {
 	Assertions
 	suite.TestingSuite
@@ -52,7 +50,7 @@ func (m *ManagerSuite) SetupSuite() {
 	tester.PingGrpcServer(ctx)
 
 	// If our inner suite is a setup suite, run it's setup.
-	if innerSetupSuite, ok := m.InnerSuite.(suite.SetupAllSuite) ; ok {
+	if innerSetupSuite, ok := m.InnerSuite.(suite.SetupAllSuite); ok {
 		innerSetupSuite.SetupSuite()
 	}
 }
@@ -67,7 +65,7 @@ func (m *ManagerSuite) TearDownSuite() {
 	}
 
 	// If our inner suite is a teardown suite, run it's setup.
-	if innerTearDownSuite, ok := m.InnerSuite.(suite.TearDownAllSuite) ; ok {
+	if innerTearDownSuite, ok := m.InnerSuite.(suite.TearDownAllSuite); ok {
 		innerTearDownSuite.TearDownSuite()
 	}
 }
@@ -79,6 +77,6 @@ func NewManagerSuite(innerSuite InnerSuite) ManagerSuite {
 		innerSuite = new(suite.Suite)
 	}
 	return ManagerSuite{
-		InnerSuite:	innerSuite,
+		InnerSuite: innerSuite,
 	}
 }

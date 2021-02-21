@@ -137,7 +137,7 @@ For internal use. Aliases to generated code are available in pkerr.
 					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Error.GetGrpcCode">func (x *Error) GetGrpcCode() int32</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Error.GetId">func (x *Error) GetId() *cerealMessages.UUID</a></dd>
+					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Error.GetId">func (x *Error) GetId() *cereal.UUID</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="godoc.7.html#Error.GetIssuer">func (x *Error) GetIssuer() string</a></dd>
@@ -254,7 +254,7 @@ Error holds information about an error.
 			<pre>type Error struct {
 
     <span class="comment">// id is a uuid that uniquely identifies this error.</span>
-<span id="Error.Id"></span>    Id *<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/">cerealMessages</a>.<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/#UUID">UUID</a> `protobuf:&#34;bytes,1,opt,name=id,proto3&#34; json:&#34;id,omitempty&#34;`
+<span id="Error.Id"></span>    Id *<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cereal/">cereal</a>.<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cereal/#UUID">UUID</a> `protobuf:&#34;bytes,1,opt,name=id,proto3&#34; json:&#34;id,omitempty&#34;`
     <span class="comment">// issuer is the issuer of a code. If multiple services use this library, they</span>
     <span class="comment">// can differentiate their error codes by having unique issuers. If a number of</span>
     <span class="comment">// services working together in the same backend coordinate to ensure their error</span>
@@ -367,7 +367,7 @@ Error implements builtins.error
 					
 					
 				</h3>
-				<pre>func (x *<a href="godoc.7.html#Error">Error</a>) GetId() *<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/">cerealMessages</a>.<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cerealMessages/#UUID">UUID</a></pre>
+				<pre>func (x *<a href="godoc.7.html#Error">Error</a>) GetId() *<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cereal/">cereal</a>.<a href="http://localhost:6161/pkg/github.com/illuscio-dev/protoCereal-go/cereal/#UUID">UUID</a></pre>
 				
 				
 				

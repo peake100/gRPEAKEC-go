@@ -10,7 +10,7 @@ import (
 	proto "github.com/golang/protobuf/proto"
 	any "github.com/golang/protobuf/ptypes/any"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
-	cerealMessages "github.com/illuscio-dev/protoCereal-go/cerealMessages"
+	cereal "github.com/illuscio-dev/protoCereal-go/cereal"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -114,7 +114,7 @@ type Error struct {
 	unknownFields protoimpl.UnknownFields
 
 	// id is a uuid that uniquely identifies this error.
-	Id *cerealMessages.UUID `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id *cereal.UUID `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// issuer is the issuer of a code. If multiple services use this library, they
 	// can differentiate their error codes by having unique issuers. If a number of
 	// services working together in the same backend coordinate to ensure their error
@@ -174,7 +174,7 @@ func (*Error) Descriptor() ([]byte, []int) {
 	return file_grpeakec_proto_pkerr_error_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Error) GetId() *cerealMessages.UUID {
+func (x *Error) GetId() *cereal.UUID {
 	if x != nil {
 		return x.Id
 	}
@@ -316,7 +316,7 @@ var file_grpeakec_proto_pkerr_error_proto_msgTypes = make([]protoimpl.MessageInf
 var file_grpeakec_proto_pkerr_error_proto_goTypes = []interface{}{
 	(*TraceInfo)(nil),           // 0: pkerr.TraceInfo
 	(*Error)(nil),               // 1: pkerr.Error
-	(*cerealMessages.UUID)(nil), // 2: cereal.UUID
+	(*cereal.UUID)(nil),         // 2: cereal.UUID
 	(*timestamp.Timestamp)(nil), // 3: google.protobuf.Timestamp
 	(*any.Any)(nil),             // 4: google.protobuf.Any
 }

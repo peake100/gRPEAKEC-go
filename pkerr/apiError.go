@@ -2,7 +2,7 @@ package pkerr
 
 import (
 	"fmt"
-	"github.com/illuscio-dev/protoCereal-go/cerealMessages"
+	"github.com/illuscio-dev/protoCereal-go/cereal"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
@@ -99,7 +99,7 @@ func newAPIErrBasic(
 	}
 
 	newProto := &Error{
-		Id:          cerealMessages.MustUUIDRandom(),
+		Id:          cereal.MustUUIDRandom(),
 		Issuer:      sentinel.Issuer,
 		Code:        sentinel.Code,
 		GrpcCode:    int32(sentinel.GrpcCode),
