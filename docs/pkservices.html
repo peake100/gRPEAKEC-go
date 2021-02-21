@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pkservices &mdash; grpcErr 0.0.10 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pkerrs" href="pkerr.html" />
+    <link rel="prev" title="gRPEAKEC-go" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> grpcErr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.10
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pkservices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#service-interfaces">Service Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-methods">Testing Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pkerr.html">pkerrs</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">grpcErr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>pkservices</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pkservices.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pkservices">
+<h1>pkservices<a class="headerlink" href="#pkservices" title="Permalink to this headline">¶</a></h1>
+<p>package pkservices offers a lightweight framework for managing the lifetime of multiple
+services and their resource dependencies (db connector, etc).</p>
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<p>First we’ll start by implementing a simple gRPC server. The service we are implementing
+is pkservices.PingServer.</p>
+<p>We also need to implement the pkservices.GrpcService interface for our server manager
+to know what to do with our service.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">pingService</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">basic</span> <span class="n">implementation</span> <span class="n">of</span> <span class="n">PingServer</span> <span class="n">that</span> <span class="n">the</span> <span class="n">manager</span> <span class="n">can</span> <span class="n">use</span> <span class="n">to</span> <span class="n">test</span>
+<span class="o">//</span> <span class="n">connectivity</span> <span class="n">to</span> <span class="n">the</span> <span class="n">server</span><span class="o">.</span>
+<span class="nb">type</span> <span class="n">PingService</span> <span class="n">struct</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">Id</span> <span class="n">implements</span> <span class="n">Service</span> <span class="ow">and</span> <span class="n">returns</span> <span class="s2">&quot;gPEAKERC Ping&quot;</span><span class="o">.</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">ping</span> <span class="n">pingService</span><span class="p">)</span> <span class="n">Id</span><span class="p">()</span> <span class="n">string</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">&quot;gPEAKERC Ping&quot;</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">Setup</span> <span class="n">implements</span> <span class="n">Service</span><span class="o">.</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">ping</span> <span class="n">pingService</span><span class="p">)</span> <span class="n">Setup</span><span class="p">(</span>
+  <span class="n">resourcesCtx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span>
+  <span class="n">resourcesReleased</span> <span class="o">*</span><span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span><span class="p">,</span>
+  <span class="n">shutdownCtx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span>
+  <span class="n">logger</span> <span class="n">zerolog</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
+<span class="p">)</span> <span class="n">error</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">nil</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">RegisterOnServer</span> <span class="n">implements</span> <span class="n">GrpcService</span><span class="o">.</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">ping</span> <span class="n">pingService</span><span class="p">)</span> <span class="n">RegisterOnServer</span><span class="p">(</span><span class="n">server</span> <span class="o">*</span><span class="n">grpc</span><span class="o">.</span><span class="n">Server</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">protogen</span><span class="o">.</span><span class="n">RegisterPingServer</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">ping</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">Ping</span> <span class="n">implements</span> <span class="n">PingServer</span><span class="o">.</span> <span class="n">It</span> <span class="n">receives</span> <span class="n">an</span> <span class="n">empty</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">returns</span> <span class="n">the</span>
+<span class="o">//</span> <span class="n">result</span><span class="o">.</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">ping</span> <span class="n">pingService</span><span class="p">)</span> <span class="n">Ping</span><span class="p">(</span>
+  <span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">msg</span> <span class="o">*</span><span class="n">empty</span><span class="o">.</span><span class="n">Empty</span><span class="p">,</span>
+<span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">empty</span><span class="o">.</span><span class="n">Empty</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Setup()</span></code> method allows us to spin up any resources our service needs to run. The
+<code class="docutils literal notranslate"><span class="pre">resourcesCtx</span></code> passed to the method will not be released until after our gRPC server
+has gracefully shutdown, and the manager we are about to register our service with will
+not fully exit until <code class="docutils literal notranslate"><span class="pre">resourcesReleased</span></code> is fully closed.</p>
+<p>Let’s run out service in a <code class="docutils literal notranslate"><span class="pre">Manager</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>func main() {
+  // Our manager options.
+  managerOpts := pkservices.NewManagerOpts().
+    // We are adding our own implementation of Ping, so we don&#39;t need to register
+    // The default one.
+    WithGrpcPingService(false)
+
+  // Create a new manager to manage our service.
+  manager := pkservices.NewManager(managerOpts, ExampleService{})
+
+  // Run the manager in it&#39;s own goroutine and return errors to our error channel.
+  errChan := make(chan error)
+  go func() {
+    defer close(errChan)
+    errChan &lt;- manager.Run()
+  }()
+
+  // make a gRPC client to ping the service
+  clientConn, err := grpc.Dial(pkservices.DefaultGrpcAddress, grpc.WithInsecure())
+  if err != nil {
+    panic(err)
+  }
+
+  // create a new client to interact with our server
+  pingClient := pkservices.NewPingClient(clientConn)
+
+  // Wait for the server to be serving requests.
+  err = pkclients.WaitForGrpcServer(context.Background(), clientConn)
+  if err != nil {
+    panic(err)
+  }
+
+  // Send a ping
+  _, err = pingClient.Ping(context.Background(), new(emptypb.Empty))
+  if err != nil {
+    panic(err)
+  }
+
+  // Start shutdown.
+  manager.StartShutdown()
+
+  // Grab our error from the error channel (blocks until the manager is shutdown)
+  err = &lt;- errChan
+  if err != nil {
+    panic(err)
+  }
+
+  // Exit.
+
+  // Output:
+  // PING RECEIVED!
+}
+</pre></div>
+</div>
+<p>This top-level logic is all you need to run your services!</p>
+</div>
+<div class="section" id="service-interfaces">
+<h2>Service Interfaces<a class="headerlink" href="#service-interfaces" title="Permalink to this headline">¶</a></h2>
+<p>pkservices defines three interfaces for declaring services: <code class="docutils literal notranslate"><span class="pre">Service</span></code>, <code class="docutils literal notranslate"><span class="pre">GrpcService</span></code>
+and <code class="docutils literal notranslate"><span class="pre">GenericService</span></code>.</p>
+<p>These interfaces are designed for the quick declaration of services, which can then
+be handed off to the <code class="docutils literal notranslate"><span class="pre">pkservices.Manager</span></code> type for running. The end result is
+having to write very little code for the boilerplate of managing the lifetime of the
+service.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Service</span></code> acts as a base for more specific service types. A service must implement
+one of the more specific types (like <code class="docutils literal notranslate"><span class="pre">ServiceGrpc</span></code>), and not just <code class="docutils literal notranslate"><span class="pre">Service</span></code> for
+the manager to run it.</p>
+</div>
+<p>The base <code class="docutils literal notranslate"><span class="pre">Service</span></code> interface looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">Service</span> <span class="n">interface</span> <span class="p">{</span>
+  <span class="o">//</span> <span class="n">Id</span> <span class="n">should</span> <span class="k">return</span> <span class="n">a</span> <span class="n">unique</span><span class="p">,</span> <span class="n">but</span> <span class="n">human</span> <span class="n">readable</span> <span class="nb">id</span> <span class="k">for</span> <span class="n">the</span> <span class="n">service</span><span class="o">.</span> <span class="n">This</span> <span class="nb">id</span> <span class="ow">is</span>
+  <span class="o">//</span> <span class="n">used</span> <span class="k">for</span> <span class="n">both</span> <span class="n">logging</span> <span class="ow">and</span> <span class="n">ServiceError</span> <span class="n">context</span><span class="o">.</span> <span class="n">If</span> <span class="n">two</span> <span class="n">services</span> <span class="n">share</span> <span class="n">the</span> <span class="n">same</span>
+  <span class="o">//</span> <span class="nb">id</span><span class="p">,</span> <span class="n">the</span> <span class="n">manger</span> <span class="n">will</span> <span class="k">return</span> <span class="n">an</span> <span class="n">error</span><span class="o">.</span>
+  <span class="n">Id</span><span class="p">()</span> <span class="n">string</span>
+
+  <span class="o">//</span> <span class="n">Setup</span> <span class="ow">is</span> <span class="n">called</span> <span class="n">before</span> <span class="n">Run</span> <span class="n">to</span> <span class="nb">set</span> <span class="n">up</span> <span class="nb">any</span> <span class="n">resources</span> <span class="n">the</span> <span class="n">service</span> <span class="n">requires</span><span class="o">.</span>
+  <span class="o">//</span>
+  <span class="o">//</span> <span class="n">resourcesCtx</span> <span class="n">will</span> <span class="n">be</span> <span class="n">cancelled</span> <span class="n">AFTER</span> <span class="n">Run</span> <span class="n">returns</span> <span class="n">to</span> <span class="n">signal</span> <span class="n">that</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">main</span>
+  <span class="o">//</span> <span class="n">process</span> <span class="n">has</span> <span class="n">finished</span><span class="p">,</span> <span class="ow">and</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">safe</span> <span class="n">to</span> <span class="n">release</span> <span class="n">resources</span><span class="o">.</span>
+  <span class="o">//</span>
+  <span class="o">//</span> <span class="n">resourcesReleased</span> <span class="n">should</span> <span class="n">be</span> <span class="n">incremented</span> <span class="ow">and</span> <span class="n">decremented</span> <span class="n">by</span> <span class="n">individual</span> <span class="n">resources</span><span class="p">,</span>
+  <span class="o">//</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">Manager</span> <span class="n">will</span> <span class="n">block</span> <span class="n">on</span> <span class="n">it</span> <span class="n">until</span> <span class="n">the</span> <span class="n">context</span> <span class="n">passed</span> <span class="n">to</span> <span class="n">Shutdown</span> <span class="n">cancels</span><span class="o">.</span>
+  <span class="o">//</span>
+  <span class="o">//</span> <span class="n">logger</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">zerolog</span><span class="o">.</span><span class="n">Logger</span> <span class="k">with</span> <span class="n">a</span>
+  <span class="o">//</span> <span class="n">zerolog</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">WithString</span><span class="p">(</span><span class="s2">&quot;SERVICE&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">Service</span><span class="o">.</span><span class="n">Id</span><span class="p">()])</span> <span class="n">entry</span> <span class="n">already</span> <span class="n">on</span> <span class="n">it</span><span class="o">.</span>
+  <span class="n">Setup</span><span class="p">(</span>
+    <span class="n">resourcesCtx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span>
+    <span class="n">resourcesReleased</span> <span class="o">*</span><span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span><span class="p">,</span>
+    <span class="n">logger</span> <span class="n">zerolog</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span>
+  <span class="p">)</span> <span class="n">error</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-methods">
+<h2>Testing Methods<a class="headerlink" href="#testing-methods" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Manager</span></code> type exposes a number of useful tasting methods, which can be accessed
+through <code class="docutils literal notranslate"><span class="pre">Manager.Test()</span></code>. See the API docs for more details.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pkerr.html" class="btn btn-neutral float-right" title="pkerrs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="gRPEAKEC-go" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright &#39;2021, Billy Peake&#39;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 module github.com/peake100/gRPEAKEC-go
 
-go 1.15	
+go 1.15
 
 require (
 	github.com/GeertJohan/go.rice v1.0.2 // indirect
@@ -13,6 +13,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/mgechev/revive v1.0.3
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
+	github.com/pseudomuto/protoc-gen-doc v1.4.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/zerolog v1.20.0
 	github.com/stretchr/testify v1.6.2-0.20201103103935-92707c0b2d50
