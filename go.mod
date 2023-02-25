@@ -13,13 +13,12 @@ require (
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/mgechev/revive v1.0.3
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/pseudomuto/protoc-gen-doc v1.4.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/zerolog v1.20.0
 	github.com/stretchr/testify v1.6.2-0.20201103103935-92707c0b2d50
 	golang.org/x/mod v0.4.1 // indirect
 	golang.org/x/net v0.0.0-20210220033124-5f55cee0dc0d // indirect
-	golang.org/x/sys v0.0.0-20210220050731-9a76102bfb43 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/tools v0.1.0
 	google.golang.org/grpc v1.27.0
 	google.golang.org/protobuf v1.25.0
